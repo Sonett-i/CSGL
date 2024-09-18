@@ -56,6 +56,14 @@ namespace CSGL.classes
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
 			shader = new Shader(filePath + "\\Resources\\Shaders\\" + "shader.vert", filePath + "\\Resources\\Shaders\\" + "shader.frag");
+
+			int VertexArrayObject = GL.GenVertexArray();
+			GL.BindVertexArray(VertexArrayObject);
+
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+			GL.EnableVertexAttribArray(0);
+
+			shader.Use();
 		}
 
 		protected override void OnUnload()
@@ -71,6 +79,10 @@ namespace CSGL.classes
 			base.OnRenderFrame(args);
 
 			GL.Clear(ClearBufferMask.ColorBufferBit);
+
+			shader.Use();
+			GL.BindVertexArray(VertexBufferObject);
+			GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
 			// Code here
 
