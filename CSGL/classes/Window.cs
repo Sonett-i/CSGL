@@ -17,6 +17,9 @@ namespace CSGL.classes
 		};
 
 		int VertexBufferObject;
+		Shader shader;
+
+		string filePath = Environment.CurrentDirectory;
 
 
 		// Is executed every frame
@@ -30,16 +33,36 @@ namespace CSGL.classes
 			}
 		}
 
+		public string ClientInfo()
+		{
+			string output = "OpenGL:" + GL.GetString(StringName.Version);
+
+			output += "\nWidth: " + ClientSize.X + "\nHeight: " + ClientSize.Y;
+
+			return output;
+		}
+
 		// When the window loads
 		protected override void OnLoad()
 		{
 			base.OnLoad();
+
+			Console.WriteLine("OpenGL: " + ClientInfo());
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 			VertexBufferObject = GL.GenBuffer();
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+
+			shader = new Shader(filePath + "\\Resources\\Shaders\\" + "shader.vert", filePath + "\\Resources\\Shaders\\" + "shader.frag");
+		}
+
+		protected override void OnUnload()
+		{
+			base.OnUnload();
+
+			shader.Dispose();
 		}
 
 		// Render frame

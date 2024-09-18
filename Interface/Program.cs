@@ -9,9 +9,6 @@ namespace Program
 	{
 		public static int Main(string[] args)
 		{
-			Colour red = new Colour(1, 2, 3, 5);
-			
-			Console.WriteLine(red.ToString());
 			using (Window window = new Window(800, 600, "OpenTK"))
 			{
 				window.Run();
