@@ -9,59 +9,61 @@ namespace CSGL
 	public class Shader
 	{
 		int Handle;
+		public int shaderProgramObject;
+		private int vertexBufferObject;
+		private int vertexArrayObject;
 
-		public Shader(string vertexPath, string fragmentPath)
+		public Shader(float[] vertices, string vertexPath, string fragmentPath)
 		{
-			int VertexShader;
-			int FragmentShader;
+			this.vertexBufferObject = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
+			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw);
+
+			this.vertexArrayObject = GL.GenVertexArray();
+			GL.BindVertexArray(this.vertexArrayObject);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+			GL.EnableVertexAttribArray(0);
 
 			Console.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
 			Console.WriteLine("Loading Vertex Shader: " + vertexPath + "\nLoading Fragment Shader: " + fragmentPath);
 			
-			string VertexShaderSource = File.ReadAllText(vertexPath);
-			string FragmentShaderSource = File.ReadAllText(fragmentPath);
+			string VertexShaderSource = @File.ReadAllText(vertexPath);
+			string FragmentShaderSource = @File.ReadAllText(fragmentPath);
 
-			VertexShader = GL.CreateShader(ShaderType.VertexShader);
-			FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
 
-			GL.CompileShader(VertexShader);
-			GL.GetShader(VertexShader, ShaderParameter.CompileStatus, out int vertSuccess);
+			int vertexShaderObject = GL.CreateShader(ShaderType.VertexShader);
+			GL.ShaderSource(vertexShaderObject, @File.ReadAllText(vertexPath));
+			GL.CompileShader(vertexShaderObject);
 
-			if (vertSuccess == 0)
+			string vertexShaderInfo = GL.GetShaderInfoLog(vertexShaderObject);
+
+			if (vertexShaderInfo != String.Empty)
 			{
-				string infoLog = GL.GetShaderInfoLog(VertexShader);
-				Console.WriteLine(infoLog);
+				Console.WriteLine("Vertex Shader: " + vertexShaderInfo);
 			}
 
-			GL.CompileShader(FragmentShader);
-			GL.GetShader(FragmentShader, ShaderParameter.CompileStatus, out int fragSuccess);
+			int fragmentShaderObject = GL.CreateShader(ShaderType.FragmentShader);
+			GL.ShaderSource(fragmentShaderObject, @File.ReadAllText(fragmentPath));
+			GL.CompileShader(fragmentShaderObject);
 
-			if (fragSuccess == 0)
+			string fragmentShaderInfo = GL.GetShaderInfoLog(fragmentShaderObject);
+
+			if (fragmentShaderInfo != String.Empty)
 			{
-				string infoLog = GL.GetShaderInfoLog(FragmentShader);
-				Console.WriteLine(infoLog);
+				Console.WriteLine("Fragment Shader: " + fragmentShaderInfo);
 			}
 
-			Handle = GL.CreateProgram();
+			this.shaderProgramObject = GL.CreateProgram();
+			GL.AttachShader(shaderProgramObject, vertexShaderObject);
+			GL.AttachShader(shaderProgramObject, fragmentShaderObject);
+			GL.LinkProgram(shaderProgramObject);
 
-			GL.AttachShader(Handle, VertexShader);
-			GL.AttachShader(Handle, FragmentShader);
+			GL.DetachShader(this.shaderProgramObject, vertexShaderObject);
+			GL.DetachShader(this.shaderProgramObject, fragmentShaderObject);
 
-			GL.LinkProgram(Handle);
-
-			GL.GetProgram(Handle, GetProgramParameterName.LinkStatus, out int linkSuccess);
-
-			if (linkSuccess == 0)
-			{
-				string infoLog = GL.GetProgramInfoLog(Handle);
-				Console.WriteLine(infoLog);
-			}
-
-			// Cleanup
-			GL.DetachShader(Handle, VertexShader);
-			GL.DetachShader(Handle, FragmentShader);
-			GL.DeleteShader(VertexShader);
-			GL.DeleteShader(FragmentShader);
+			GL.DeleteShader(vertexShaderObject);
+			GL.DeleteShader(fragmentShaderObject);
 		}
 
 		private bool disposedValue = false;
@@ -90,7 +92,7 @@ namespace CSGL
 
 		public void Use()
 		{
-			GL.UseProgram(Handle);
+			GL.UseProgram(this.shaderProgramObject);
 		}
 	}
 }

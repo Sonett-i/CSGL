@@ -55,7 +55,7 @@ namespace CSGL.classes
 			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-			shader = new Shader(filePath + "\\Resources\\Shaders\\" + "shader.vert", filePath + "\\Resources\\Shaders\\" + "shader.frag");
+			shader = new Shader(vertices, filePath + "\\Resources\\Shaders\\" + "shader.vert", filePath + "\\Resources\\Shaders\\" + "shader.frag");
 
 			int VertexArrayObject = GL.GenVertexArray();
 			GL.BindVertexArray(VertexArrayObject);
