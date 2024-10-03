@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -7,13 +8,37 @@ namespace CSGL.classes
 {
 	public class Window : GameWindow
 	{
-		public Window(int width, int height, string title) : base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = (width, height), Title = title }) { }
-
-		float[] vertices =
+		public Window(int width, int height, string title) :
+			base(GameWindowSettings.Default,
+				new NativeWindowSettings()
+				{
+					Title = title,
+					ClientSize = new Vector2i(width, height),
+					WindowBorder = WindowBorder.Fixed,
+					StartVisible = true,
+					StartFocused = true,
+					API = ContextAPI.OpenGL,
+					Profile = ContextProfile.Core,
+					APIVersion = new Version(4, 1)
+				})
 		{
-			-0.5f, -0.5f, 0.0f, // Bottom Left
-			0.5f, -0.5f, 0.0f, // Bottom Right
-			0.0f, 0.5f, 0.0f // Top
+
+			this.CenterWindow();
+		}
+
+		float[] vertices = new float[]
+		{
+			// position				colour
+			0.5f,   0.5f,   0.0f,   1.0f, 0.0f, 0.0f, 1.0f,	//	Vertex 0 - top right
+			0.5f,   -0.5f,  0.0f,   0.0f, 1.0f, 0.0f, 1.0f,	//	Vertex 1 - bottom right
+			-0.5f, -0.5f,	0.0f,   1.0f, 1.0f, 0.0f, 1.0f, //	Vertex 2 - bottom left
+			-0.5f,  0.5f,  0.0f,	0.0f, 0.0f, 1.0f, 1.0f  //	Vertex 3 - top left
+		};
+
+		uint[] indices = new uint[]
+		{
+			0, 1, 3, // Triangle 1
+			1, 2, 3 // Triangle 2
 		};
 
 		int VertexBufferObject;
@@ -55,7 +80,7 @@ namespace CSGL.classes
 			GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-			shader = new Shader(vertices, filePath + "\\Resources\\Shaders\\" + "shader.vert", filePath + "\\Resources\\Shaders\\" + "shader.frag");
+			shader = new Shader(vertices, indices, filePath + "\\Resources\\Shaders\\" + "shader.vert", filePath + "\\Resources\\Shaders\\" + "shader.frag");
 
 			int VertexArrayObject = GL.GenVertexArray();
 			GL.BindVertexArray(VertexArrayObject);
@@ -76,17 +101,15 @@ namespace CSGL.classes
 		// Render frame
 		protected override void OnRenderFrame(FrameEventArgs args)
 		{
-			base.OnRenderFrame(args);
-
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 
 			shader.Use();
 			GL.BindVertexArray(VertexBufferObject);
-			GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
-			// Code here
 
 			SwapBuffers();
+			base.OnRenderFrame(args);
 		}
 
 		protected override void OnFramebufferResize(FramebufferResizeEventArgs e)

@@ -10,7 +10,8 @@ namespace Program
 		public static int Main(string[] args)
 		{
 
-			/*using (Game game = new Game(800, 600, "Game"))
+			/*
+			using (Game game = new Game(800, 600, "Game"))
 			{
 				game.Run();
 			}
@@ -20,6 +21,7 @@ namespace Program
 			{
 				window.Run();
 			}
+			
 			
 			return (0);
 		}

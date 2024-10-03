@@ -12,9 +12,36 @@ namespace CSGL
 		public int shaderProgramObject;
 		private int vertexBufferObject;
 		private int vertexArrayObject;
+		private int elementBufferObject;
 
-		public Shader(float[] vertices, string vertexPath, string fragmentPath)
+		void DebugShader(float[] vertices, uint[] indices)
 		{
+			string output = "Vertices\n";
+
+			for (int i = 0; i < vertices.Length; i++)
+			{
+				output += vertices[i] + ", ";
+
+				if (i % 7 == 0)
+					output += "\n";
+			}
+
+			output += "\nIndices:\n";
+			for (int i = 0; i < indices.Length; i++)
+			{
+				output += indices[i] + ", ";
+
+				if (i % 3 == 0)
+					output += "\n";
+			}
+
+			Console.WriteLine(output);
+		}
+
+		public Shader(float[] vertices, uint[] indices, string vertexPath, string fragmentPath)
+		{
+			DebugShader(vertices, indices);
+
 			this.vertexBufferObject = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw);
@@ -22,15 +49,31 @@ namespace CSGL
 			this.vertexArrayObject = GL.GenVertexArray();
 			GL.BindVertexArray(this.vertexArrayObject);
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+			// Positional Data
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 7 * sizeof(float), 0);
 			GL.EnableVertexAttribArray(0);
 
+			// Vertex Colour
+			GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 7 * sizeof(float), 3 * sizeof(float));
+			GL.EnableVertexAttribArray(1);
+
 			Console.WriteLine($"Current Directory: {Directory.GetCurrentDirectory()}");
-			Console.WriteLine("Loading Vertex Shader: " + vertexPath + "\nLoading Fragment Shader: " + fragmentPath);
-			
+			Console.WriteLine("Loading Vertex Shader: " + vertexPath);
+			Console.WriteLine(File.ReadAllText(vertexPath));
+
+			Console.WriteLine("\nLoading Fragment Shader: " + fragmentPath);
+			Console.WriteLine(File.ReadAllText(fragmentPath));
+
+
+
+			// Indices
+			this.elementBufferObject = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.elementBufferObject);
+			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+
 			string VertexShaderSource = @File.ReadAllText(vertexPath);
 			string FragmentShaderSource = @File.ReadAllText(fragmentPath);
-
 
 			int vertexShaderObject = GL.CreateShader(ShaderType.VertexShader);
 			GL.ShaderSource(vertexShaderObject, @File.ReadAllText(vertexPath));
@@ -87,6 +130,19 @@ namespace CSGL
 		public void Dispose()
 		{
 			Dispose(true);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+			GL.DeleteBuffer(this.elementBufferObject);
+
+			GL.BindVertexArray(0);
+			GL.DeleteVertexArray(this.vertexArrayObject);
+
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+			GL.DeleteBuffer(this.vertexBufferObject);
+
+			GL.UseProgram(0);
+			GL.DeleteProgram(this.shaderProgramObject);
+
 			GC.SuppressFinalize(this);
 		}
 
