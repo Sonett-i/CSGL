@@ -4,5 +4,6 @@ namespace MathU
 {
 	struct Vector2
 	{
+
 	}
 }
