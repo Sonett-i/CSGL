@@ -4,6 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace CSGL
 {
@@ -17,16 +18,16 @@ namespace CSGL
 		float[] vertices = new float[]
 		{
 			// position				colour
-			0.5f,   0.5f,   0.0f,   1.0f, 0.0f, 0.0f, 1.0f,	//	Vertex 0 - top right
-			0.5f,   -0.5f,  0.0f,   0.0f, 1.0f, 0.0f, 1.0f,	//	Vertex 1 - bottom right
-			-0.5f, -0.5f,	0.0f,   1.0f, 1.0f, 0.0f, 1.0f, //	Vertex 2 - bottom left
-			-0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f, 1.0f  //	Vertex 3 - top left
+			-0.5f,  0.5f,   0.0f,   1.0f, 0.0f, 0.0f, 1.0f,	//	Vertex 0 - top right
+			0.5f,   0.5f,  0.0f,	0.0f, 1.0f, 0.0f, 1.0f,	//	Vertex 1 - bottom right
+			0.5f, -0.5f,   0.0f,	0.0f, 0.0f, 1.0f, 1.0f, //	Vertex 2 - bottom left
+			-0.5f,  -0.5f,  0.0f,   1.0f, 1.0f, 0.0f, 1.0f  //	Vertex 3 - top left
 		};
 
 		uint[] indices = new uint[]
 		{
-			0, 1, 3, // Triangle 1
-			1, 2, 3 // Triangle 2
+			0, 1, 2, // Triangle 1
+			0, 2, 3 // Triangle 2
 		};
 
 		public Game(int width, int height, string title) : 
@@ -36,7 +37,7 @@ namespace CSGL
 					Title = title,
 					ClientSize = new Vector2i(width, height),
 					WindowBorder = WindowBorder.Fixed,
-					StartVisible = true,
+					StartVisible = false,
 					StartFocused = true,
 					API = ContextAPI.OpenGL,
 					Profile = ContextProfile.Core,
@@ -49,9 +50,9 @@ namespace CSGL
 
 		protected override void OnLoad()
 		{
-			base.OnLoad();
 			GL.ClearColor(0.3f, 0.4f, 0.5f, 1.0f);
 
+			Console.WriteLine("Bind Vertex Buffer");
 			this.vertexBufferObject = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw);
@@ -68,10 +69,12 @@ namespace CSGL
 			GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 7 * sizeof(float), 3 * sizeof(float));
 			GL.EnableVertexAttribArray(1);
 
+			Console.WriteLine("Bind Index Buffer");
 			// Indices
 			this.elementBufferObject =  GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.elementBufferObject);
 			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
 			string vertexShaderCode =
 				@"	#version 330
@@ -97,14 +100,20 @@ namespace CSGL
 						pixelColor = vec4(ourColour, 1.0f); //vec4(0.8f, 0.8f, 0.1f, 1.0f);
 					}";
 
+			Console.WriteLine("Compiling Vertex Shader");
 			int vertexShaderObject = GL.CreateShader(ShaderType.VertexShader);
 			GL.ShaderSource(vertexBufferObject, vertexShaderCode);
 			GL.CompileShader(vertexShaderObject);
 
+			Console.WriteLine("Compiling Fragment Shader");
 			string vertexShaderInfo = GL.GetShaderInfoLog(vertexShaderObject);
 			if (vertexShaderInfo != String.Empty)
 			{
-				Console.WriteLine("Vertex: " + vertexShaderInfo);
+				Console.WriteLine("Vertex: \n" + vertexShaderInfo);
+			}
+			else
+			{
+				Console.WriteLine("Done");
 			}
 
 			int fragmentShaderObject = GL.CreateShader(ShaderType.FragmentShader);
@@ -114,8 +123,15 @@ namespace CSGL
 			string fragmentShaderInfo = GL.GetShaderInfoLog(fragmentShaderObject);
 			if (fragmentShaderInfo != String.Empty)
 			{
-				Console.WriteLine("Fragment: " + fragmentShaderInfo);
+				Console.WriteLine("Fragment: \n" + fragmentShaderInfo);
 			}
+			else
+			{
+				Console.WriteLine("Done");
+			}
+
+		https://www.youtube.com/watch?v=ZQLJ4IzZggw&list=PLSlpr6o9vURyxd-keTeGLXy980pF7boki&index=5
+			// 4:49
 
 			this.shaderProgramObject = GL.CreateProgram();
 			GL.AttachShader(this.shaderProgramObject, vertexShaderObject);
@@ -126,12 +142,29 @@ namespace CSGL
 			GL.DetachShader(this.shaderProgramObject, fragmentShaderObject);
 			GL.DeleteShader(vertexShaderObject);
 			GL.DeleteShader(fragmentShaderObject);
+
+			this.IsVisible = true;
+
+			base.OnLoad();
 		}
 
 
-		protected override void OnUpdateFrame(FrameEventArgs args)
+		// Is executed every frame
+		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
-			base.OnUpdateFrame(args);
+			base.OnUpdateFrame(e);
+
+			//Console.WriteLine("Time: " + Time.time + "\ndelta: " + Time.deltaTime);
+
+			if (KeyboardState.IsKeyDown(Keys.Escape))
+			{
+				Close();
+			}
+
+			if (KeyboardState.IsKeyDown(Keys.D))
+			{
+				Console.WriteLine("Time: " + Time.time + "\ndelta: " + Time.deltaTime);
+			}
 		}
 
 		protected override void OnRenderFrame(FrameEventArgs args)
@@ -141,7 +174,7 @@ namespace CSGL
 			GL.UseProgram(this.shaderProgramObject);
 
 			GL.BindVertexArray(this.vertexArrayObject);
-			//GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.elementBufferObject);
 
 			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -158,9 +191,9 @@ namespace CSGL
 
 		protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
 		{
-			base.OnFramebufferResize(e);
-
 			GL.Viewport(0, 0, e.Width, e.Height);
+
+			base.OnFramebufferResize(e);
 		}
 
 		protected override void OnUnload()

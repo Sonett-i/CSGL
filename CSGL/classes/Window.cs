@@ -15,7 +15,7 @@ namespace CSGL.classes
 					Title = title,
 					ClientSize = new Vector2i(width, height),
 					WindowBorder = WindowBorder.Fixed,
-					StartVisible = true,
+					StartVisible = false,
 					StartFocused = true,
 					API = ContextAPI.OpenGL,
 					Profile = ContextProfile.Core,
@@ -52,9 +52,16 @@ namespace CSGL.classes
 		{
 			base.OnUpdateFrame(e);
 
+			//Console.WriteLine("Time: " + Time.time + "\ndelta: " + Time.deltaTime);
+			
 			if (KeyboardState.IsKeyDown(Keys.Escape))
 			{
 				Close();
+			}
+
+			if (KeyboardState.IsKeyDown(Keys.D))
+			{
+				Console.WriteLine("Time: " + Time.time + "\ndelta: " + Time.deltaTime);
 			}
 		}
 
@@ -70,8 +77,6 @@ namespace CSGL.classes
 		// When the window loads
 		protected override void OnLoad()
 		{
-			base.OnLoad();
-
 			Console.WriteLine("OpenGL: " + ClientInfo());
 			GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -89,13 +94,19 @@ namespace CSGL.classes
 			GL.EnableVertexAttribArray(0);
 
 			shader.Use();
+
+			this.IsVisible = true;
+			base.OnLoad();
 		}
 
 		protected override void OnUnload()
 		{
+			GL.BindVertexArray(0);
+			shader.Dispose();
+
 			base.OnUnload();
 
-			shader.Dispose();
+			
 		}
 
 		// Render frame
@@ -117,6 +128,12 @@ namespace CSGL.classes
 			base.OnFramebufferResize(e);
 
 			GL.Viewport(0, 0, e.Width, e.Height);
+		}
+
+		protected override void OnResize(ResizeEventArgs e)
+		{
+			GL.Viewport(0, 0, e.Width, e.Height);
+			base.OnResize(e);
 		}
 	}
 }

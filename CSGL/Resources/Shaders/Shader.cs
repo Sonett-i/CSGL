@@ -8,7 +8,7 @@ namespace CSGL
 {
 	public class Shader
 	{
-		int Handle;
+		int Handle = 0;
 		public int shaderProgramObject;
 		private int vertexBufferObject;
 		private int vertexArrayObject;
@@ -38,9 +38,11 @@ namespace CSGL
 			Console.WriteLine(output);
 		}
 
-		public Shader(float[] vertices, uint[] indices, string vertexPath, string fragmentPath)
+		public Shader(float[] vertices, uint[] indices, string vertexPath, string fragmentPath, int handle = 0)
 		{
 			DebugShader(vertices, indices);
+
+			this.Handle = handle;
 
 			this.vertexBufferObject = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
