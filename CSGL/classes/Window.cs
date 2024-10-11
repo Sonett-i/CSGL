@@ -29,16 +29,16 @@ namespace CSGL.classes
 		float[] vertices = new float[]
 		{
 			// position				colour
-			0.5f,   0.5f,   0.0f,   1.0f, 0.0f, 0.0f, 1.0f,	//	Vertex 0 - top right
-			0.5f,   -0.5f,  0.0f,   0.0f, 1.0f, 0.0f, 1.0f,	//	Vertex 1 - bottom right
-			-0.5f, -0.5f,	0.0f,   1.0f, 1.0f, 0.0f, 1.0f, //	Vertex 2 - bottom left
-			-0.5f,  0.5f,  0.0f,	0.0f, 0.0f, 1.0f, 1.0f  //	Vertex 3 - top left
+			-0.5f,  0.5f,   0.0f,   1.0f, 0.0f, 0.0f, 1.0f,	//	Vertex 0 - top right
+			0.5f,   0.5f,  0.0f,    0.0f, 1.0f, 0.0f, 1.0f,	//	Vertex 1 - bottom right
+			0.5f, -0.5f,   0.0f,    0.0f, 0.0f, 1.0f, 1.0f, //	Vertex 2 - bottom left
+			-0.5f,  -0.5f,  0.0f,   1.0f, 1.0f, 0.0f, 1.0f  //	Vertex 3 - top left
 		};
 
 		uint[] indices = new uint[]
 		{
-			0, 1, 3, // Triangle 1
-			1, 2, 3 // Triangle 2
+			0, 1, 2, // Triangle 1
+			0, 2, 3 // Triangle 2
 		};
 
 		int VertexBufferObject;

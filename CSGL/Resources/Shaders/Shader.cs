@@ -9,9 +9,10 @@ namespace CSGL
 	public class Shader
 	{
 		int Handle = 0;
-		public int shaderProgramObject;
-		private int vertexBufferObject;
-		private int vertexArrayObject;
+
+		public int shaderProgramHandle;
+		private int vertexBufferHandle;
+		private int vertexArrayHandle;
 		private int elementBufferObject;
 
 		void DebugShader(float[] vertices, uint[] indices)
@@ -44,13 +45,13 @@ namespace CSGL
 
 			this.Handle = handle;
 
-			this.vertexBufferObject = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
+			this.vertexBufferHandle = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferHandle);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw);
 
-			this.vertexArrayObject = GL.GenVertexArray();
-			GL.BindVertexArray(this.vertexArrayObject);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferObject);
+			this.vertexArrayHandle = GL.GenVertexArray();
+			GL.BindVertexArray(this.vertexArrayHandle);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vertexBufferHandle);
 
 			// Positional Data
 			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 7 * sizeof(float), 0);
@@ -66,8 +67,6 @@ namespace CSGL
 
 			Console.WriteLine("\nLoading Fragment Shader: " + fragmentPath);
 			Console.WriteLine(File.ReadAllText(fragmentPath));
-
-
 
 			// Indices
 			this.elementBufferObject = GL.GenBuffer();
@@ -99,13 +98,13 @@ namespace CSGL
 				Console.WriteLine("Fragment Shader: " + fragmentShaderInfo);
 			}
 
-			this.shaderProgramObject = GL.CreateProgram();
-			GL.AttachShader(shaderProgramObject, vertexShaderObject);
-			GL.AttachShader(shaderProgramObject, fragmentShaderObject);
-			GL.LinkProgram(shaderProgramObject);
+			this.shaderProgramHandle = GL.CreateProgram();
+			GL.AttachShader(shaderProgramHandle, vertexShaderObject);
+			GL.AttachShader(shaderProgramHandle, fragmentShaderObject);
+			GL.LinkProgram(shaderProgramHandle);
 
-			GL.DetachShader(this.shaderProgramObject, vertexShaderObject);
-			GL.DetachShader(this.shaderProgramObject, fragmentShaderObject);
+			GL.DetachShader(this.shaderProgramHandle, vertexShaderObject);
+			GL.DetachShader(this.shaderProgramHandle, fragmentShaderObject);
 
 			GL.DeleteShader(vertexShaderObject);
 			GL.DeleteShader(fragmentShaderObject);
@@ -121,6 +120,7 @@ namespace CSGL
 				disposedValue = true;
             }
         }
+
 		~Shader()
 		{
 			if (disposedValue == false)
@@ -137,20 +137,20 @@ namespace CSGL
 			GL.DeleteBuffer(this.elementBufferObject);
 
 			GL.BindVertexArray(0);
-			GL.DeleteVertexArray(this.vertexArrayObject);
+			GL.DeleteVertexArray(this.vertexArrayHandle);
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-			GL.DeleteBuffer(this.vertexBufferObject);
+			GL.DeleteBuffer(this.vertexBufferHandle);
 
 			GL.UseProgram(0);
-			GL.DeleteProgram(this.shaderProgramObject);
+			GL.DeleteProgram(this.shaderProgramHandle);
 
 			GC.SuppressFinalize(this);
 		}
 
 		public void Use()
 		{
-			GL.UseProgram(this.shaderProgramObject);
+			GL.UseProgram(this.shaderProgramHandle);
 		}
 	}
 }
