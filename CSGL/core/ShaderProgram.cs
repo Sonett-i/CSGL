@@ -45,15 +45,16 @@ namespace CSGL
 		{
 			this.disposed = false;
 
-			Console.WriteLine("Compiling Vertex Shader");
-			if (!ShaderProgram.CompileVertexShader(vertexShaderCode, out this.VertexShaderHandle, out string vertexShaderCompileError))
+			Console.WriteLine("Compiling Vertex Shader " + vertexShaderCode);
+			Console.WriteLine(File.ReadAllText(@vertexShaderCode));
+			if (!ShaderProgram.CompileVertexShader(File.ReadAllText(@vertexShaderCode), out this.VertexShaderHandle, out string vertexShaderCompileError))
 			{
 				throw new ArgumentException(vertexShaderCompileError);
 			}
 
-			Console.WriteLine("Compiling Fragment Shader");
-
-			if (!ShaderProgram.CompileFragmentShader(fragmentShaderCode, out this.FragmentShaderHandle, out string fragmentShaderCompileError))
+			Console.WriteLine("Compiling Fragment Shader " + fragmentShaderCode);
+			Console.WriteLine(File.ReadAllText(fragmentShaderCode));
+			if (!ShaderProgram.CompileFragmentShader(File.ReadAllText(@fragmentShaderCode), out this.FragmentShaderHandle, out string fragmentShaderCompileError))
 			{
 				throw new ArgumentException(fragmentShaderCompileError);
 			}
@@ -186,6 +187,40 @@ namespace CSGL
 			GL.UseProgram(0);
 		}
 
+		public void SetUniform(string name, float v1, float v2, float v3)
+		{
+			if (!this.GetShaderUniform(name, out ShaderUniform uniform))
+			{
+				throw new ArgumentException("Uniform not found");
+			}
+
+			if (uniform.Type != ActiveUniformType.FloatVec3)
+			{
+				throw new ArgumentException("Uniform type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.Uniform3(uniform.Location, v1, v2, v3);
+			GL.UseProgram(0);
+		}
+
+		public void SetUniform(string name, float v1, float v2, float v3, float v4)
+		{
+			if (!this.GetShaderUniform(name, out ShaderUniform uniform))
+			{
+				throw new ArgumentException("Uniform not found");
+			}
+
+			if (uniform.Type != ActiveUniformType.FloatVec4)
+			{
+				throw new ArgumentException("Uniform type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.Uniform4(uniform.Location, v1, v2, v3, v4);
+			GL.UseProgram(0);
+		}
+
 		private bool GetShaderUniform(string name, out ShaderUniform uniform)
 		{
 			uniform = new ShaderUniform();
@@ -216,6 +251,94 @@ namespace CSGL
 			}
 
 			return uniforms;
+		}
+
+		public void SetAttribute(string name, float v1)
+		{
+			if (!this.GetShaderAttribute(name, out ShaderAttribute attribute))
+			{
+				throw new ArgumentException("Attribute not found");
+			}
+
+			if (attribute.Type != ActiveAttribType.Float)
+			{
+				throw new ArgumentException("Attribute type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.VertexAttrib1(attribute.Location, v1);
+
+			GL.UseProgram(0);
+		}
+
+		public void SetAttribute(string name, float v1, float v2)
+		{
+			if (!this.GetShaderAttribute(name, out ShaderAttribute attribute))
+			{
+				throw new ArgumentException("Attribute not found");
+			}
+
+			if (attribute.Type != ActiveAttribType.FloatVec2)
+			{
+				throw new ArgumentException("Attribute type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.VertexAttrib2(attribute.Location, v1, v2);
+
+			GL.UseProgram(0);
+		}
+
+		public void SetAttribute(string name, float v1, float v2, float v3)
+		{
+			if (!this.GetShaderAttribute(name, out ShaderAttribute attribute))
+			{
+				throw new ArgumentException("Attribute not found");
+			}
+
+			if (attribute.Type != ActiveAttribType.FloatVec3)
+			{
+				throw new ArgumentException("Attribute type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.VertexAttrib3(attribute.Location, v1, v2, v3);
+
+			GL.UseProgram(0);
+		}
+
+		public void SetAttribute(string name, float v1, float v2, float v3, float v4)
+		{
+			if (!this.GetShaderAttribute(name, out ShaderAttribute attribute))
+			{
+				throw new ArgumentException("Attribute not found");
+			}
+
+			if (attribute.Type != ActiveAttribType.FloatVec4)
+			{
+				throw new ArgumentException("Attribute type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.VertexAttrib4(attribute.Location, v1, v2, v3, v4);
+
+			GL.UseProgram(0);
+		}
+
+		private bool GetShaderAttribute(string name, out ShaderAttribute attribute)
+		{
+			attribute = new ShaderAttribute();
+
+			for (int i = 0; i < this.attributes.Length; i++)
+			{
+				attribute = this.attributes[i];
+
+				if (attribute.Name == name)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public static ShaderAttribute[] CreateAttributeList(int shaderProgramhandle)
