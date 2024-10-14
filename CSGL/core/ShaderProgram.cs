@@ -86,6 +86,11 @@ namespace CSGL
 			GC.SuppressFinalize(this);
 		}
 
+		public void Use()
+		{
+			GL.UseProgram(this.ShaderProgramHandle);
+		}
+
 		public static bool CompileVertexShader(string vertexShaderCode, out int vertexShaderHandle, out string errorMessage)
 		{
 			errorMessage = string.Empty;

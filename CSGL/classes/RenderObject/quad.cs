@@ -8,7 +8,7 @@ namespace CSGL
 {
 	public class Quad : RenderObject
 	{
-		public Quad(Vertex[] vertices, uint[] indices, ShaderProgram shaderProgram) : base(vertices, indices, shaderProgram)
+		public Quad(float[] vertices, uint[] indices, ShaderProgram shaderProgram) : base(vertices, indices, shaderProgram)
 		{
 
 		}

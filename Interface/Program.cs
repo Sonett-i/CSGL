@@ -1,7 +1,5 @@
 ﻿using System;
 using CSGL;
-using CSGL.classes;
-using MathU;
 
 namespace Program
 {
@@ -9,7 +7,7 @@ namespace Program
 	{
 		public static int Main(string[] args)
 		{
-
+			// Assessment
 			using (MainWindow game = new MainWindow(1280, 768, "Game"))
 			{
 				game.Run();

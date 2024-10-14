@@ -34,6 +34,10 @@ namespace CSGL
 
 		int[] viewport = new int[4];
 
+		float[] vertices;
+		uint[] indices;
+
+		RenderObject quad;
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
 				new NativeWindowSettings()
@@ -66,37 +70,47 @@ namespace CSGL
 			}
 		}
 
+		void InitializeWindow()
+		{
+			GL.GetInteger(GetPName.Viewport, viewport);
+			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
+
+			GL.ClearColor(backColour);
+		}
+
 		void InitializeShaders()
 		{
-			shaderProgram = new ShaderProgram(@filePath + vertexShader, @filePath + fragmentShader);
 			shaderProgram = new ShaderProgram(@filePath + vertexShader, @filePath + fragmentShader);
 		}
 
 		void InitializeObjects()
 		{
-			Vertex[] vertices = ObjectFactory.CreateSolidCube(0.2f, Color4.HotPink);
+			int boxCount = 100;
 
-			
-			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-			GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
-			GL.Enable(EnableCap.DepthTest);
+			vertices = new float[] {
+
+				-0.5f, -0.5f, 0.0f,		1f, 0f, 0f, 1f, // v0
+				0.5f, -0.5f, 0.0f,		0f, 1f, 0f, 1f, // v1
+				0.0f, 0.5f, 0.0f,		0f, 0f, 1f, 1f // v2
+			};
+
+			indices = new uint[]
+			{
+				0, 1, 2
+			};
+
+			quad = new RenderObject(vertices, indices, shaderProgram, BufferUsageHint.StaticDraw);
 		}
 
 		protected override void OnLoad()
 		{
 			Console.WriteLine(filePath);
 
+			InitializeWindow();
 			InitializeShaders();
 			InitializeObjects();
 
-			GL.GenVertexArrays(1, out int _vertexArray);
-			GL.BindVertexArray(_vertexArray);
-
 			this.IsVisible = true;
-
-			GL.GetInteger(GetPName.Viewport, viewport);
-
-
 			base.OnLoad();
 		}
 
@@ -105,14 +119,6 @@ namespace CSGL
 		// Is executed every frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
-			float t = Time.time * 0.5f;
-			Matrix4 xR = Matrix4.CreateRotationX(t);
-			Matrix4 yR = Matrix4.CreateRotationY(t);
-			Matrix4 zR = Matrix4.CreateRotationZ(t);
-
-			modelView = zR * yR * xR;
-
-
 			HandleKeyboard();
 
 			base.OnUpdateFrame(e);
@@ -122,14 +128,9 @@ namespace CSGL
 		{
 			Title = windowName + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
 
-			// Clear BG Colour
-			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
-
-			GL.ClearColor(backColour);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			
-			GL.UseProgram(shaderProgram.ShaderProgramHandle);
 
+			quad.Render();
 			
 			this.Context.SwapBuffers();
 			base.OnRenderFrame(e);
