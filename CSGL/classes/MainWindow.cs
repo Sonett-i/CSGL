@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
@@ -13,6 +14,8 @@ namespace CSGL
 {
 
 	// http://dreamstatecoding.blogspot.com/2017/01/opengl-4-with-opentk-in-c-part-2.html
+
+	// http://dreamstatecoding.blogspot.com/2017/02/opengl-4-with-opentk-in-c-part-6.html HERE
 	public class MainWindow : GameWindow
 	{
 		private int vertexBufferObject;
@@ -26,8 +29,10 @@ namespace CSGL
 		string windowName;
 		string filePath = Environment.CurrentDirectory + "\\Resources\\Shaders\\";
 
-		private string vertexShader = "simplePipe.vert";
+		private string vertexShader = "testmatrix.vert";
 		private string fragmentShader = "simplePipe.frag";
+
+		int[] viewport = new int[4];
 
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
@@ -57,7 +62,7 @@ namespace CSGL
 
 			if (KeyboardState.IsKeyDown(Keys.D))
 			{
-				Console.WriteLine("Time: " + Time.time + "\ndelta: " + Time.deltaTime);
+				Console.WriteLine(modelView.ToString());
 			}
 		}
 
@@ -69,16 +74,12 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
-			Vertex[] vertices =
-			{
-				new Vertex(new Vector4(-0.25f, 0.25f, 0.5f, 1-0f), Color4.HotPink),
-				new Vertex(new Vector4(0.0f, -0.25f, 0.5f, 1-0f), Color4.HotPink),
-				new Vertex(new Vector4(0.25f, 0.25f, 0.5f, 1-0f), Color4.HotPink),
-			};
+			Vertex[] vertices = ObjectFactory.CreateSolidCube(0.2f, Color4.HotPink);
 
-			renderObjects.Add(new RenderObject(vertices));
-			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+			
+			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
 			GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
+			GL.Enable(EnableCap.DepthTest);
 		}
 
 		protected override void OnLoad()
@@ -92,13 +93,26 @@ namespace CSGL
 			GL.BindVertexArray(_vertexArray);
 
 			this.IsVisible = true;
+
+			GL.GetInteger(GetPName.Viewport, viewport);
+
+
 			base.OnLoad();
 		}
 
+		private Matrix4 modelView;
 
 		// Is executed every frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
+			float t = Time.time * 0.5f;
+			Matrix4 xR = Matrix4.CreateRotationX(t);
+			Matrix4 yR = Matrix4.CreateRotationY(t);
+			Matrix4 zR = Matrix4.CreateRotationZ(t);
+
+			modelView = zR * yR * xR;
+
+
 			HandleKeyboard();
 
 			base.OnUpdateFrame(e);
@@ -108,21 +122,16 @@ namespace CSGL
 		{
 			Title = windowName + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
 
+			// Clear BG Colour
 			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
 
 			GL.ClearColor(backColour);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			
 			GL.UseProgram(shaderProgram.ShaderProgramHandle);
+
 			
-
-			foreach (RenderObject renderObject in renderObjects)
-			{
-				renderObject.Render();
-			}
-
 			this.Context.SwapBuffers();
-
 			base.OnRenderFrame(e);
 		}
 

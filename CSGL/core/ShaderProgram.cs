@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 
 namespace CSGL
 {
@@ -218,6 +219,23 @@ namespace CSGL
 
 			GL.UseProgram(this.ShaderProgramHandle);
 			GL.Uniform4(uniform.Location, v1, v2, v3, v4);
+			GL.UseProgram(0);
+		}
+
+		public void SetUniform(string name, Matrix4 m1, bool transpose = false)
+		{
+			if (!this.GetShaderUniform(name, out ShaderUniform uniform))
+			{
+				throw new ArgumentException("Uniform not found");
+			}
+
+			if (uniform.Type != ActiveUniformType.FloatMat4)
+			{
+				throw new ArgumentException("Uniform type mismatch");
+			}
+
+			GL.UseProgram(this.ShaderProgramHandle);
+			GL.UniformMatrix4(uniform.Location, transpose, ref m1);
 			GL.UseProgram(0);
 		}
 
