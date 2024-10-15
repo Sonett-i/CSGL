@@ -29,8 +29,8 @@ namespace CSGL
 		string windowName;
 		string filePath = Environment.CurrentDirectory + "\\Resources\\Shaders\\";
 
-		private string vertexShader = "testmatrix.vert";
-		private string fragmentShader = "simplePipe.frag";
+		private string vertexShader = "shader.vert";
+		private string fragmentShader = "shader.frag";
 
 		int[] viewport = new int[4];
 
@@ -99,7 +99,10 @@ namespace CSGL
 				0, 1, 2
 			};
 
-			quad = new RenderObject(vertices, indices, shaderProgram, BufferUsageHint.StaticDraw);
+			quad = ObjectFactory.CreateTriangle(Vector3.Zero, 1f, shaderProgram);
+
+			renderObjects.Add(quad);
+			renderObjects.Add(ObjectFactory.CreateTriangle(new Vector3(0.25f, 0.25f, 0.0f), 1f, shaderProgram));
 		}
 
 		protected override void OnLoad()
@@ -119,18 +122,37 @@ namespace CSGL
 		// Is executed every frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
+			Time.Tick();
 			HandleKeyboard();
 
 			base.OnUpdateFrame(e);
 		}
 
+		private float nextPoll = 0f;
+		private float pollInterval = 1f;
+
+		private void PollWindow(float time)
+		{
+			//Console.WriteLine(time + " " + Time.time);
+
+			if (Time.time >= Time.NextPoll)
+			{
+				Title = windowName + $" (Vsync: {VSync}) FPS: {1f / time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
+				Time.NextPoll = Time.time + Time.PollInterval;
+			}
+		}
+
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
-			Title = windowName + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
+			PollWindow((float)e.Time);
+			//Title = windowName + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			quad.Render();
+			foreach (RenderObject renderObject in renderObjects)
+			{
+				renderObject.Render();
+			}
 			
 			this.Context.SwapBuffers();
 			base.OnRenderFrame(e);

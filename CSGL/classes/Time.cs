@@ -19,6 +19,9 @@ namespace CSGL
 
 		private static DateTime startTime = DateTime.Now;
 		private static DateTime lastTime = startTime;
+		
+		public static float NextPoll = 0.0f;
+		public static float PollInterval = 0.1f;
 
 		public static float deltaTime 
 		{
@@ -49,6 +52,11 @@ namespace CSGL
 			TimeSpan timeSpan = DateTime.Now - startTime;
 
 			return (float)timeSpan.TotalSeconds;
+		}
+
+		public static void Tick()
+		{
+			lastTime = DateTime.Now;
 		}
 	}
 }

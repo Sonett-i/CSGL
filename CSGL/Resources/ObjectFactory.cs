@@ -62,5 +62,24 @@ namespace CSGL
 			return vertices;
 		}
 
+		public static RenderObject CreateTriangle(Vector3 origin, float width, ShaderProgram shaderProgram)
+		{
+			float halfWidth = width / 2f;
+
+			float[] vertices = new float[]
+			{
+				origin.X - halfWidth, origin.Y - halfWidth, origin.Z,	1.0f, 0.0f, 0.0f, 1.0f,
+				origin.X + halfWidth, origin.Y - halfWidth, origin.Z,   0.0f, 1.0f, 0.0f, 1.0f,
+				origin.X, origin.Y + halfWidth, origin.Z,				0.0f, 0.0f, 1.0f, 1.0f,
+			};
+
+			uint[] indices = new uint[]
+			{
+				0, 1, 2
+			};
+
+			return new RenderObject(vertices, indices, shaderProgram, OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);
+		}
+
 	}
 }
