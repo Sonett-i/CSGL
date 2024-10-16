@@ -2,17 +2,12 @@
 using System.Numerics;
 using OpenTK.Graphics.OpenGL;
 
-// dev branch
-
 namespace CSGL
 {
 	public class RenderObject : IDisposable
 	{
 		private bool disposed;
 		private bool initialized;
-
-
-		private int buffer;
 
 		private int vbo; // Vertex Buffer Object
 		private int vao; // Vertex Array Object
@@ -30,12 +25,12 @@ namespace CSGL
 			this.indices = indices;
 			this.hint = hint;
 
-			Console.WriteLine("Bind Vertex Buffer Object");
+			Log.Default("Bind Vertex Buffer Object");
 			this.vbo = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo);
 			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, hint);
 
-			Console.WriteLine("Bind Vertex Array Object");
+			Log.Default("Bind Vertex Array Object");
 			this.vao = GL.GenVertexArray();
 			GL.BindVertexArray(this.vao);
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo);
@@ -49,7 +44,7 @@ namespace CSGL
 			GL.EnableVertexAttribArray(1);
 
 			// Indices
-			Console.WriteLine("Bind Index Buffer Object");
+			Log.Default("Bind Index Buffer Object");
 			this.ebo = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.ebo);
 			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
@@ -76,7 +71,7 @@ namespace CSGL
 
 			if (error != ErrorCode.NoError)
 			{
-				Console.WriteLine($"OpenGL Error: {error}");
+				Log.Default($"OpenGL Error: {error}");
 			}
 
 			//

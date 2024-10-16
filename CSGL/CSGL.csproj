@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="core\" />
     <Folder Include="Resources\RenderObject\" />
+    <Folder Include="Resources\Shaders\" />
   </ItemGroup>
 
 </Project>

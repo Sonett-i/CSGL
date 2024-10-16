@@ -35,6 +35,9 @@ namespace CSGL
 	public sealed class ShaderProgram : IDisposable
 	{
 		private bool disposed;
+
+		public string Name;
+
 		public readonly int ShaderProgramHandle;
 		public readonly int VertexShaderHandle;
 		public readonly int FragmentShaderHandle;
@@ -42,19 +45,21 @@ namespace CSGL
 		private readonly ShaderUniform[] uniforms;
 		private readonly ShaderAttribute[] attributes;
 
-		public ShaderProgram(string vertexShaderCode, string fragmentShaderCode)
+		public ShaderProgram(string vertexShaderCode, string fragmentShaderCode, string name)
 		{
+			this.Name = name;
 			this.disposed = false;
 
-			Console.WriteLine("Compiling Vertex Shader " + vertexShaderCode);
-			Console.WriteLine(File.ReadAllText(@vertexShaderCode));
+			Log.Default("Compiling Vertex Shader: " + Name);
+
+			Log.Advanced(File.ReadAllText(@vertexShaderCode));
 			if (!ShaderProgram.CompileVertexShader(File.ReadAllText(@vertexShaderCode), out this.VertexShaderHandle, out string vertexShaderCompileError))
 			{
 				throw new ArgumentException(vertexShaderCompileError);
 			}
 
-			Console.WriteLine("Compiling Fragment Shader " + fragmentShaderCode);
-			Console.WriteLine(File.ReadAllText(fragmentShaderCode));
+			Log.Default("Compiling Fragment Shader: " + fragmentShaderCode);
+			Log.Advanced(File.ReadAllText(fragmentShaderCode));
 			if (!ShaderProgram.CompileFragmentShader(File.ReadAllText(@fragmentShaderCode), out this.FragmentShaderHandle, out string fragmentShaderCompileError))
 			{
 				throw new ArgumentException(fragmentShaderCompileError);
@@ -64,6 +69,46 @@ namespace CSGL
 
 			this.uniforms = ShaderProgram.CreateUniformList(this.ShaderProgramHandle);
 			this.attributes = ShaderProgram.CreateAttributeList(this.ShaderProgramHandle);
+
+			Log.Default($"{this.Name} compiled using handle: {this.ShaderProgramHandle}");
+
+			if (EditorConfig.advancedDebug)
+			{
+				Log.Advanced($"Uniforms:{this.uniforms.Length}\nAttributes:{this.attributes.Length}");
+			}
+		}
+
+		public ShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader, string name)
+		{
+			this.Name = name;
+			this.disposed = false;
+
+			Log.Default("Compiling Vertex Shader: " + vertexShader.Name);
+
+			Log.Advanced(vertexShader.ShaderCode);
+			if (!ShaderProgram.CompileVertexShader(vertexShader.ShaderCode, out this.VertexShaderHandle, out string vertexShaderCompileError))
+			{
+				throw new ArgumentException(vertexShaderCompileError);
+			}
+
+			Log.Default("Compiling Fragment Shader: " + fragmentShader.Name);
+			Log.Advanced(fragmentShader.ShaderCode);
+			if (!ShaderProgram.CompileFragmentShader(fragmentShader.ShaderCode, out this.FragmentShaderHandle, out string fragmentShaderCompileError))
+			{
+				throw new ArgumentException(fragmentShaderCompileError);
+			}
+
+			this.ShaderProgramHandle = ShaderProgram.CreateLinkProgram(VertexShaderHandle, FragmentShaderHandle);
+
+			this.uniforms = ShaderProgram.CreateUniformList(this.ShaderProgramHandle);
+			this.attributes = ShaderProgram.CreateAttributeList(this.ShaderProgramHandle);
+
+			Log.Default($"{this.Name} compiled using handle: {this.ShaderProgramHandle}");
+
+			if (EditorConfig.advancedDebug)
+			{
+				Log.Advanced($"Uniforms:{this.uniforms.Length}\nAttributes:{this.attributes.Length}");
+			}
 		}
 
 		~ShaderProgram()

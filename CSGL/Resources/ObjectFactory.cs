@@ -68,14 +68,36 @@ namespace CSGL
 
 			float[] vertices = new float[]
 			{
-				origin.X - halfWidth, origin.Y - halfWidth, origin.Z,	1.0f, 0.0f, 0.0f, 1.0f,
-				origin.X + halfWidth, origin.Y - halfWidth, origin.Z,   0.0f, 1.0f, 0.0f, 1.0f,
-				origin.X, origin.Y + halfWidth, origin.Z,				0.0f, 0.0f, 1.0f, 1.0f,
+				origin.X, origin.Y + halfWidth, origin.Z,               0.0f, 0.0f, 1.0f, 1.0f, // v0
+				origin.X + halfWidth, origin.Y - halfWidth, origin.Z,   0.0f, 1.0f, 0.0f, 1.0f, // v1
+				origin.X - halfWidth, origin.Y - halfWidth, origin.Z,	1.0f, 0.0f, 0.0f, 1.0f, // v2
 			};
 
 			uint[] indices = new uint[]
 			{
 				0, 1, 2
+			};
+
+			return new RenderObject(vertices, indices, shaderProgram, OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);
+		}
+
+		public static RenderObject CreateQuad(Vector3 origin, float width, float height, ShaderProgram shaderProgram)
+		{
+			float halfWidth = width / 2;
+			float halfHeight = height / 2;
+
+			float[] vertices = new float[]
+			{
+				origin.X - halfHeight, origin.Y + halfHeight, origin.Z,  0.0f, 0.0f, 1.0f, 1.0f, // v0
+				origin.X + halfHeight, origin.Y + halfHeight, origin.Z,  0.0f, 0.0f, 1.0f, 1.0f, // v1
+				origin.X + halfWidth, origin.Y - halfHeight, origin.Z,   0.0f, 1.0f, 0.0f, 1.0f, // v2
+				origin.X - halfWidth, origin.Y - halfHeight, origin.Z,   1.0f, 0.0f, 0.0f, 1.0f, // v3
+			};
+
+			uint[] indices = new uint[]
+			{
+				0, 1, 2,
+				0, 2, 3
 			};
 
 			return new RenderObject(vertices, indices, shaderProgram, OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);
