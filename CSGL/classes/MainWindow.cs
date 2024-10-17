@@ -21,6 +21,8 @@ namespace CSGL
 		private List<RenderObject> renderObjects = new List<RenderObject>();
 
 		RenderObject? quad;
+
+		Scene scene = new Scene("Default");
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
 				new NativeWindowSettings()
@@ -47,15 +49,27 @@ namespace CSGL
 				Close();
 			}
 
-			if (KeyboardState.IsKeyDown(Keys.D))
+			if (KeyboardState.IsKeyDown(Keys.R))
 			{
-				Console.WriteLine(modelView.ToString());
+				ShaderManager.HotReload();
 			}
+		}
+
+		void HandleMouse()
+		{
+			Input.Mouse.Update(MousePosition, IsMouseButtonDown(MouseButton.Left), IsMouseButtonPressed(MouseButton.Left), IsMouseButtonDown(MouseButton.Right), IsMouseButtonPressed(MouseButton.Right));
+			
+			//Log.Default(Input.Mouse.Position.ToString());
 		}
 
 		void InitializeWindow()
 		{
-			GL.GetInteger(GetPName.Viewport, WindowConfig.Viewport);
+			int[] viewport = new int[4];
+			GL.GetInteger(GetPName.Viewport, viewport);
+			Viewport.Set(viewport);
+
+			GL.Enable(EnableCap.DepthTest);
+
 			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
 
 			GL.ClearColor(backColour);
@@ -66,12 +80,9 @@ namespace CSGL
 			ShaderManager.Initialize();
 		}
 
-		void InitializeObjects()
+		void InitializeModels()
 		{
-			quad = ObjectFactory.CreateQuad(Vector3.Zero, 1f, 1f, ShaderManager.GetShader("shader"));
-
-			renderObjects.Add(quad);
-			//renderObjects.Add(ObjectFactory.CreateTriangle(new Vector3(0.25f, 0.25f, 0.0f), 1f, shaderProgram));
+			ModelManager.Initialize();
 		}
 
 		protected override void OnLoad()
@@ -79,20 +90,23 @@ namespace CSGL
 			Log.Default($"Initializing {WindowConfig.Name}");
 
 			InitializeWindow();
+			
 			InitializeShaders();
-			InitializeObjects();
+			InitializeModels();
 
+			scene.Start();
 			this.IsVisible = true;
 			base.OnLoad();
 		}
 
-		private Matrix4 modelView;
-
-		// Is executed every frame
+		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			Time.Tick();
 			HandleKeyboard();
+			HandleMouse();
+
+			scene.Update();
 
 			base.OnUpdateFrame(e);
 		}
@@ -103,7 +117,7 @@ namespace CSGL
 
 			if (Time.time >= Time.NextPoll)
 			{
-				Title = WindowConfig.Name + $" (Vsync: {VSync}) FPS: {1f / time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
+				Title = WindowConfig.Name + $" (Vsync: {VSync}) FPS: {1f / time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")} Mouse: ({Input.Mouse.Position.X}, {Input.Mouse.Position.Y})";
 				Time.NextPoll = Time.time + Time.PollInterval;
 			}
 		}
@@ -115,10 +129,7 @@ namespace CSGL
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			foreach (RenderObject renderObject in renderObjects)
-			{
-				renderObject.Render();
-			}
+			scene.Render();
 			
 			this.Context.SwapBuffers();
 			base.OnRenderFrame(e);

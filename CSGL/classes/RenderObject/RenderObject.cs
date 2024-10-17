@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 
 namespace CSGL
 {
@@ -16,7 +17,7 @@ namespace CSGL
 		float[] vertices;
 		uint[] indices;
 
-		ShaderProgram shaderProgram;
+		public ShaderProgram shaderProgram;
 		BufferUsageHint hint;
 
 		public RenderObject(float[] vertices, uint[] indices, ShaderProgram shaderProgram, BufferUsageHint hint = BufferUsageHint.StaticDraw)
@@ -50,7 +51,6 @@ namespace CSGL
 			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
-
 			GL.BindVertexArray(0);
 			this.shaderProgram = shaderProgram;
 			
@@ -59,13 +59,20 @@ namespace CSGL
 
 		public void Render()
 		{
+			Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, -5.0f);
+			Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), Viewport.Width / Viewport.Height, Camera.main.NearClip, Camera.main.FarClip);
+			Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians(10.0f * Time.time)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians(10.0f * Time.time)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(10.0f * Time.time));
+
+			this.shaderProgram.SetUniform("model", model);
+			this.shaderProgram.SetUniform("view", model);
+			this.shaderProgram.SetUniform("projection", model);
+
 			GL.UseProgram(shaderProgram.ShaderProgramHandle);
 
 			GL.BindVertexArray(this.vao);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.ebo);
 
 			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
-			//GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
 			ErrorCode error = GL.GetError();
 
@@ -73,8 +80,6 @@ namespace CSGL
 			{
 				Log.Default($"OpenGL Error: {error}");
 			}
-
-			//
 		}
 
 		~RenderObject() 

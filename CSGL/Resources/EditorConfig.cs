@@ -9,6 +9,7 @@ namespace CSGL
 	public static class EditorConfig
 	{
 		public static string ShaderDirectory = Environment.CurrentDirectory + "\\Resources\\Shaders\\";
+		public static string ModelDirectory = Environment.CurrentDirectory + "\\Resources\\Models\\";
 		public static bool advancedDebug = false;
 	}
 }

@@ -58,6 +58,17 @@ namespace CSGL
 			Log.Default("Done");
 		}
 
+		public static void HotReload()
+		{
+			Log.Default("Reloading shaders");
+			foreach (ShaderProgram shader in shaderList)
+			{
+				shader.Dispose();
+			}
+			
+			ShaderManager.Initialize();
+		}
+
 		public static ShaderProgram GetShader(string name)
 		{
 			foreach (ShaderProgram shaderProgram in shaderList)
