@@ -9,11 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CSGL\CSGL.csproj" />
-    <ProjectReference Include="..\MathU\MathU.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="structs\" />
   </ItemGroup>
 
 </Project>

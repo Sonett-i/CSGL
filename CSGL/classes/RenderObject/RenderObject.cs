@@ -123,11 +123,11 @@ namespace CSGL
 		{
 			Matrix4 view = Matrix4.CreateTranslation(Camera.main.Position.X, Camera.main.Position.Y, Camera.main.Position.Z);
 			Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), Viewport.Width / Viewport.Height, Camera.main.NearClip, Camera.main.FarClip);
-			Matrix4 model = Matrix4.Identity; // * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians(0)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians(Input.Mouse.Position.Y * 0.1f)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(Input.Mouse.Position.X * 0.1f));
+			Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians(Input.Mouse.Position.X * 0.1f)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians(Input.Mouse.Position.Y * 0.1f)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(0));
 
-			this.shaderProgram.SetUniform("model", model);
-			this.shaderProgram.SetUniform("view", view);
-			this.shaderProgram.SetUniform("projection", projection);
+			this.shaderProgram.SetUniform("model", model, true);
+			this.shaderProgram.SetUniform("view", view, true);
+			this.shaderProgram.SetUniform("projection", projection, true);
 
 			GL.UseProgram(shaderProgram.ShaderProgramHandle);
 

@@ -40,25 +40,7 @@ namespace CSGL
 			this.CenterWindow();
 		}
 
-		void HandleKeyboard()
-		{
-			if (KeyboardState.IsKeyDown(Keys.Escape))
-			{
-				Close();
-			}
-
-			if (KeyboardState.IsKeyDown(Keys.R))
-			{
-				ShaderManager.HotReload();
-			}
-		}
-
-		void HandleMouse()
-		{
-			Input.Mouse.Update(MousePosition, IsMouseButtonDown(MouseButton.Left), IsMouseButtonPressed(MouseButton.Left), IsMouseButtonDown(MouseButton.Right), IsMouseButtonPressed(MouseButton.Right));
-			
-			//Log.Default(Input.Mouse.Position.ToString());
-		}
+		
 
 		void InitializeWindow()
 		{
@@ -97,12 +79,27 @@ namespace CSGL
 			base.OnLoad();
 		}
 
+		void HandleKeyboard()
+		{
+			if (KeyboardState.IsKeyDown(Keys.Escape))
+			{
+				Close();
+			}
+
+			if (KeyboardState.IsKeyDown(Keys.R))
+			{
+				ShaderManager.HotReload();
+			}
+		}
+
+
 		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			Time.Tick();
+			Input.Update(KeyboardState, MouseState);
+
 			HandleKeyboard();
-			HandleMouse();
 
 			scene.Update();
 

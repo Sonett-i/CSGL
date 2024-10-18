@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace CSGL
@@ -18,7 +19,7 @@ namespace CSGL
 			this.ID = -1;
 			this.Name = name;
 
-			this.camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 10f, 45f);
+			this.camera = new Camera(new Vector3(0.0f, 0.0f, -3.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 10f, 45f);
 
 			Camera.main = this.camera;
 		}
@@ -30,7 +31,7 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
-			//RenderObject quad = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
+			//RenderObject test = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
 
 			RenderObject test = ModelManager.LoadModel("Cube").renderObject;
 
@@ -45,7 +46,9 @@ namespace CSGL
 
 		public void Update()
 		{
+			Vector3 position = new Vector3(Input.GetAxisRaw("Horizontal").X, 0, Input.GetAxisRaw("Vertical").Y);
 
+			Camera.main.Position += position * Time.deltaTime;
 		}
 
 		public void Render()
