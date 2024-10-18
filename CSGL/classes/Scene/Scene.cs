@@ -18,7 +18,7 @@ namespace CSGL
 			this.ID = -1;
 			this.Name = name;
 
-			this.camera = new Camera(new Vector3(0.0f, 0.0f, 0.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 10f, 45f);
+			this.camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 10f, 45f);
 
 			Camera.main = this.camera;
 		}
@@ -30,9 +30,11 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
-			RenderObject quad = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
+			//RenderObject quad = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
 
-			AddObjectToScene(quad);
+			RenderObject test = ModelManager.LoadModel("Cube").renderObject;
+
+			AddObjectToScene(test);
 		}
 
 		public void Start()
@@ -48,16 +50,8 @@ namespace CSGL
 
 		public void Render()
 		{
-			Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
-			Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(camera.FOV), Viewport.Width / Viewport.Height, camera.NearClip, camera.FarClip);
-			Matrix4 model = Matrix4.Identity; // * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians(10.0f * Time.time)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians(10.0f * Time.time)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(10.0f * Time.time));
-
 			foreach (RenderObject obj in sceneObjects)
 			{
-				obj.shaderProgram.SetUniform("model", model);
-				obj.shaderProgram.SetUniform("view", model);
-				obj.shaderProgram.SetUniform("projection", model);
-
 				obj.Render();
 			}
 		}

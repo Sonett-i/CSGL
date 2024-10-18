@@ -20,8 +20,6 @@ namespace CSGL
 	{
 		private List<RenderObject> renderObjects = new List<RenderObject>();
 
-		RenderObject? quad;
-
 		Scene scene = new Scene("Default");
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
