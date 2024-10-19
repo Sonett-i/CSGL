@@ -61,73 +61,81 @@ namespace CSGL
 			initialized = true;
 		}
 
+		//	Vertex Buffer Array Format
+		//	name	| index	|  data	| size
+		//	pos		| 0		|  xyz	| 3
+		//	colour	| 3		|  rgba	| 4
+		//	normals | 7		|  xyz	| 3
+		//	uv		| 10	|  uv	| 2
+
 		public RenderObject(Model model, ShaderProgram shaderProgram, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.hint = hint;
 			this.name = model.name;
 
 			// Vertices array stores position, color, and texture coordinates
-			this.vertices = new float[model.vertices.Length * 9];
+			this.vertices = new float[model.vertices.Length * 12];
 			int vertexIndex = 0;
+
+			//	Fills Vertex Data
 
 			for (int i = 0; i < model.vertices.Length; i++)
 			{
 				// Vec3 Vertex Position
-				this.vertices[vertexIndex] = model.vertices[i].x;
-				this.vertices[vertexIndex + 1] = model.vertices[i].y;
-				this.vertices[vertexIndex + 2] = model.vertices[i].z;
+				this.vertices[vertexIndex] = model.vertices[i].x;       //0
+				this.vertices[vertexIndex + 1] = model.vertices[i].y;   //1
+				this.vertices[vertexIndex + 2] = model.vertices[i].z;   //2
 
-				// Vec4 Colour
-				this.vertices[vertexIndex + 3] = 1.0f;
-				this.vertices[vertexIndex + 4] = 1.0f;
-				this.vertices[vertexIndex + 5] = 1.0f;
-				this.vertices[vertexIndex + 6] = 1.0f;
+				// Vec4 Colour (white by default)
+				this.vertices[vertexIndex + 3] = 1.0f;                  //3
+				this.vertices[vertexIndex + 4] = 1.0f;                  //4
+				this.vertices[vertexIndex + 5] = 1.0f;                  //5
+				this.vertices[vertexIndex + 6] = 1.0f;                  //6
 
 				// Vec2 Texture Coordinate
-				vertexIndex += 9;
+				vertexIndex += 12;
 			}
 
 			int totalIndices = model.faces.Sum(face => (face.v.Length - 2) * 3);
 			this.indices = new uint[totalIndices];
 			int indicesIndex = 0;
 
-			//	Triangle Fan
-			//		Iterates through the faces of a model.
-			//		For each face:
-			//			iterates through each vertex (v) and vertex vertex texturecoord (vt) in the face
-			//
-			//		x and y from TextureCoordinate 
-			//		
-			//		
-
-			for (int i = 0; i < model.faces.Length; i++)
+			for (int i = 0; i < model.faces.Length; i++) // i
 			{
 				Face face = model.faces[i];
 				int numVertices = face.v.Length;
 
-				for (int j = 0; j < numVertices; j++)
+				for (int j = 0; j < numVertices; j++) // ii
 				{
 					int vertexPos = face.v[j];
 					int uvIndex = face.vt[j];
+					int normalIndex = face.vn[j];
+
+					// Vec3 Vertex Normals
+					int vnI = (vertexPos * 12) + 7;
+					this.vertices[vnI] = model.normals[normalIndex].normal.X;
+					this.vertices[vnI + 1] = model.normals[normalIndex].normal.Y;
+					this.vertices[vnI + 2] = model.normals[normalIndex].normal.Z;
 
 					//	mx + b
 					//	Linear Equation used to map uv index offset in vertex buffer array
-					int uI = (vertexPos * 9) + 7;
-					int vI = uI + 1;
+					int uvI = (vertexPos * 12) + 10; // TexCoord offset
+
 
 					// Add Texture Coordinate Vec2 to Vertex Buffer
 					if (uvIndex >= 0 && uvIndex < model.texCoords.Length)
 					{
-						this.vertices[uI] = model.texCoords[uvIndex].uv.X;
-						this.vertices[vI] = model.texCoords[uvIndex].uv.Y;
+						this.vertices[uvI] = model.texCoords[uvIndex].uv.X;	//10
+						this.vertices[uvI + 1] = model.texCoords[uvIndex].uv.Y;	//11
 					}
 				}
 
+				// Create Triangles by connecting the current face's root vertex to 2 others on the current face
 				for (int j = 1; j < numVertices - 1; j++)
 				{
-					this.indices[indicesIndex++] = (uint)face.v[0];
-					this.indices[indicesIndex++] = (uint)face.v[j];
-					this.indices[indicesIndex++] = (uint)face.v[j + 1];
+					this.indices[indicesIndex++] = (uint)face.v[0]; // root vertex in current face
+					this.indices[indicesIndex++] = (uint)face.v[j]; // vertex at current index
+					this.indices[indicesIndex++] = (uint)face.v[j + 1]; // neighboring vertex 
 				}
 			}
 
@@ -144,17 +152,21 @@ namespace CSGL
 
 			// Shader Data
 
-			// Positional Data: Uniform Layout 1
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 9 * sizeof(float), 0);
+			// Positional Data (vec3): Uniform Layout 0
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 0);
 			GL.EnableVertexAttribArray(0);
 
-			// Vertex Colour: Uniform Layout 2
-			GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 9 * sizeof(float), 3 * sizeof(float));
+			// Vertex Colour (vec4): Uniform Layout 1
+			GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 12 * sizeof(float), 3 * sizeof(float));
 			GL.EnableVertexAttribArray(1);
 
-			// TexCoord: Uniform Layout 3
-			GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, 9 * sizeof(float), 7 * sizeof(float));
+			// Normal Data (vec3): Uniform Layout 2
+			GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 7 * sizeof(float));
 			GL.EnableVertexAttribArray(2);
+
+			// TexCoord (vec2): Uniform Layout 3
+			GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 12 * sizeof(float), 10 * sizeof(float));
+			GL.EnableVertexAttribArray(3);
 
 			// Index Buffer
 			Log.Default($"Binding Index Buffer (size: {indices.Length}) to Element Buffer Object");
@@ -169,12 +181,11 @@ namespace CSGL
 			initialized = true;
 		}
 
-
 		public void Render()
 		{
 			Matrix4 view = Matrix4.CreateTranslation(Camera.main.Position.X, Camera.main.Position.Y, Camera.main.Position.Z);
 			Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), Viewport.Width / Viewport.Height, Camera.main.NearClip, Camera.main.FarClip);
-			Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians(Input.Mouse.Position.X * 0.1f)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians(Input.Mouse.Position.Y * 0.1f)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(0));
+			Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians((-Input.Mouse.Position.Y + 100) * 0.1f)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians((Input.Mouse.Position.X + 100) * 0.1f)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(0));
 
 			this.shaderProgram.SetUniform("model", model, true);
 			this.shaderProgram.SetUniform("view", view, true);

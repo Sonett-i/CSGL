@@ -21,7 +21,7 @@ namespace CSGL
 			this.ID = -1;
 			this.Name = name;
 
-			this.camera = new Camera(new Vector3(0.0f, 0.0f, -3.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
+			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
 
 			Camera.main = this.camera;
 		}

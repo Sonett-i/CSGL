@@ -8,7 +8,7 @@ namespace CSGL
 {
 	public static class WindowConfig
 	{
-		public static string Name = "GPR204";
+		public static string Name = "GPR202";
 		public static int[] Viewport = new int[4];
 	}
 }
