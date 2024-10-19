@@ -10,15 +10,8 @@ using System.Runtime.CompilerServices;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
-/*
- * 
- * 
- */
-
 namespace CSGL
 {
-
-
 	public class MainWindow : GameWindow
 	{
 		private List<RenderObject> renderObjects = new List<RenderObject>();

@@ -3,6 +3,8 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
+#pragma warning disable 8618
+
 namespace CSGL
 {
 	public static class Input
