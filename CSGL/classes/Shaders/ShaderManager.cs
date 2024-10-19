@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+#pragma warning disable 8603
+
 namespace CSGL
 {
 	public class ShaderManager
 	{
 		public static List<ShaderProgram> shaderList = new List<ShaderProgram>();
 
-		
 		public static void Initialize()
 		{
 			string[] files = Directory.GetFiles(EditorConfig.ShaderDirectory);

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+#pragma warning disable 8603
+
 namespace CSGL
 {
 	public static class ModelManager

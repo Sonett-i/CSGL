@@ -5,6 +5,13 @@ using OpenTK.Mathematics;
 
 namespace CSGL
 {
+	//	Vertex Buffer Array Format
+	//	name	| index	|  data	| size
+	//	pos		| 0		|  xyz	| 3
+	//	colour	| 3		|  rgba	| 4
+	//	normals | 7		|  xyz	| 3
+	//	uv		| 10	|  uv	| 2
+
 	public class RenderObject : IDisposable
 	{
 		private bool disposed;
@@ -21,52 +28,6 @@ namespace CSGL
 
 		public ShaderProgram shaderProgram;
 		BufferUsageHint hint;
-
-		public RenderObject(float[] vertices, uint[] indices, ShaderProgram shaderProgram, BufferUsageHint hint = BufferUsageHint.StaticDraw)
-		{
-			this.vertices = vertices;
-			this.indices = indices;
-			this.hint = hint;
-
-			this.name = "default";
-
-			Log.Default("Bind Vertex Buffer Object");
-			this.vbo = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo);
-			GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, hint);
-
-			Log.Default("Bind Vertex Array Object");
-			this.vao = GL.GenVertexArray();
-			GL.BindVertexArray(this.vao);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo);
-
-			// Positional Data
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 7 * sizeof(float), 0);
-			GL.EnableVertexAttribArray(0);
-
-			// Vertex Colour
-			GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 7 * sizeof(float), 3 * sizeof(float));
-			GL.EnableVertexAttribArray(1);
-
-			// Indices
-			Log.Default("Bind Index Buffer Object");
-			this.ebo = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.ebo);
-			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-
-			GL.BindVertexArray(0);
-			this.shaderProgram = shaderProgram;
-			
-			initialized = true;
-		}
-
-		//	Vertex Buffer Array Format
-		//	name	| index	|  data	| size
-		//	pos		| 0		|  xyz	| 3
-		//	colour	| 3		|  rgba	| 4
-		//	normals | 7		|  xyz	| 3
-		//	uv		| 10	|  uv	| 2
 
 		public RenderObject(Model model, ShaderProgram shaderProgram, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
@@ -100,12 +61,12 @@ namespace CSGL
 			this.indices = new uint[totalIndices];
 			int indicesIndex = 0;
 
-			for (int i = 0; i < model.faces.Length; i++) // i
+			for (int i = 0; i < model.faces.Length; i++)
 			{
 				Face face = model.faces[i];
 				int numVertices = face.v.Length;
 
-				for (int j = 0; j < numVertices; j++) // ii
+				for (int j = 0; j < numVertices; j++)
 				{
 					int vertexPos = face.v[j];
 					int uvIndex = face.vt[j];
@@ -131,6 +92,7 @@ namespace CSGL
 				}
 
 				// Create Triangles by connecting the current face's root vertex to 2 others on the current face
+				//	Skips root vertex
 				for (int j = 1; j < numVertices - 1; j++)
 				{
 					this.indices[indicesIndex++] = (uint)face.v[0]; // root vertex in current face
@@ -172,7 +134,7 @@ namespace CSGL
 			Log.Default($"Binding Index Buffer (size: {indices.Length}) to Element Buffer Object");
 			this.ebo = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.ebo);
-			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, hint);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
 			GL.BindVertexArray(0);
