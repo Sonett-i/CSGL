@@ -39,8 +39,6 @@ namespace CSGL
 		public float y; 
 		public float z;
 
-		public Vector3 position;
-
 		public Vertex(Vector3 position)
 		{
 			this.x = position.X;
@@ -67,7 +65,6 @@ namespace CSGL
 		{
 			this.uv = uv; 
 		}
-
 	}
 
 	public struct Face
@@ -90,6 +87,5 @@ namespace CSGL
 				vn[i] = face[i].Z;
 			}
 		}
-
 	}
 }

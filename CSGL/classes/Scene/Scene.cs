@@ -18,11 +18,10 @@ namespace CSGL
 
 		public Scene(string name) 
 		{
-			this.ID = -1;
+			this.ID = 0;
 			this.Name = name;
 
 			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
-
 			Camera.main = this.camera;
 		}
 
@@ -41,18 +40,16 @@ namespace CSGL
 			RenderObject sphere = ModelManager.LoadModel("Sphere").renderObject;
 			RenderObject pyramid = ModelManager.LoadModel("Pyramid").renderObject;
 
-
 			AddObjectToScene(cube);
 			AddObjectToScene(cylinder);
 			AddObjectToScene(torus);
 			AddObjectToScene(sphere);
 			AddObjectToScene(pyramid);
-
 		}
 
 		public void Start()
 		{
-			Log.Default($"{this.Name} scene started");
+			Log.Default($"{this.Name} ({this.ID}) scene started");
 			InitializeObjects();
 			Log.Default("Displaying model: " + sceneObjects[currentModel].name);
 		}
@@ -71,7 +68,6 @@ namespace CSGL
 				{
 					currentModel = 0;
 				}
-
 				Log.Default("Displaying model: " + sceneObjects[currentModel].name);
 			}
 		}

@@ -51,7 +51,6 @@ namespace CSGL
 			this.disposed = false;
 
 			Log.Default("Compiling Vertex Shader: " + vertexShader.Name + ".vert");
-
 			Log.Advanced(vertexShader.ShaderCode);
 			if (!ShaderProgram.CompileVertexShader(vertexShader.ShaderCode, out this.VertexShaderHandle, out string vertexShaderCompileError))
 			{
@@ -72,31 +71,6 @@ namespace CSGL
 
 			Log.Default($"{this.Name} shader compiled using handle: {this.ShaderProgramHandle}");
 			Log.Default($"Uniforms:{this.uniforms.Length}\nAttributes:{this.attributes.Length}\n");
-
-			if (EditorConfig.advancedDebug)
-			{
-				Log.Advanced($"Uniforms:{this.uniforms.Length}\nAttributes:{this.attributes.Length}");
-			}
-		}
-
-		~ShaderProgram()
-		{
-			this.Dispose();
-		}
-
-		public void Dispose()
-		{
-			if (this.disposed)
-				return;
-
-			GL.DeleteShader(VertexShaderHandle);
-			GL.DeleteShader(FragmentShaderHandle);
-
-			GL.UseProgram(0);
-			GL.DeleteProgram(this.ShaderProgramHandle);
-
-			this.disposed = true;
-			GC.SuppressFinalize(this);
 		}
 
 		public void Use()
@@ -138,6 +112,7 @@ namespace CSGL
 				errorMessage = fragmentShaderInfo;
 				return false;
 			}
+
 			return true;
 		}
 
@@ -435,6 +410,27 @@ namespace CSGL
 			}
 
 			return attributes;
+		}
+
+		// Dispose shader resources when class destructor is called
+		~ShaderProgram()
+		{
+			this.Dispose();
+		}
+
+		public void Dispose()
+		{
+			if (this.disposed)
+				return;
+
+			GL.DeleteShader(VertexShaderHandle);
+			GL.DeleteShader(FragmentShaderHandle);
+
+			GL.UseProgram(0);
+			GL.DeleteProgram(this.ShaderProgramHandle);
+
+			this.disposed = true;
+			GC.SuppressFinalize(this);
 		}
 	}
 }
