@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 
 namespace CSGL
 {
-	internal class Screen
-	{
-	}
-
 	public static class Viewport
 	{
 		public static int x;
@@ -39,6 +35,5 @@ namespace CSGL
 
 			return new Vector2(nx, ny);
 		}
-
 	}
 }

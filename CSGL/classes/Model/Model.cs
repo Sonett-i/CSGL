@@ -75,12 +75,11 @@ namespace CSGL
 
 		public Face(Vector3i[] face)
 		{
-			int length = face.Length;
-			v = new int[length];
-			vt = new int[length];
-			vn = new int[length];
+			v = new int[face.Length];
+			vt = new int[face.Length];
+			vn = new int[face.Length];
 
-			for (int i = 0; i < length; i++)
+			for (int i = 0; i < face.Length; i++)
 			{
 				v[i] = face[i].X;
 				vt[i] = face[i].Y;

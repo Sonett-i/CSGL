@@ -161,6 +161,7 @@ namespace CSGL
 
 			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
+			// If there is an issue with rendering, output to console
 			ErrorCode error = GL.GetError();
 
 			if (error != ErrorCode.NoError)
