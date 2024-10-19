@@ -55,7 +55,7 @@ namespace CSGL
 				}
 			}
 
-			Log.Default("Done");
+			Log.Default("Compiled Shaders\n");
 		}
 
 		public static void HotReload()

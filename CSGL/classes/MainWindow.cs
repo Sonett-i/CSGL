@@ -10,12 +10,15 @@ using System.Runtime.CompilerServices;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
+/*
+ * 
+ * 
+ */
+
 namespace CSGL
 {
 
-	// http://dreamstatecoding.blogspot.com/2017/01/opengl-4-with-opentk-in-c-part-2.html
 
-	// http://dreamstatecoding.blogspot.com/2017/02/opengl-4-with-opentk-in-c-part-6.html HERE
 	public class MainWindow : GameWindow
 	{
 		private List<RenderObject> renderObjects = new List<RenderObject>();
@@ -86,7 +89,7 @@ namespace CSGL
 				Close();
 			}
 
-			if (KeyboardState.IsKeyDown(Keys.R))
+			if (KeyboardState.IsKeyReleased(Keys.R))
 			{
 				ShaderManager.HotReload();
 			}
@@ -120,7 +123,6 @@ namespace CSGL
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			PollWindow((float)e.Time);
-			//Title = windowName + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")}";
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -145,7 +147,7 @@ namespace CSGL
 
 		protected override void OnUnload()
 		{
-			foreach (RenderObject renderObject in renderObjects)
+			foreach (RenderObject renderObject in scene.sceneObjects)
 			{
 				renderObject.Dispose();
 			}
@@ -158,6 +160,10 @@ namespace CSGL
 /*	To-do
  *	dreamstatecoding
  *		http://dreamstatecoding.blogspot.com/2017/01/opengl-4-with-opentk-in-c-part-2.html
+ *		
+ *	// http://dreamstatecoding.blogspot.com/2017/01/opengl-4-with-opentk-in-c-part-2.html
+
+	// http://dreamstatecoding.blogspot.com/2017/02/opengl-4-with-opentk-in-c-part-6.html HERE
  * 
  */
 

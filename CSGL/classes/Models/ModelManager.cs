@@ -24,9 +24,10 @@ namespace CSGL
 
                 if (ext == ".obj")
                 {
+					Log.Default($"Importing {fileName}{ext}");
 					Model model = Obj.Import(File.ReadAllLines(EditorConfig.ModelDirectory + fileName + ext));
 					models.Add(model);
-					Log.Default($"Loaded {fileName + ext}: " + model.ToString());
+					Log.Default($"Loaded {fileName + ext}: " + model.ToString() + "\n");
                 }
                 
 			}
