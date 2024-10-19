@@ -2,6 +2,8 @@
 
 Last updated: 20 October, 2024
 
+![NVIDIA_Share_arU2zMec7o](https://github.com/user-attachments/assets/4dd78fb3-1c4b-472d-87b6-10f1a650e7cd)
+
 **CSGL** is a C# project that leverages <a href="https://opentk.net/">**OpenTK**</a> to interface with **OpenGL**, allowing for the creation and rendering of 3D scenes. This library focuses on importing OBJ files, compiling shaders, and rendering 3D objects in a scene.
 
 ## Features
@@ -28,4 +30,5 @@ Last updated: 20 October, 2024
 
 - **.fbx Importing**: 
   - Import models using fbx format.
+
 
