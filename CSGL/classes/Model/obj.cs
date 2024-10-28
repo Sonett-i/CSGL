@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace CSGL
 {
-	public static class Obj
+	public static class OBJ
 	{
 		/*	obj format
 		 *	

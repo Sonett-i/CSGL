@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Numerics;
+using CSGL.Math;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
@@ -28,6 +28,8 @@ namespace CSGL
 
 		public ShaderProgram shaderProgram;
 		BufferUsageHint hint;
+
+		public Matrix4 m_Model;
 
 		public RenderObject(Model model, ShaderProgram shaderProgram, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
@@ -145,13 +147,9 @@ namespace CSGL
 
 		public void Render()
 		{
-			Matrix4 view = Matrix4.CreateTranslation(Camera.main.Position.X, Camera.main.Position.Y, Camera.main.Position.Z);
-			Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), Viewport.Width / Viewport.Height, Camera.main.NearClip, Camera.main.FarClip);
-			Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationZ((float)MathHelper.DegreesToRadians((-Input.Mouse.Position.Y + 100) * 0.1f)) * Matrix4.CreateRotationY((float)MathHelper.DegreesToRadians((Input.Mouse.Position.X + 100) * 0.1f)) * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(0));
-
-			this.shaderProgram.SetUniform("model", model, true);
-			this.shaderProgram.SetUniform("view", view, true);
-			this.shaderProgram.SetUniform("projection", projection, true);
+			this.shaderProgram.SetUniform("model", m_Model, true);
+			this.shaderProgram.SetUniform("view", Camera.main.m_View, true);
+			this.shaderProgram.SetUniform("projection", Camera.main.m_Projection, true);
 			this.shaderProgram.SetUniform("time", Time.time);
 
 			GL.UseProgram(shaderProgram.ShaderProgramHandle);

@@ -13,8 +13,7 @@ namespace CSGL
 		public Camera camera;
 		
 		public List<RenderObject> sceneObjects = new List<RenderObject>();
-
-		int currentModel = 0;
+		public List<GameObject> sceneGameObjects = new List<GameObject>();
 
 		public Scene(string name) 
 		{
@@ -25,56 +24,80 @@ namespace CSGL
 			Camera.main = this.camera;
 		}
 
-		public void AddObjectToScene(RenderObject obj)
+
+		public void AddObjectToScene(GameObject obj)
 		{
-			sceneObjects.Add(obj);
+			sceneGameObjects.Add(obj);
 		}
 
 		void InitializeObjects()
 		{
 			//RenderObject test = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
 
+			
 			RenderObject cylinder = ModelManager.LoadModel("Cylinder").renderObject;
 			RenderObject cube = ModelManager.LoadModel("Cube").renderObject;
 			RenderObject torus = ModelManager.LoadModel("Torus").renderObject;
 			RenderObject sphere = ModelManager.LoadModel("Sphere").renderObject;
 			RenderObject pyramid = ModelManager.LoadModel("Pyramid").renderObject;
+			RenderObject map = ModelManager.LoadModel("Plane").renderObject;
 
-			AddObjectToScene(cube);
-			AddObjectToScene(cylinder);
-			AddObjectToScene(torus);
-			AddObjectToScene(sphere);
-			AddObjectToScene(pyramid);
+			GameObject worldMap = new GameObject(new Transform(new Vector3(0, 0, 0), MathFuncs.Euler(0, 0, 0), Vector3.One), map);
+
+			GameObject box1 = new GameObject(new Transform(new Vector3(0, 0, 0), MathFuncs.Euler(0, 0, 0), Vector3.One), cube);
+			GameObject box2 = new GameObject(new Transform(new Vector3(0, 0, 0), MathFuncs.Euler(0, 0, 0), Vector3.One), cube);
+			
+			AddObjectToScene(box1);
+			AddObjectToScene(box2);
+			AddObjectToScene(worldMap);
+			
+
+			foreach (GameObject obj in sceneGameObjects)
+			{
+				obj.OnAwake();
+			}
 		}
 
 		public void Start()
 		{
 			Log.Default($"{this.Name} ({this.ID}) scene started");
 			InitializeObjects();
-			Log.Default("Displaying model: " + sceneObjects[currentModel].name);
+			//Log.Default("Displaying model: " + sceneObjects[currentModel].name);
+
+			Camera.main.Position = new Vector3(0, -10, -20);
+
+			foreach (GameObject obj in sceneGameObjects)
+			{
+				obj.Start();
+			}
+
+		}
+
+		public void FixedUpdate()
+		{
+
 		}
 
 		public void Update()
 		{
-			Vector3 position = new Vector3(Input.GetAxisRaw("Horizontal").X, 0, Input.GetAxisRaw("Vertical").Y);
+			Vector3 position = new Vector3(-Input.GetAxisRaw("Horizontal").X, 0, Input.GetAxisRaw("Vertical").Y);
 
 			Camera.main.Position += position * Time.deltaTime;
 
-			if (Input.KeyboardState.IsKeyReleased(Keys.Space))
+			foreach (GameObject obj in sceneGameObjects)
 			{
-				currentModel++;
-
-				if (currentModel >= sceneObjects.Count)
-				{
-					currentModel = 0;
-				}
-				Log.Default("Displaying model: " + sceneObjects[currentModel].name);
+				obj.Update();
 			}
+
+			Camera.main.Update();
 		}
 
 		public void Render()
 		{
-			sceneObjects[currentModel].Render();
+			foreach (GameObject gameObject in sceneGameObjects)
+			{
+				gameObject.Render();
+			}
 		}
 	}
 }

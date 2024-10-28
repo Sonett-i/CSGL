@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using CSGL;
 
 #pragma warning disable 8603
 
@@ -11,7 +12,7 @@ namespace CSGL
 {
 	public static class ModelManager
 	{
-		static List<Model> models = new List<Model>();
+		public static List<Model> models = new List<Model>();
 
 		public static void Initialize()
 		{
@@ -27,10 +28,16 @@ namespace CSGL
                 if (ext == ".obj")
                 {
 					Log.Default($"Importing {fileName}{ext}");
-					Model model = Obj.Import(File.ReadAllLines(EditorConfig.ModelDirectory + fileName + ext));
+					Model model = OBJ.Import(File.ReadAllLines(EditorConfig.ModelDirectory + fileName + ext));
 					models.Add(model);
 					Log.Default($"Loaded {fileName + ext}: " + model.ToString() + "\n");
                 }
+
+				if (ext == ".fbx")
+				{
+					Log.Default($"Importing {fileName}{ext}");
+					Model model = FBX.Import(File.ReadAllBytes(EditorConfig.ModelDirectory + fileName + ext));
+				}
                 
 			}
 		}

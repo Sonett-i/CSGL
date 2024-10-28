@@ -8,15 +8,17 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
+
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
 namespace CSGL
 {
 	public class MainWindow : GameWindow
 	{
-		private List<RenderObject> renderObjects = new List<RenderObject>();
+		public List<GameObject> gameObjects = new List<GameObject>();		
 
-		Scene scene = new Scene("Default");
+		public Scene scene = new Scene("Default");
+		private float timeInterval = 0.0f;
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
 				new NativeWindowSettings()
@@ -28,15 +30,14 @@ namespace CSGL
 					StartFocused = true,
 					API = ContextAPI.OpenGL,
 					Profile = ContextProfile.Core,
-					APIVersion = new Version(4, 1)
+					APIVersion = new Version(4, 1),
+					Vsync = WindowConfig.VSyncMode,
 				})
 		{
 			WindowConfig.Name = title + ": OpenGL Version: " + GL.GetString(StringName.Version);
 			this.Title = WindowConfig.Name;
 			this.CenterWindow();
 		}
-
-		
 
 		void InitializeWindow()
 		{
@@ -51,25 +52,14 @@ namespace CSGL
 			GL.ClearColor(backColour);
 		}
 
-		void InitializeShaders()
-		{
-			ShaderManager.Initialize();
-		}
 
-		void InitializeModels()
-		{
-			ModelManager.Initialize();
-		}
 
 		protected override void OnLoad()
 		{
 			Log.Default($"Initializing {WindowConfig.Name}");
 
 			InitializeWindow();
-			
-			InitializeShaders();
-			InitializeModels();
-
+			AssetManager.Initialize();
 			scene.Start();
 			this.IsVisible = true;
 			base.OnLoad();
@@ -84,10 +74,15 @@ namespace CSGL
 
 			if (KeyboardState.IsKeyReleased(Keys.R))
 			{
-				ShaderManager.HotReload();
+				
+				//ShaderManager.HotReload();
 			}
 		}
 
+		private void FixedUpdate()
+		{
+			scene.FixedUpdate();
+		}
 
 		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
@@ -98,6 +93,14 @@ namespace CSGL
 			HandleKeyboard();
 
 			scene.Update();
+
+			timeInterval += (float)e.Time;
+
+			if (timeInterval >= WindowConfig.FixedInterval)
+			{
+				FixedUpdate();
+				timeInterval = 0;
+			}
 
 			base.OnUpdateFrame(e);
 		}
@@ -120,6 +123,7 @@ namespace CSGL
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			scene.Render();
+			
 			
 			this.Context.SwapBuffers();
 			base.OnRenderFrame(e);

@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.Common;
 
 namespace CSGL
 {
 	public static class WindowConfig
 	{
 		public static string Name = "GPR202";
+		public static float FixedInterval = 0.02f;
+		public static VSyncMode VSyncMode = VSyncMode.Off;
 	}
 }
