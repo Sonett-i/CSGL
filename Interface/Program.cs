@@ -9,9 +9,8 @@ namespace Interface
 
 		public static int Main(string[] args)
 		{
-
-			// Assessment
-			using (MainWindow game = new MainWindow(1280, 768, CSGL.WindowConfig.Name + ": A1"))
+			// GPR202 Assessment 2
+			using (MainWindow game = new MainWindow(1280, 768, CSGL.WindowConfig.Name + ": A2"))
 			{
 				game.Run();
 			}
