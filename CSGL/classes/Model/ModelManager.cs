@@ -14,8 +14,9 @@ namespace CSGL
 	{
 		public static List<Model> models = new List<Model>();
 
-		public static void Initialize()
+		public static void Import()
 		{
+			Log.Default("Importing Models");
 			string[] files = Directory.GetFiles(EditorConfig.ModelDirectory);
 
 			Log.Default($"Found {files.Length} model(s) in {EditorConfig.ModelDirectory}");

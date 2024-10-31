@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace CSGL
 {
-	public static class MathFuncs
+	public static class MathU
 	{
 		public static Quaternion Euler(Vector3 eulerAngles)
 		{
@@ -34,6 +34,12 @@ namespace CSGL
 			return result;
 		}
 
+		public static float Clamp(float x, float min, float max)
+		{
+			float t = (x < min) ? min : x;
+			return (t > max) ? max : t;
+		}
+
 		public static Matrix4 TRS(Transform transform)
 		{
 			Matrix4 translation = Matrix4.CreateTranslation(transform.Position);
@@ -41,6 +47,11 @@ namespace CSGL
 			Matrix4 scale = Matrix4.CreateScale(transform.Scale);
 
 			return scale * rotation * translation;
+		}
+
+		public static float Rad(float degrees)
+		{
+			return MathF.PI * degrees / 180;
 		}
 	}
 }

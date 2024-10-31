@@ -11,8 +11,4 @@
     <ProjectReference Include="..\CSGL\CSGL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Config\" />
-  </ItemGroup>
-
 </Project>

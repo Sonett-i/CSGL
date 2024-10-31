@@ -24,7 +24,7 @@ namespace CSGL
 			this.name = name;
 			this.sides = sides;
 
-			this.renderObject = new RenderObject(this, ShaderManager.GetShader("default"), OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);
+			this.renderObject = new RenderObject(this, MaterialManager.GetMaterial("default"), OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);
 		}
 
 		public override string ToString()

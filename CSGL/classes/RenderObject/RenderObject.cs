@@ -26,12 +26,13 @@ namespace CSGL
 
 		public string name;
 
-		public ShaderProgram shaderProgram;
+		public Material Material;
+
 		BufferUsageHint hint;
 
 		public Matrix4 m_Model;
 
-		public RenderObject(Model model, ShaderProgram shaderProgram, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		public RenderObject(Model model, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.hint = hint;
 			this.name = model.name;
@@ -140,19 +141,29 @@ namespace CSGL
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
 			GL.BindVertexArray(0);
-			this.shaderProgram = shaderProgram;
+			this.Material = material;
 
 			initialized = true;
 		}
 
+		public void SetMaterial(Material material)
+		{
+			this.Material = material;
+		}
+
 		public void Render()
 		{
-			this.shaderProgram.SetUniform("model", m_Model, true);
-			this.shaderProgram.SetUniform("view", Camera.main.m_View, true);
-			this.shaderProgram.SetUniform("projection", Camera.main.m_Projection, true);
-			this.shaderProgram.SetUniform("time", Time.time);
+			this.Material.Shader.SetUniform("model", m_Model, true);
+			this.Material.Shader.SetUniform("view", Camera.main.m_View, true);
+			this.Material.Shader.SetUniform("projection", Camera.main.m_Projection, true);
+			//this.shaderProgram.SetUniform("time", Time.time);
 
-			GL.UseProgram(shaderProgram.ShaderProgramHandle);
+			if (this.Material.Texture != null)
+			{
+				this.Material.Texture.UseTexture();
+			}
+
+			GL.UseProgram(this.Material.Shader.ShaderProgramHandle);
 
 			GL.BindVertexArray(this.vao);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.ebo);

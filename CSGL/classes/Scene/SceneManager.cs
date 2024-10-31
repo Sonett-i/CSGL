@@ -8,7 +8,7 @@ namespace CSGL
 {
 	public class SceneManager
 	{
-		public static Scene LoadScene(string sceneName)
+		public static Scene? LoadScene(string sceneName)
 		{
 			return null;
 		}

@@ -14,7 +14,7 @@ namespace CSGL
 	{
 		public static List<ShaderProgram> shaderList = new List<ShaderProgram>();
 
-		public static void Initialize()
+		public static void Import()
 		{
 			string[] files = Directory.GetFiles(EditorConfig.ShaderDirectory);
 			Log.Default($"Compiling {files.Length} shaders in {EditorConfig.ShaderDirectory}");
@@ -68,7 +68,7 @@ namespace CSGL
 				shader.Dispose();
 			}
 			
-			ShaderManager.Initialize();
+			ShaderManager.Import();
 		}
 
 		public static ShaderProgram GetShader(string name)

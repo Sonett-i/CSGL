@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSGL
 {
@@ -14,6 +10,14 @@ namespace CSGL
 
 		public static int Width;
 		public static int Height;
+
+		public static float AspectRatio
+		{
+			get
+			{
+				return Width / Height;
+			}
+		}
 
 		public static void Set(int[] viewport)
 		{

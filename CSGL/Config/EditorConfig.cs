@@ -8,9 +8,17 @@ namespace CSGL
 {
 	public static class EditorConfig
 	{
+		//	Resources
 		public static string ShaderDirectory = Environment.CurrentDirectory + "\\Resources\\Shaders\\";
 		public static string ModelDirectory = Environment.CurrentDirectory + "\\Resources\\Models\\";
+		public static string TextureDirectory = Environment.CurrentDirectory + "\\Resources\\Textures\\";
+		public static string MaterialDirectory = Environment.CurrentDirectory + "\\Resources\\Materials\\";
+
+		//	GameObjects
+
+		//	Scenes
+
 		public static string AssetDirectory = Environment.CurrentDirectory + "\\Assets\\";
-		public static bool advancedDebug = false;
+		public static bool advancedDebug = true;
 	}
 }

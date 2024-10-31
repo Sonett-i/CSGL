@@ -22,40 +22,35 @@ namespace CSGL
 			Mouse.Update(mouseState);
 		}
 
-		public static Vector2 GetAxisRaw(string axis)
+		public static float GetAxisRaw(string axis)
 		{
-			Vector2 result = new Vector2(0, 0);
-
 			if (axis == "Horizontal")
 			{
 				if (KeyboardState.IsKeyDown(Keys.A))
 				{
-					result.X = -1.0f;
+					return -1.0f;
 				}
 
 				if (KeyboardState.IsKeyDown(Keys.D))
 				{
-					result.X += 1.0f;
+					return 1.0f;
 				}
-				return result;
 			}
 
 			if (axis == "Vertical")
 			{
 				if (KeyboardState.IsKeyDown(Keys.W))
 				{
-					result.Y = 1.0f;
+					return 1.0f;
 				}
 
 				if ( KeyboardState.IsKeyDown(Keys.S))
 				{
-					result.Y = -1.0f;
+					return -1.0f;
 				}
-
-				return result;
 			}
 
-			return result;
+			return 0;
 		}
 	}
 
@@ -67,14 +62,13 @@ namespace CSGL
 		public bool LeftButtonDown = false;
 		public bool RightButtonDown = false;
 
-		public Mouse()
-		{
-
-		}
-
 		public void Update(MouseState mouseState)
 		{
 			this.Position = new Vector2(mouseState.Position.X, Viewport.Height - mouseState.Position.Y);
 		}
+
+		//	Config
+
+		public static float Sensitivity = 0.1f;
 	}
 }

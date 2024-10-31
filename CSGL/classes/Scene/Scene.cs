@@ -34,22 +34,24 @@ namespace CSGL
 		{
 			//RenderObject test = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
 
-			
 			RenderObject cylinder = ModelManager.LoadModel("Cylinder").renderObject;
 			RenderObject cube = ModelManager.LoadModel("Cube").renderObject;
 			RenderObject torus = ModelManager.LoadModel("Torus").renderObject;
 			RenderObject sphere = ModelManager.LoadModel("Sphere").renderObject;
 			RenderObject pyramid = ModelManager.LoadModel("Pyramid").renderObject;
-			RenderObject map = ModelManager.LoadModel("Plane").renderObject;
+			//RenderObject map = ModelManager.LoadModel("Plane").renderObject;
 
-			GameObject worldMap = new GameObject(new Transform(new Vector3(0, 0, 0), MathFuncs.Euler(0, 0, 0), Vector3.One), map);
+			GameObject worldMap = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), ModelManager.LoadModel("Plane").renderObject);
 
-			GameObject box1 = new GameObject(new Transform(new Vector3(0, 0, 0), MathFuncs.Euler(0, 0, 0), Vector3.One), cube);
-			GameObject box2 = new GameObject(new Transform(new Vector3(0, 0, 0), MathFuncs.Euler(0, 0, 0), Vector3.One), cube);
-			
-			AddObjectToScene(box1);
-			AddObjectToScene(box2);
+			GameObject textureTest = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), cube);
+
+			textureTest.RenderObject.SetMaterial(MaterialManager.GetMaterial("default"));
+			worldMap.RenderObject.SetMaterial(MaterialManager.GetMaterial("cloud"));
+
+			//AddObjectToScene(box1);
+			//AddObjectToScene(box2);
 			AddObjectToScene(worldMap);
+			AddObjectToScene(textureTest);
 			
 
 			foreach (GameObject obj in sceneGameObjects)
@@ -64,7 +66,7 @@ namespace CSGL
 			InitializeObjects();
 			//Log.Default("Displaying model: " + sceneObjects[currentModel].name);
 
-			Camera.main.Position = new Vector3(0, -10, -20);
+			Camera.main.Transform.Position = new Vector3(0, -10, -20);
 
 			foreach (GameObject obj in sceneGameObjects)
 			{
@@ -80,10 +82,6 @@ namespace CSGL
 
 		public void Update()
 		{
-			Vector3 position = new Vector3(-Input.GetAxisRaw("Horizontal").X, 0, Input.GetAxisRaw("Vertical").Y);
-
-			Camera.main.Position += position * Time.deltaTime;
-
 			foreach (GameObject obj in sceneGameObjects)
 			{
 				obj.Update();
@@ -96,7 +94,7 @@ namespace CSGL
 		{
 			foreach (GameObject gameObject in sceneGameObjects)
 			{
-				gameObject.Render();
+				gameObject.OnRender();
 			}
 		}
 	}

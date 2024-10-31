@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace CSGL
 {
@@ -8,15 +9,62 @@ namespace CSGL
 
 		public static void Initialize()
 		{
-			ShaderManager.Initialize();
-			ModelManager.Initialize();
+			ShaderManager.Import();
+			ModelManager.Import();
+			TextureManager.Import();
+			MaterialManager.Import();
 
+			AssetManager.Import();
+		}
+
+		public static void Import()
+		{
+			Log.Default("Importing assets from: " + EditorConfig.AssetDirectory);
 			string[] folders = Directory.GetDirectories(EditorConfig.AssetDirectory);
 			foreach (string folder in folders)
 			{
-				string[] subDir = Directory.GetDirectories(folder);
+				explore(folder);
+
 				
 			}
+		}
+
+		public static string explore(string path)
+		{
+			string result = "";
+
+			string[] subDirectory = Directory.GetDirectories(path);
+
+			if (subDirectory.Length > 0)
+			{
+				for (int i = 0; i < subDirectory.Length; i++)
+				{
+					result = explore(subDirectory[i]);
+				}
+			}
+
+			string[] files = Directory.GetFiles(path);
+
+			if (files.Length > 0)
+			{
+				for (int i = 0; i < files.Length; i++)
+				{
+					string fileName = Path.GetFileName(files[i]);
+					string ext = Path.GetExtension(files[i]);
+
+					if (ext == ".json")
+					{
+						Asset? asset = Asset.ImportFromJson(files[i]);
+					}
+
+					if (ext == ".jpg" || ext == ".png")
+					{
+						TextureManager.Import(files[i], fileName);
+					}
+				}
+			}
+
+			return result;
 		}
 	}
 }

@@ -7,6 +7,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using StbImageSharp;
 
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -47,12 +48,11 @@ namespace CSGL
 
 			GL.Enable(EnableCap.DepthTest);
 
+			//Stbimage reverses images, set true flag to conform to OpenGL standard
+			StbImage.stbi_set_flip_vertically_on_load(1);
 			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
-
 			GL.ClearColor(backColour);
 		}
-
-
 
 		protected override void OnLoad()
 		{
@@ -79,6 +79,11 @@ namespace CSGL
 			}
 		}
 
+		protected override void OnMouseMove(MouseMoveEventArgs e)
+		{
+			base.OnMouseMove(e);
+		}
+
 		private void FixedUpdate()
 		{
 			scene.FixedUpdate();
@@ -88,6 +93,10 @@ namespace CSGL
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
 			Time.Tick();
+
+			if (!IsFocused)
+				return;
+
 			Input.Update(KeyboardState, MouseState);
 
 			HandleKeyboard();
@@ -100,6 +109,11 @@ namespace CSGL
 			{
 				FixedUpdate();
 				timeInterval = 0;
+			}
+
+			if (Input.KeyboardState.IsKeyReleased(Keys.R))
+			{
+				ShaderManager.HotReload();
 			}
 
 			base.OnUpdateFrame(e);
@@ -132,6 +146,8 @@ namespace CSGL
 		protected override void OnResize(ResizeEventArgs e)
 		{
 			GL.Viewport(0, 0, e.Width, e.Height);
+			Viewport.Width = e.Width;
+			Viewport.Height = e.Height;
 			base.OnResize(e);
 		}
 
