@@ -11,7 +11,7 @@ namespace CSGL
 	public class TextureManager
 	{
 		public static List<Texture2D> Textures = new List<Texture2D>();
-		public static Texture2D defaultTexture;
+		public static Texture2D? defaultTexture;
 		public static void Import()
 		{
 			Log.Default("Importing Textures");

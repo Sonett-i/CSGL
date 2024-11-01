@@ -4,9 +4,6 @@ namespace CSGL
 {
 	public class GameObject : Monobehaviour
 	{
-		int ID;
-
-
 		public GameObject(Transform transform, RenderObject renderObject) : base(transform, renderObject)
 		{
 

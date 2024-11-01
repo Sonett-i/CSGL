@@ -32,10 +32,6 @@ namespace CSGL
 
 		public Matrix4 m_Model;
 
-		private int m_model;
-		private int m_projection;
-		private int m_view;
-
 		public RenderObject(Model model, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.hint = hint;
@@ -165,10 +161,7 @@ namespace CSGL
 			this.Material.Shader.SetUniform("projection", Camera.main.m_Projection, true);
 			//this.shaderProgram.SetUniform("time", Time.time);
 
-			if (this.Material.Texture != null)
-			{
-				this.Material.Texture.UseTexture();
-			}
+			this.Material.Render();
 
 			GL.UseProgram(this.Material.Shader.ShaderProgramHandle);
 

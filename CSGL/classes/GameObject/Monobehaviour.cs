@@ -50,11 +50,6 @@ namespace CSGL
 
 		public virtual void OnRender()
 		{
-			if (Texture != null)
-			{
-				Texture.UseTexture();
-			}
-
 			RenderObject.Render();
 		}
 	}

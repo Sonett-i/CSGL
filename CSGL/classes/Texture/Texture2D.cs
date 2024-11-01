@@ -38,11 +38,18 @@ namespace CSGL
 
 			StbImage.stbi_set_flip_vertically_on_load(0);
 
+			//GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+			//GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+			//GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+			//GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+
 			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 		}
 
-		public void UseTexture()
+		public void UseTexture(TextureUnit unit)
 		{
+			GL.ActiveTexture(unit);
 			GL.BindTexture(TextureTarget.Texture2D, this.TextureHandle);
 		}
 

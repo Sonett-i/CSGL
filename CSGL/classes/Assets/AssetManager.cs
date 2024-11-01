@@ -11,6 +11,7 @@ namespace CSGL
 		{
 			ShaderManager.Import();
 			ModelManager.Import();
+
 			TextureManager.Import();
 			MaterialManager.Import();
 
@@ -21,15 +22,14 @@ namespace CSGL
 		{
 			Log.Default("Importing assets from: " + EditorConfig.AssetDirectory);
 			string[] folders = Directory.GetDirectories(EditorConfig.AssetDirectory);
+
 			foreach (string folder in folders)
 			{
-				explore(folder);
-
-				
+				Explore(folder);
 			}
 		}
 
-		public static string explore(string path)
+		public static string Explore(string path)
 		{
 			string result = "";
 
@@ -39,7 +39,7 @@ namespace CSGL
 			{
 				for (int i = 0; i < subDirectory.Length; i++)
 				{
-					result = explore(subDirectory[i]);
+					result = Explore(subDirectory[i]);
 				}
 			}
 

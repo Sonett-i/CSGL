@@ -70,6 +70,7 @@ namespace CSGL
 
 		public Cubemap()
 		{
+			this.shader = ShaderManager.GetShader("skybox");
 			LoadCubeMap();
 			Setup();
 		}
@@ -108,7 +109,7 @@ namespace CSGL
 			GL.EnableVertexAttribArray(0);
 			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
-			this.shader = ShaderManager.GetShader("skybox");
+			
 			GL.UseProgram(shader.ShaderProgramHandle);
 
 			GL.Uniform1(GL.GetUniformLocation(shader.ShaderProgramHandle, "skybox"), 0);

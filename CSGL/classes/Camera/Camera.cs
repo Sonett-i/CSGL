@@ -78,8 +78,6 @@ namespace CSGL
 		private bool firstMove = false;
 		Vector2 lastMouse = Input.Mouse.Position;
 		Vector2 direction = new Vector2(-90.0f, 0.0f);
-		private bool CursorControl = false;
-
 
 		public Camera(Vector3 position, ProjectionType projectionType, float nearClip, float farClip, float fov)
 		{
