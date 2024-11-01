@@ -32,6 +32,10 @@ namespace CSGL
 
 		public Matrix4 m_Model;
 
+		private int m_model;
+		private int m_projection;
+		private int m_view;
+
 		public RenderObject(Model model, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.hint = hint;
@@ -143,6 +147,8 @@ namespace CSGL
 			GL.BindVertexArray(0);
 			this.Material = material;
 
+			
+
 			initialized = true;
 		}
 
@@ -153,6 +159,7 @@ namespace CSGL
 
 		public void Render()
 		{
+			this.Material.MVP(m_Model, Camera.main.m_View, Camera.main.m_Projection);
 			this.Material.Shader.SetUniform("model", m_Model, true);
 			this.Material.Shader.SetUniform("view", Camera.main.m_View, true);
 			this.Material.Shader.SetUniform("projection", Camera.main.m_Projection, true);

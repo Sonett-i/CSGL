@@ -13,8 +13,9 @@ namespace CSGL
 		public int Height;
 
 		public int channel;
+		public byte[] data;
 
-		public Texture2D(string filePath, string fileName, int channel = 0)
+		public Texture2D(string filePath, string fileName, int channel = 0, bool flipped = false)
 		{
 			Name = fileName;
 
@@ -23,14 +24,19 @@ namespace CSGL
 			this.TextureHandle = GL.GenTexture();
 			GL.BindTexture(TextureTarget.Texture2D, this.TextureHandle);
 
+			if (flipped)
+				StbImage.stbi_set_flip_vertically_on_load(1);
+
 			using (FileStream stream = File.OpenRead(filePath))
 			{
 				ImageResult result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 				this.Width = result.Width;
 				this.Height = result.Height;
-
+				this.data = result.Data;
 				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, result.Width, result.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, result.Data);
 			}
+
+			StbImage.stbi_set_flip_vertically_on_load(0);
 
 			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 		}

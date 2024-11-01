@@ -22,6 +22,11 @@ namespace CSGL
 			Mouse.Update(mouseState);
 		}
 
+		public static unsafe void SetMousePosition(Window* window,int x, int y)
+		{
+			GLFW.SetCursorPos(window, x, y);
+		}
+
 		public static float GetAxisRaw(string axis)
 		{
 			if (axis == "Horizontal")

@@ -15,6 +15,11 @@ namespace CSGL
 		public List<RenderObject> sceneObjects = new List<RenderObject>();
 		public List<GameObject> sceneGameObjects = new List<GameObject>();
 
+		public float lastUpdateTime = 0;
+		public float lastRenderTime = 0;
+
+		Cubemap cubemap;
+
 		public Scene(string name) 
 		{
 			this.ID = 0;
@@ -48,6 +53,8 @@ namespace CSGL
 			textureTest.RenderObject.SetMaterial(MaterialManager.GetMaterial("default"));
 			worldMap.RenderObject.SetMaterial(MaterialManager.GetMaterial("cloud"));
 
+			cubemap = new Cubemap();
+
 			//AddObjectToScene(box1);
 			//AddObjectToScene(box2);
 			AddObjectToScene(worldMap);
@@ -77,25 +84,36 @@ namespace CSGL
 
 		public void FixedUpdate()
 		{
-
+			Camera.main.Update();
 		}
 
 		public void Update()
 		{
+			float start = Time.time;
+
 			foreach (GameObject obj in sceneGameObjects)
 			{
 				obj.Update();
 			}
 
-			Camera.main.Update();
+			float end = Time.time;
+
+			lastUpdateTime = end - start;
 		}
 
 		public void Render()
 		{
+			float start = Time.time;
+
 			foreach (GameObject gameObject in sceneGameObjects)
 			{
 				gameObject.OnRender();
 			}
+			float end = Time.time;
+
+			cubemap.Draw(Camera.main.m_View, Camera.main.m_Projection);
+			
+			lastRenderTime = end - start;
 		}
 	}
 }

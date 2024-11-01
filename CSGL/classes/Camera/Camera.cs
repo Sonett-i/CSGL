@@ -62,8 +62,8 @@ namespace CSGL
 			}
 		}
 
-		public float Speed = 1.0f;
-		public float Sensitivity = 1.0f;
+		public float Speed = 2.0f;
+		public float Sensitivity = 0.30f;
 
 
 		public ProjectionType ProjectionType;
@@ -101,7 +101,7 @@ namespace CSGL
 			}
 			else
 			{
-				Vector2 delta = Input.Mouse.Position - lastMouse;
+				Vector2 delta = Input.Mouse.Position - Viewport.CenterScreen;
 				lastMouse = Input.Mouse.Position;
 
 				this.Yaw += delta.X * this.Sensitivity;

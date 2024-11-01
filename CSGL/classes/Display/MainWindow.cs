@@ -8,6 +8,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using StbImageSharp;
+using OpenTK.Windowing.Common.Input;
 
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
@@ -33,6 +34,7 @@ namespace CSGL
 					Profile = ContextProfile.Core,
 					APIVersion = new Version(4, 1),
 					Vsync = WindowConfig.VSyncMode,
+					
 				})
 		{
 			WindowConfig.Name = title + ": OpenGL Version: " + GL.GetString(StringName.Version);
@@ -44,7 +46,15 @@ namespace CSGL
 		{
 			int[] viewport = new int[4];
 			GL.GetInteger(GetPName.Viewport, viewport);
+
+			GLFW.WindowHint(WindowHintInt.Samples, 4); // multisampling
+			GLFW.WindowHint(WindowHintInt.RefreshRate, 60);
+
 			Viewport.Set(viewport);
+
+			Vector2i point = PointToScreen(new Vector2i(Viewport.Width / 2, Viewport.Height / 2));
+
+			Viewport.SetScreen(point, PointToClient(point));
 
 			GL.Enable(EnableCap.DepthTest);
 
@@ -61,8 +71,18 @@ namespace CSGL
 			InitializeWindow();
 			AssetManager.Initialize();
 			scene.Start();
+
+			if (!WindowConfig.CursorVisible)
+				Cursor = MouseCursor.Empty;
+
 			this.IsVisible = true;
+
 			base.OnLoad();
+		}
+
+		unsafe void LockMouse()
+		{
+			Input.SetMousePosition(this.WindowPtr, Viewport.CenterScreen.X, Viewport.CenterScreen.Y);
 		}
 
 		void HandleKeyboard()
@@ -75,13 +95,28 @@ namespace CSGL
 			if (KeyboardState.IsKeyReleased(Keys.R))
 			{
 				
-				//ShaderManager.HotReload();
+				ShaderManager.HotReload();
 			}
 		}
 
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
+			Input.Mouse.Update(MouseState);
+
+			//GLFW.SetCursorPos(WindowPtr, point.X, point.Y);
+
+
 			base.OnMouseMove(e);
+		}
+
+		protected override void OnKeyDown(KeyboardKeyEventArgs e)
+		{
+			base.OnKeyDown(e);
+		}
+
+		protected override void OnKeyUp(KeyboardKeyEventArgs e)
+		{
+			base.OnKeyUp(e);
 		}
 
 		private void FixedUpdate()
@@ -111,10 +146,8 @@ namespace CSGL
 				timeInterval = 0;
 			}
 
-			if (Input.KeyboardState.IsKeyReleased(Keys.R))
-			{
-				ShaderManager.HotReload();
-			}
+			if (WindowConfig.StickyMouse && IsFocused)
+				LockMouse();
 
 			base.OnUpdateFrame(e);
 		}
@@ -136,10 +169,16 @@ namespace CSGL
 
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+			if (Time.deltaTime > 0.3)
+			{
+				Log.Default($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
+			}
+
 			scene.Render();
-			
-			
 			this.Context.SwapBuffers();
+
+			GL.Finish();
+
 			base.OnRenderFrame(e);
 		}
 

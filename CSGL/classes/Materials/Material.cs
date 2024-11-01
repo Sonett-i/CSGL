@@ -4,8 +4,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace CSGL
 {
@@ -15,14 +15,33 @@ namespace CSGL
 		public ShaderProgram Shader;
 		public Texture2D Texture;
 
+		public int m_model;
+		private int m_view;
+		private int m_projection;
+
 		public Material(ShaderProgram shader, Texture2D texture, string name) 
 		{
 			this.Shader = shader;
 			this.Texture = texture;
 
 			this.Name = name;
+
+			m_model = GL.GetUniformLocation(shader.ShaderProgramHandle, "model");
+			m_view = GL.GetUniformLocation(shader.ShaderProgramHandle, "view");
+			m_projection = GL.GetUniformLocation(shader.ShaderProgramHandle, "projection");
 		}
 		
+		public void MVP(Matrix4 model, Matrix4 view, Matrix4 projection)
+		{
+			GL.UseProgram(Shader.ShaderProgramHandle);
+
+			GL.UniformMatrix4(m_model, false, ref model);
+			GL.UniformMatrix4(m_view, false, ref view);
+			GL.UniformMatrix4(m_projection, false, ref projection);
+
+			GL.UseProgram(0);
+		}
+
 		public static Material LoadFromJson(string filePath)
 		{
 			string jsonString = File.ReadAllText(filePath);
