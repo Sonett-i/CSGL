@@ -12,5 +12,9 @@ namespace CSGL
 
 		public static bool StickyMouse = true;
 		public static bool CursorVisible = false;
+
+		public static int Width = 0;
+		public static int Height = 0;
+
 	}
 }

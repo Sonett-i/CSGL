@@ -9,8 +9,10 @@ namespace Interface
 
 		public static int Main(string[] args)
 		{
+			LoadConfig.ImportFromJson();
+
 			// GPR202 Assessment 2
-			using (MainWindow game = new MainWindow(1280, 768, CSGL.WindowConfig.Name + ": A2"))
+			using (MainWindow game = new MainWindow(WindowConfig.Width, WindowConfig.Height, WindowConfig.Name + ": A2"))
 			{
 				game.Run();
 			}

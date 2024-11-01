@@ -8,6 +8,9 @@ namespace CSGL
 {
 	public static class EditorConfig
 	{
+		//	Config
+		public static string ConfigDirectory = Environment.CurrentDirectory + "\\Config\\";
+
 		//	Resources
 		public static string ShaderDirectory = Environment.CurrentDirectory + "\\Resources\\Shaders\\";
 		public static string ModelDirectory = Environment.CurrentDirectory + "\\Resources\\Models\\";
