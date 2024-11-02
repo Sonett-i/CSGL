@@ -19,9 +19,9 @@ namespace CSGL
 
 		//	GameObjects
 
-		//	Scenes
 
 		public static string AssetDirectory = Environment.CurrentDirectory + "\\Assets\\";
+
 		public static bool advancedDebug = true;
 	}
 }

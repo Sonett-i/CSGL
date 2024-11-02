@@ -11,16 +11,16 @@ namespace CSGL
 		public string Name;
 
 		public Camera camera;
-		
+
 		public List<RenderObject> sceneObjects = new List<RenderObject>();
 		public List<GameObject> sceneGameObjects = new List<GameObject>();
 
 		public float lastUpdateTime = 0;
 		public float lastRenderTime = 0;
 
-		Cubemap cubemap;
+		public Cubemap Cubemap;
 
-		public Scene(string name) 
+		public Scene(string name)
 		{
 			this.ID = 0;
 			this.Name = name;
@@ -44,22 +44,22 @@ namespace CSGL
 			RenderObject torus = ModelManager.LoadModel("Torus").renderObject;
 			RenderObject sphere = ModelManager.LoadModel("Sphere").renderObject;
 			RenderObject pyramid = ModelManager.LoadModel("Pyramid").renderObject;
-			//RenderObject map = ModelManager.LoadModel("Plane").renderObject;
+			RenderObject map = ModelManager.LoadModel("Plane").renderObject;
 
-			GameObject worldMap = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), ModelManager.LoadModel("Plane").renderObject);
+
 
 			GameObject textureTest = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), cube);
 
 			textureTest.RenderObject.SetMaterial(MaterialManager.GetMaterial("default"));
-			worldMap.RenderObject.SetMaterial(MaterialManager.GetMaterial("cloud"));
 
-			cubemap = new Cubemap();
 
 			//AddObjectToScene(box1);
 			//AddObjectToScene(box2);
-			AddObjectToScene(worldMap);
 			AddObjectToScene(textureTest);
-			
+
+			GameObject worldMap = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), ModelManager.LoadModel("Plane").renderObject);
+			worldMap.RenderObject.SetMaterial(MaterialManager.GetMaterial("cloud"));
+			AddObjectToScene(worldMap);
 
 			foreach (GameObject obj in sceneGameObjects)
 			{
@@ -73,7 +73,7 @@ namespace CSGL
 			InitializeObjects();
 			//Log.Default("Displaying model: " + sceneObjects[currentModel].name);
 
-			Camera.main.Transform.Position = new Vector3(0, -10, -20);
+			Camera.main.Transform.Position = new Vector3(0, 10, -20);
 
 			foreach (GameObject obj in sceneGameObjects)
 			{
@@ -109,10 +109,14 @@ namespace CSGL
 			{
 				gameObject.OnRender();
 			}
+
 			float end = Time.time;
 
-			cubemap.Draw(Camera.main.m_View, Camera.main.m_Projection);
-			
+			if (Cubemap != null)
+			{
+				Cubemap.Draw(Camera.main.m_View, Camera.main.m_Projection);
+			}
+
 			lastRenderTime = end - start;
 		}
 	}

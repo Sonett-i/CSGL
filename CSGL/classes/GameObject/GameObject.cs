@@ -16,7 +16,6 @@ namespace CSGL
 
 		public override void Start()
 		{
-
 			base.Start();
 		}
 

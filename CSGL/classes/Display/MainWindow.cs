@@ -17,7 +17,7 @@ namespace CSGL
 {
 	public class MainWindow : GameWindow
 	{
-		public List<GameObject> gameObjects = new List<GameObject>();		
+		public List<GameObject> gameObjects = new List<GameObject>();
 
 		public Scene scene = new Scene("Default");
 		private float timeInterval = 0.0f;
@@ -34,7 +34,7 @@ namespace CSGL
 					Profile = ContextProfile.Core,
 					APIVersion = new Version(4, 1),
 					Vsync = WindowConfig.VSyncMode,
-					
+
 				})
 		{
 			WindowConfig.Name = title + ": OpenGL Version: " + GL.GetString(StringName.Version);
@@ -70,6 +70,9 @@ namespace CSGL
 
 			InitializeWindow();
 			AssetManager.Initialize();
+
+			scene = SceneManager.LoadScene("DefaultScene");
+
 			scene.Start();
 
 			if (!WindowConfig.CursorVisible)
@@ -94,7 +97,7 @@ namespace CSGL
 
 			if (KeyboardState.IsKeyReleased(Keys.R))
 			{
-				
+
 				ShaderManager.HotReload();
 			}
 		}
@@ -171,10 +174,11 @@ namespace CSGL
 
 			if (Time.deltaTime > 0.3)
 			{
-				Log.Default($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
+				Log.Advanced($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
 			}
 
 			scene.Render();
+
 			this.Context.SwapBuffers();
 
 			GL.Finish();

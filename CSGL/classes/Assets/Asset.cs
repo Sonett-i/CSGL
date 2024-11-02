@@ -51,12 +51,21 @@ namespace CSGL
 				asset.Name = name;
 				asset.filePath = filePath;
 				
+				if (assetType == "scene")
+				{
+					SceneManager.ImportFromJson(root);
+				}
 
 				if (assetType == "GameObject")
 				{
 					asset.Type = AssetType.ASSET_GAMEOBJECT;
 
 					//GameObject go = FromAsset(asset);
+				}
+
+				if (assetType == "Cubemap")
+				{
+
 				}
 
 			}

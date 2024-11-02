@@ -8,7 +8,6 @@ namespace CSGL
 	{
 		public Transform Transform;
 		public RenderObject RenderObject;
-		public Texture2D? Texture;
 
 		
 		public Monobehaviour(Transform transform, RenderObject RenderObject, Texture2D? texture = null)
@@ -18,7 +17,6 @@ namespace CSGL
 
 			if (texture != null)
 			{
-				Texture = texture;
 				this.RenderObject.Material = MaterialManager.GetMaterial("textured");// ShaderManager.GetShader("textured");
 			}
 			else
@@ -30,7 +28,8 @@ namespace CSGL
 
 		public virtual void OnAwake()
 		{
-
+			Log.Default($"{RenderObject.name} awake at: {Transform.Position.ToString()}");
+			RenderObject.m_Model = MathU.TRS(Transform);
 		}
 
 		public virtual void Start()
