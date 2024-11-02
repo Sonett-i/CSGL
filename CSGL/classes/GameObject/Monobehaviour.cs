@@ -14,16 +14,6 @@ namespace CSGL
 		{
 			this.Transform = transform;
 			this.RenderObject = RenderObject;
-
-			if (texture != null)
-			{
-				this.RenderObject.Material = MaterialManager.GetMaterial("textured");// ShaderManager.GetShader("textured");
-			}
-			else
-			{
-				this.RenderObject.Material = MaterialManager.GetMaterial("default");
-			}
-
 		}
 
 		public virtual void OnAwake()

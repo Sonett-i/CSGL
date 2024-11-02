@@ -7,7 +7,7 @@ namespace CSGL
 {
 	public class Scene
 	{
-		int ID;
+		public int ID;
 		public string Name;
 
 		public Camera camera;
@@ -18,11 +18,11 @@ namespace CSGL
 		public float lastUpdateTime = 0;
 		public float lastRenderTime = 0;
 
-		public Cubemap Cubemap;
+		public Cubemap cubemap;
 
 		public Scene(string name)
 		{
-			this.ID = 0;
+			this.ID = SceneManager.Scenes.Count + 1;
 			this.Name = name;
 
 			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
@@ -38,7 +38,7 @@ namespace CSGL
 		void InitializeObjects()
 		{
 			//RenderObject test = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
-
+			/*
 			RenderObject cylinder = ModelManager.LoadModel("Cylinder").renderObject;
 			RenderObject cube = ModelManager.LoadModel("Cube").renderObject;
 			RenderObject torus = ModelManager.LoadModel("Torus").renderObject;
@@ -56,11 +56,8 @@ namespace CSGL
 			//AddObjectToScene(box1);
 			//AddObjectToScene(box2);
 			AddObjectToScene(textureTest);
-
-			GameObject worldMap = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), ModelManager.LoadModel("Plane").renderObject);
-			worldMap.RenderObject.SetMaterial(MaterialManager.GetMaterial("cloud"));
-			AddObjectToScene(worldMap);
-
+			
+			*/
 			foreach (GameObject obj in sceneGameObjects)
 			{
 				obj.OnAwake();
@@ -112,11 +109,9 @@ namespace CSGL
 
 			float end = Time.time;
 
-			if (Cubemap != null)
-			{
-				Cubemap.Draw(Camera.main.m_View, Camera.main.m_Projection);
-			}
-
+			if (cubemap != null)
+				cubemap.Draw(Camera.main.m_View, Camera.main.m_Projection);
+			
 			lastRenderTime = end - start;
 		}
 	}

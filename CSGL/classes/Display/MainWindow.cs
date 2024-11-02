@@ -71,10 +71,11 @@ namespace CSGL
 			InitializeWindow();
 			AssetManager.Initialize();
 
+			SceneManager.Scenes.Add(scene);
+
 			scene = SceneManager.LoadScene("DefaultScene");
 
 			scene.Start();
-
 			if (!WindowConfig.CursorVisible)
 				Cursor = MouseCursor.Empty;
 

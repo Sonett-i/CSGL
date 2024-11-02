@@ -50,7 +50,7 @@ namespace CSGL
 
 				asset.Name = name;
 				asset.filePath = filePath;
-				
+
 				if (assetType == "scene")
 				{
 					SceneManager.ImportFromJson(root);

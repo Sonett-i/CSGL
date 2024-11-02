@@ -157,6 +157,9 @@ namespace CSGL
 		{
 			this.Material.MVP(m_Model, Camera.main.m_View, Camera.main.m_Projection);
 
+			//this.Material.Shader.SetUniform("model", m_Model, true);
+			//this.Material.Shader.SetUniform("view", Camera.main.m_View, true);
+			//this.Material.Shader.SetUniform("projection", Camera.main.m_Projection, true);
 			//this.shaderProgram.SetUniform("time", Time.time);
 
 			this.Material.Render();

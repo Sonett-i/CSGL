@@ -9,11 +9,6 @@ namespace CSGL
 
 		}
 
-		public GameObject(Transform transform, RenderObject renderObject, Texture2D texture2D) : base(transform, renderObject, texture2D)
-		{
-
-		}
-
 		public override void Start()
 		{
 			base.Start();

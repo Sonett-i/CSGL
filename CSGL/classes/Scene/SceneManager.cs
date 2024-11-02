@@ -25,6 +25,7 @@ namespace CSGL
 			string sceneName = root.GetProperty("name").GetString() ?? "scene";
 
 			Scene scene = new Scene(sceneName);
+			
 			List<GameObject> objects = new List<GameObject>();
 
 			if (root.TryGetProperty("gameobjects", out JsonElement gameobjectElement))
@@ -32,7 +33,7 @@ namespace CSGL
 				foreach (JsonElement gameobject in gameobjectElement.EnumerateArray())
 				{
 					JsonElement gobject = gameobject.GetProperty("gobject");
-					
+
 					string name = gobject.GetProperty("name").GetString() ?? "gameobject";
 
 					JsonElement position = gobject.GetProperty("position");
@@ -56,7 +57,7 @@ namespace CSGL
 
 					JsonElement components = gobject.GetProperty("components");
 
-					string componentType = components.GetProperty("type").GetString() ?? "RenderObject";
+					string componentType = components.GetProperty("type").GetString() ?? "renderobject";
 					string modelName = components.GetProperty("mesh").GetString() ?? "cube";
 					string material = components.GetProperty("material").GetString() ?? "default";
 
@@ -67,7 +68,7 @@ namespace CSGL
 
 						RenderObject renderobject = ModelManager.LoadModel(modelName).renderObject;
 
-						renderobject.SetMaterial(mat);
+						renderobject.Material = mat;
 
 						if (model != null && mat != null)
 						{
@@ -82,7 +83,7 @@ namespace CSGL
 
 					if (componentType == "cubemap")
 					{
-						scene.Cubemap = new Cubemap();
+						scene.cubemap = new Cubemap();
 					}
 				}
 			}
