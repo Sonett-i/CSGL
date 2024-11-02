@@ -72,9 +72,11 @@ namespace CSGL
 			InitializeWindow();
 			AssetManager.Initialize();
 
-			SceneManager.Scenes.Add(scene);
+			//SceneManager.Scenes.Add(scene);
 
-			SceneManager.CurrentScene = SceneManager.LoadScene("DefaultScene");
+			Scene scene = new Scene("debug");
+
+			SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
 			SceneManager.CurrentScene.Start();
 
 			if (!WindowConfig.CursorVisible)

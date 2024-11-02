@@ -103,10 +103,11 @@ namespace CSGL
 					string modelName = components.GetProperty("mesh").GetString() ?? "cube";
 					string material = components.GetProperty("material").GetString() ?? "default";
 
+					/*
 					if (componentType == "renderobject")
 					{
-						Model model = ModelManager.LoadModel(modelName);
-						Material mat = MaterialManager.GetMaterial(material);
+						//Model model = ModelManager.LoadModel(modelName);
+						//Material mat = MaterialManager.GetMaterial(material);
 
 						RenderObject renderobject = new RenderObject(model, mat, OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);// ModelManager.LoadModel(modelName).renderObject;
 
@@ -114,7 +115,7 @@ namespace CSGL
 
 						if (model != null && mat != null)
 						{
-							GameObject go = new GameObject(transform, renderobject);
+							GameObject go = null;// new GameObject(transform, renderobject);
 							//GameObject textureTest = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), cube);
 							if (go != null)
 							{
@@ -122,6 +123,7 @@ namespace CSGL
 							}
 						}
 					}
+					*/
 
 					if (componentType == "cubemap")
 					{

@@ -4,7 +4,7 @@ namespace CSGL
 {
 	public class GameObject : Monobehaviour
 	{
-		public GameObject(Transform transform, RenderObject renderObject) : base(transform, renderObject)
+		public GameObject(Transform transform, MeshRenderer meshRenderer) : base(transform, meshRenderer)
 		{
 
 		}

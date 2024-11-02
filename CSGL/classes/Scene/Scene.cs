@@ -40,6 +40,9 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
+
+			MeshRenderer meshRenderer = new MeshRenderer(ModelManager.LoadModel("cube.obj"), MaterialManager.GetMaterial("default"));
+
 			foreach (GameObject obj in sceneGameObjects)
 			{
 				obj.OnAwake();
@@ -101,7 +104,7 @@ namespace CSGL
 		{
 			foreach (GameObject gameObject in sceneGameObjects)
 			{
-				gameObject.RenderObject.Dispose();
+				gameObject.MeshRenderer.Dispose();
 			}
 
 			if (cubemap != null)

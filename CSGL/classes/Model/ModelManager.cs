@@ -12,7 +12,7 @@ namespace CSGL
 {
 	public static class ModelManager
 	{
-		public static List<Model> models = new List<Model>();
+		public static List<MeshFilter> models = new List<MeshFilter>();
 
 		public static void Import()
 		{
@@ -29,25 +29,27 @@ namespace CSGL
                 if (ext == ".obj")
                 {
 					Log.Default($"Importing {fileName}{ext}");
-					Model model = OBJ.Import(File.ReadAllLines(EditorConfig.ModelDirectory + fileName + ext));
+					MeshFilter model = OBJ.Import(files[i]);
 					models.Add(model);
 					Log.Default($"Loaded {fileName + ext}: " + model.ToString() + "\n");
                 }
 
+				/*
 				if (ext == ".fbx")
 				{
 					Log.Default($"Importing {fileName}{ext}");
 					Model model = FBX.Import(File.ReadAllBytes(EditorConfig.ModelDirectory + fileName + ext));
 				}
+				*/
                 
 			}
 		}
 
-		public static Model LoadModel(string name)
+		public static MeshFilter LoadModel(string name)
 		{
-			foreach (Model model in models)
+			foreach (MeshFilter model in models)
 			{
-				if (model.name == name)
+				if (model.Name == name)
 					return model;
 			}
 

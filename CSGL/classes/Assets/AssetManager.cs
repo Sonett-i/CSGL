@@ -15,7 +15,7 @@ namespace CSGL
 			TextureManager.Import();
 			MaterialManager.Import();
 
-			AssetManager.Import();
+			//AssetManager.Import();
 		}
 
 		public static void Import()

@@ -143,8 +143,6 @@ namespace CSGL
 			GL.BindVertexArray(0);
 			this.Material = material;
 
-			
-
 			initialized = true;
 		}
 

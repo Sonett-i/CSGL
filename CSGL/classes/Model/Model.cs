@@ -33,6 +33,24 @@ namespace CSGL
 		}
 	}
 
+	public class Mesh
+	{
+		public List<Vertex> vertices = new List<Vertex>();
+		public List<VertexNormal> normals = new List<VertexNormal>();
+		public List<TextureCoordinate> texCoords = new List<TextureCoordinate>();
+		public List<Face> faces = new List<Face>();
+
+		public int sides;
+		public string name;
+		public int index;
+		public MeshFilter renderer;
+
+		public Mesh(int index)
+		{
+			this.index = index;
+		}
+	}
+
 	public struct Vertex
 	{
 		public float x;
@@ -72,9 +90,10 @@ namespace CSGL
 		public int[] v = new int[500];
 		public int[] vt = new int[500];
 		public int[] vn = new int[500];
-
-		public Face(Vector3i[] face)
+		public string material = "";
+		public Face(Vector3i[] face, string material = "")
 		{
+			this.material = material;
 			v = new int[face.Length];
 			vt = new int[face.Length];
 			vn = new int[face.Length];
