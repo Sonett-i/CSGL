@@ -17,6 +17,13 @@ namespace CSGL
 
 		public static Model Import(string[] data)
 		{
+
+			return null;
+		}
+
+		/*
+		public static Model Import(string[] data)
+		{
 			List<Vertex> _v = new List<Vertex>();
 			List<VertexNormal> _vn = new List<VertexNormal>();
 			List<TextureCoordinate> _vt = new List<TextureCoordinate>();
@@ -80,6 +87,7 @@ namespace CSGL
 			return model;
 
 		}
+		*/
 
 		public static Vector3 Vector3FromString(string[] data)
 		{
