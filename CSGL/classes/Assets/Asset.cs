@@ -53,7 +53,12 @@ namespace CSGL
 
 				if (assetType == "scene")
 				{
-					SceneManager.ImportFromJson(root);
+					Scene scene = SceneManager.ImportFromJson(root, filePath);
+
+					if (scene != null)
+					{
+						SceneManager.Scenes.Add(scene);
+					}
 				}
 
 				if (assetType == "GameObject")

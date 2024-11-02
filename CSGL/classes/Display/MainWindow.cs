@@ -20,6 +20,7 @@ namespace CSGL
 		public List<GameObject> gameObjects = new List<GameObject>();
 
 		public Scene scene = new Scene("Default");
+
 		private float timeInterval = 0.0f;
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
@@ -73,9 +74,9 @@ namespace CSGL
 
 			SceneManager.Scenes.Add(scene);
 
-			scene = SceneManager.LoadScene("DefaultScene");
+			SceneManager.CurrentScene = SceneManager.LoadScene("DefaultScene");
+			SceneManager.CurrentScene.Start();
 
-			scene.Start();
 			if (!WindowConfig.CursorVisible)
 				Cursor = MouseCursor.Empty;
 
@@ -98,8 +99,12 @@ namespace CSGL
 
 			if (KeyboardState.IsKeyReleased(Keys.R))
 			{
-
 				ShaderManager.HotReload();
+			}
+
+			if (KeyboardState.IsKeyReleased(Keys.P))
+			{
+				SceneManager.ReloadScene(SceneManager.CurrentScene.FilePath);
 			}
 		}
 
@@ -140,7 +145,8 @@ namespace CSGL
 
 			HandleKeyboard();
 
-			scene.Update();
+			SceneManager.CurrentScene.Update();
+			//scene.Update();
 
 			timeInterval += (float)e.Time;
 
@@ -178,7 +184,7 @@ namespace CSGL
 				Log.Advanced($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
 			}
 
-			scene.Render();
+			SceneManager.CurrentScene.Render();
 
 			this.Context.SwapBuffers();
 

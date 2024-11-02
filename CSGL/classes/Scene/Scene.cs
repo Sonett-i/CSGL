@@ -9,6 +9,7 @@ namespace CSGL
 	{
 		public int ID;
 		public string Name;
+		public string FilePath;
 
 		public Camera camera;
 
@@ -26,7 +27,9 @@ namespace CSGL
 			this.Name = name;
 
 			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
-			Camera.main = this.camera;
+
+			if (!SceneManager.isReloading)
+				Camera.main = this.camera;
 		}
 
 
@@ -37,27 +40,6 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
-			//RenderObject test = ObjectFactory.CreateCube(new Vector3(0.0f, 0f, 0.1f), 1f, ShaderManager.GetShader("default"), new Color4(0.5f, 0.7f, 0.3f, 1.0f));
-			/*
-			RenderObject cylinder = ModelManager.LoadModel("Cylinder").renderObject;
-			RenderObject cube = ModelManager.LoadModel("Cube").renderObject;
-			RenderObject torus = ModelManager.LoadModel("Torus").renderObject;
-			RenderObject sphere = ModelManager.LoadModel("Sphere").renderObject;
-			RenderObject pyramid = ModelManager.LoadModel("Pyramid").renderObject;
-			RenderObject map = ModelManager.LoadModel("Plane").renderObject;
-
-
-
-			GameObject textureTest = new GameObject(new Transform(new Vector3(0, 0, 0), MathU.Euler(0, 0, 0), Vector3.One), cube);
-
-			textureTest.RenderObject.SetMaterial(MaterialManager.GetMaterial("default"));
-
-
-			//AddObjectToScene(box1);
-			//AddObjectToScene(box2);
-			AddObjectToScene(textureTest);
-			
-			*/
 			foreach (GameObject obj in sceneGameObjects)
 			{
 				obj.OnAwake();

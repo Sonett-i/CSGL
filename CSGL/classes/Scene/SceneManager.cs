@@ -2,12 +2,16 @@
 using System.Text.Json;
 using System.IO;
 using OpenTK.Mathematics;
+using static CSGL.Asset;
 
 namespace CSGL
 {
 	public class SceneManager
 	{
 		public static List<Scene> Scenes = new List<Scene>();
+		public static Scene CurrentScene = new Scene("Default");
+
+		public static bool isReloading = false;
 
 		public static Scene? LoadScene(string sceneName)
 		{
@@ -20,12 +24,48 @@ namespace CSGL
 			return null;
 		}
 
-		public static void ImportFromJson(JsonElement root)
+		public static void ReloadScene(string filepath)
+		{
+			Log.Default("Reloading current scene");
+			Camera cache = Camera.main;
+
+			Camera.main = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
+
+			isReloading = true;
+			if (File.Exists(filepath))
+			{
+				using (JsonDocument document = JsonDocument.Parse(File.ReadAllText(filepath)))
+				{
+					JsonElement root = document.RootElement;
+					string assetType = root.GetProperty("assetType").ToString();
+					string name = root.GetProperty("name").ToString();
+
+					if (assetType == "scene")
+					{
+						Scene scene = SceneManager.ImportFromJson(root, filepath);
+
+						if (scene != null)
+						{
+							SceneManager.CurrentScene = scene;
+							//SceneManager.Scenes.Add(scene);
+						}
+					}
+				}
+			}
+			isReloading = false;
+
+			Camera.main = cache;
+			Log.Default("Done");
+		}
+
+		public static Scene ImportFromJson(JsonElement root, string filepath)
 		{
 			string sceneName = root.GetProperty("name").GetString() ?? "scene";
 
 			Scene scene = new Scene(sceneName);
-			
+
+			scene.FilePath = filepath;
+
 			List<GameObject> objects = new List<GameObject>();
 
 			if (root.TryGetProperty("gameobjects", out JsonElement gameobjectElement))
@@ -53,7 +93,7 @@ namespace CSGL
 					float sZ = scale.GetProperty("z").GetSingle();
 
 
-					Transform transform = new Transform(new Vector3(pX, pY, pZ), MathU.Euler(rX, rY, rZ), Vector3.One);
+					Transform transform = new Transform(new Vector3(pX, pY, pZ), MathU.Euler(rX, rY, rZ), new Vector3(sX, sY, sZ));
 
 					JsonElement components = gobject.GetProperty("components");
 
@@ -66,7 +106,7 @@ namespace CSGL
 						Model model = ModelManager.LoadModel(modelName);
 						Material mat = MaterialManager.GetMaterial(material);
 
-						RenderObject renderobject = ModelManager.LoadModel(modelName).renderObject;
+						RenderObject renderobject = new RenderObject(model, mat, OpenTK.Graphics.OpenGL.BufferUsageHint.StaticDraw);// ModelManager.LoadModel(modelName).renderObject;
 
 						renderobject.Material = mat;
 
@@ -90,7 +130,7 @@ namespace CSGL
 
 			Log.Default($"Imported scene {scene.Name} with {scene.sceneGameObjects.Count} objects");
 
-			SceneManager.Scenes.Add(scene);
+			return scene;
 		}
 	}
 }
