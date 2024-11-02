@@ -79,6 +79,8 @@ namespace CSGL
 		Vector2 lastMouse = Input.Mouse.Position;
 		Vector2 direction = new Vector2(-90.0f, 0.0f);
 
+		bool canMove = false;
+
 		public Camera(Vector3 position, ProjectionType projectionType, float nearClip, float farClip, float fov)
 		{
 			this.Transform = new Transform(position, Quaternion.Identity, Vector3.One);
@@ -118,7 +120,14 @@ namespace CSGL
 
 		public void Update()
 		{
-			HandleInput();
+			if (Input.MouseState.IsButtonDown(MouseButton.Right))
+			{
+				HandleInput();
+			}
+			else
+			{
+				UpdateView();
+			}
 		}
 
 		public Matrix4 GetViewMatrix() => Matrix4.LookAt(Transform.Position, Transform.Position + Front, Up);

@@ -10,10 +10,12 @@ namespace CSGL
 		public static void Initialize()
 		{
 			ShaderManager.Import();
+
+			MaterialManager.Import();
 			ModelManager.Import();
 
 			TextureManager.Import();
-			MaterialManager.Import();
+			
 
 			AssetManager.Import();
 		}

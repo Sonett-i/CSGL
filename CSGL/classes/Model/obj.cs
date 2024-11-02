@@ -15,67 +15,76 @@ namespace CSGL
 		 *	f	v/vt/vn	|	face definitions
 		 */
 
-		public static Model Import(string[] data)
+
+		public static Model Import(string[] data, string fileName)
 		{
-			List<Vertex> _v = new List<Vertex>();
-			List<VertexNormal> _vn = new List<VertexNormal>();
-			List<TextureCoordinate> _vt = new List<TextureCoordinate>();
-			List<Face> _f = new List<Face>();
+			List<Mesh> meshes = new List<Mesh>();
+
+			int submeshIndex = -1;
 
 			string o = "";
 			int s = 0;
+
+			List<Submesh> submesh = new List<Submesh>();
 
 			for (int i = 2; i < data.Length; i++)
 			{
 				string[] line = data[i].Split(' ');
 
-				if (line[0] == "o")
+				switch (line[0])
 				{
-					o = line[1];
-				}
+					case "o":
+						submeshIndex++;
+						submesh.Add(new Submesh(submeshIndex));
+						submesh[submeshIndex].o = line[1];
+						break;
 
-				if (line[0] == "v")
-				{
-					Vertex v = new Vertex(Vector3FromString(line));
-					_v.Add(v);
-				}
+					case "v":
+						submesh[submeshIndex].vertices.Add(new Vertex(Vector3FromString(line)));
+						break;
 
-				if (line[0] == "vn")
-				{
-					VertexNormal vn = new VertexNormal(Vector3FromString(line));
-					_vn.Add(vn);
-				}
+					case "vn":
+						submesh[submeshIndex].normals.Add(new VertexNormal(Vector3FromString(line)));
+						break;
 
-				if (line[0] == "vt")
-				{
-					TextureCoordinate vt = new TextureCoordinate(Vector2FromString(line));
-					_vt.Add(vt);
-				}
+					case "vt":
+						submesh[submeshIndex].texCoords.Add(new TextureCoordinate(Vector2FromString(line)));
+						break;
 
-				if (line[0] == "s")
-				{
-					s = int.Parse(line[1]);
-				}
+					case "s":
+						submesh[submeshIndex].s = line[1];
+						break;
 
-				if (line[0] == "f")
-				{
-					Vector3i[] face = new Vector3i[line.Length-1];
-					int faceIndex = 0;
+					case "mtllib":
+						break;
 
-					for (int j = 1; j < line.Length; j++)
-					{
-						string[] faces = line[j].Split("/");
-						face[faceIndex] = Vector3iFromString(faces);
+					case "usemtl":
+						break;
 
-						faceIndex++;
-					}
+					case "f":
+						Vector3i[] face = new Vector3i[line.Length - 1];
+						int faceIndex = 0;
 
-					Face modelFace = new Face(face);
-					_f.Add(modelFace);
+						for (int j = 1; j < line.Length; j++)
+						{
+							string[] faces = line[j].Split("/");
+							face[faceIndex] = Vector3iFromString(faces);
+							faceIndex++;
+						}
+						Face modelFace = new Face(face);
+						submesh[submeshIndex].Faces.Add(modelFace);
+						break;
 				}
 			}
 
-			Model model = new Model(_v.ToArray(), _vn.ToArray(), _vt.ToArray(), _f.ToArray(), o, s);
+			Log.Default("submeshes" + submesh.ToString());
+
+			foreach (Submesh sm in submesh)
+			{
+				meshes.Add(sm.ToMesh());
+			}
+
+			Model model = new Model(meshes.ToArray(), fileName);
 
 			return model;
 

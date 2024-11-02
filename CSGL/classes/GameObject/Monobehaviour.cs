@@ -7,19 +7,19 @@ namespace CSGL
 	public class Monobehaviour
 	{
 		public Transform Transform;
-		public RenderObject RenderObject;
+		public Model Model;
 
 		
-		public Monobehaviour(Transform transform, RenderObject RenderObject, Texture2D? texture = null)
+		public Monobehaviour(Transform transform, Model model, Texture2D? texture = null)
 		{
 			this.Transform = transform;
-			this.RenderObject = RenderObject;
+			this.Model = model;
 		}
 
 		public virtual void OnAwake()
 		{
-			Log.Default($"{RenderObject.name} awake at: {Transform.Position.ToString()}");
-			RenderObject.m_Model = MathU.TRS(Transform);
+			Log.Default($"{Model.Name} awake at: {Transform.Position.ToString()}");
+			//Model.m_Model = MathU.TRS(Transform);
 		}
 
 		public virtual void Start()
@@ -29,7 +29,7 @@ namespace CSGL
 
 		public virtual void Update()
 		{
-			RenderObject.m_Model = MathU.TRS(Transform);
+			//Model.m_Model = MathU.TRS(Transform);
 		}
 
 		public virtual void FixedUpdate()
@@ -39,7 +39,7 @@ namespace CSGL
 
 		public virtual void OnRender()
 		{
-			RenderObject.Render();
+			//Model.Render();
 		}
 	}
 }

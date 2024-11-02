@@ -13,7 +13,7 @@ namespace CSGL
 
 		public Camera camera;
 
-		public List<RenderObject> sceneObjects = new List<RenderObject>();
+		public List<MeshRenderer> sceneObjects = new List<MeshRenderer>();
 		public List<GameObject> sceneGameObjects = new List<GameObject>();
 
 		public float lastUpdateTime = 0;
@@ -101,7 +101,7 @@ namespace CSGL
 		{
 			foreach (GameObject gameObject in sceneGameObjects)
 			{
-				gameObject.RenderObject.Dispose();
+				gameObject.Model.Dispose();
 			}
 
 			if (cubemap != null)

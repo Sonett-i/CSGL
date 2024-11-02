@@ -12,7 +12,7 @@ namespace CSGL
 	//	normals | 7		|  xyz	| 3
 	//	uv		| 10	|  uv	| 2
 
-	public class RenderObject : IDisposable
+	public class MeshRenderer : IDisposable
 	{
 		private bool disposed;
 		private bool initialized;
@@ -32,23 +32,23 @@ namespace CSGL
 
 		public Matrix4 m_Model;
 
-		public RenderObject(Model model, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		public MeshRenderer(Mesh mesh, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.hint = hint;
-			this.name = model.name;
+			this.name = mesh.name;
 
 			// Vertices array stores position, color, and texture coordinates
-			this.vertices = new float[model.vertices.Length * 12];
+			this.vertices = new float[mesh.vertices.Length * 12];
 			int vertexIndex = 0;
 
 			//	Fills Vertex Data
 
-			for (int i = 0; i < model.vertices.Length; i++)
+			for (int i = 0; i < mesh.vertices.Length; i++)
 			{
 				// Vec3 Vertex Position
-				this.vertices[vertexIndex] = model.vertices[i].x;       //0
-				this.vertices[vertexIndex + 1] = model.vertices[i].y;   //1
-				this.vertices[vertexIndex + 2] = model.vertices[i].z;   //2
+				this.vertices[vertexIndex] = mesh.vertices[i].x;       //0
+				this.vertices[vertexIndex + 1] = mesh.vertices[i].y;   //1
+				this.vertices[vertexIndex + 2] = mesh.vertices[i].z;   //2
 
 				// Vec4 Colour (white by default)
 				this.vertices[vertexIndex + 3] = 1.0f;                  //3
@@ -60,13 +60,13 @@ namespace CSGL
 				vertexIndex += 12;
 			}
 
-			int totalIndices = model.faces.Sum(face => (face.v.Length - 2) * 3);
+			int totalIndices = mesh.faces.Sum(face => (face.v.Length - 2) * 3);
 			this.indices = new uint[totalIndices];
 			int indicesIndex = 0;
 
-			for (int i = 0; i < model.faces.Length; i++)
+			for (int i = 0; i < mesh.faces.Length; i++)
 			{
-				Face face = model.faces[i];
+				Face face = mesh.faces[i];
 				int numVertices = face.v.Length;
 
 				for (int j = 0; j < numVertices; j++)
@@ -77,9 +77,9 @@ namespace CSGL
 
 					// Vec3 Vertex Normals
 					int vnI = (vertexPos * 12) + 7;
-					this.vertices[vnI] = model.normals[normalIndex].normal.X;
-					this.vertices[vnI + 1] = model.normals[normalIndex].normal.Y;
-					this.vertices[vnI + 2] = model.normals[normalIndex].normal.Z;
+					this.vertices[vnI] = mesh.normals[normalIndex].normal.X;
+					this.vertices[vnI + 1] = mesh.normals[normalIndex].normal.Y;
+					this.vertices[vnI + 2] = mesh.normals[normalIndex].normal.Z;
 
 					//	mx + b
 					//	Linear Equation used to map uv index offset in vertex buffer array
@@ -87,10 +87,10 @@ namespace CSGL
 
 
 					// Add Texture Coordinate Vec2 to Vertex Buffer
-					if (uvIndex >= 0 && uvIndex < model.texCoords.Length)
+					if (uvIndex >= 0 && uvIndex < mesh.texCoords.Length)
 					{
-						this.vertices[uvI] = model.texCoords[uvIndex].uv.X;	//10
-						this.vertices[uvI + 1] = model.texCoords[uvIndex].uv.Y;	//11
+						this.vertices[uvI] = mesh.texCoords[uvIndex].uv.X;	//10
+						this.vertices[uvI + 1] = mesh.texCoords[uvIndex].uv.Y;	//11
 					}
 				}
 
@@ -180,7 +180,7 @@ namespace CSGL
 			}
 		}
 
-		~RenderObject() 
+		~MeshRenderer() 
 		{
 			this.Dispose();
 		}

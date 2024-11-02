@@ -210,10 +210,7 @@ namespace CSGL
 
 		protected override void OnUnload()
 		{
-			foreach (RenderObject renderObject in scene.sceneObjects)
-			{
-				renderObject.Dispose();
-			}
+			SceneManager.CurrentScene.Unload();
 
 			base.OnUnload();
 		}

@@ -29,7 +29,7 @@ namespace CSGL
                 if (ext == ".obj")
                 {
 					Log.Default($"Importing {fileName}{ext}");
-					Model model = OBJ.Import(File.ReadAllLines(EditorConfig.ModelDirectory + fileName + ext));
+					Model model = OBJ.Import(File.ReadAllLines(EditorConfig.ModelDirectory + fileName + ext), fileName);
 					models.Add(model);
 					Log.Default($"Loaded {fileName + ext}: " + model.ToString() + "\n");
                 }
@@ -47,7 +47,7 @@ namespace CSGL
 		{
 			foreach (Model model in models)
 			{
-				if (model.name == name)
+				if (model.Name == name)
 					return model;
 			}
 
