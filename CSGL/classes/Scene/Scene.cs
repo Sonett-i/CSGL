@@ -96,5 +96,18 @@ namespace CSGL
 			
 			lastRenderTime = end - start;
 		}
+
+		public void Unload()
+		{
+			foreach (GameObject gameObject in sceneGameObjects)
+			{
+				gameObject.RenderObject.Dispose();
+			}
+
+			if (cubemap != null)
+				cubemap.Dispose();
+
+			sceneGameObjects.Clear();
+		}
 	}
 }

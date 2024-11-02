@@ -31,6 +31,8 @@ namespace CSGL
 
 			Camera.main = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
 
+			SceneManager.CurrentScene.Unload();
+
 			isReloading = true;
 			if (File.Exists(filepath))
 			{

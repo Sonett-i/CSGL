@@ -192,11 +192,24 @@ namespace CSGL
 
 			if (initialized)
 			{
-				GL.DeleteBuffer(vbo);
-				GL.DeleteBuffer(ebo);
-				GL.DeleteVertexArray(vao);
+				try
+				{
+					if (vbo != 0)
+						GL.DeleteBuffer(vbo);
 
-				this.initialized = false;
+					if (ebo != 0)
+						GL.DeleteBuffer(ebo);
+
+					if (vao != 0)
+						GL.DeleteVertexArray(vao);
+
+					this.initialized = false;
+				}
+				catch (AccessViolationException ex)
+				{
+					Log.Default($"AccessViolationException caught while deleting buffers: {ex.Message}");
+				}
+				
 			}
 
 			this.disposed = true;
