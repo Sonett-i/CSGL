@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.ES20;
+﻿using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,16 @@ namespace CSGL
 		public MeshFilter MeshFilter;
 		public BufferUsageHint BufferUsageHint;
 
+
+
 		public MeshRenderer(MeshFilter MeshFilter, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw) 
 		{
 			this.MeshFilter = MeshFilter;
 			this.material = material;
 			this.BufferUsageHint = hint;
+
+			//this.vertexBuffer = new VertexBuffer(in MeshFilter, this.BufferUsageHint);
+			//this.elementBuffers = new ElementBuffer[MeshFilter.Mesh.SubMesh.Length];
 		}
 
 		void Bind()
@@ -27,12 +33,17 @@ namespace CSGL
 
 		public void Render()
 		{
+			
+		}
 
+		~MeshRenderer()
+		{
+			this.Dispose();
 		}
 
 		public void Dispose()
 		{
-
+			
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace CSGL
 
 		public virtual void Update()
 		{
-			//RenderObject.m_Model = MathU.TRS(Transform);
+			//MeshRenderer.m_model = MathU.TRS(Transform);
 		}
 
 		public virtual void FixedUpdate()

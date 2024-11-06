@@ -28,9 +28,9 @@ namespace CSGL
 
 		public static Vector3i Vector3iFromString(string[] data)
 		{
-			int x = int.Parse(data[0]) - 1;
-			int y = int.Parse(data[1]) - 1;
-			int z = int.Parse(data[2]) - 1;
+			int x = int.Parse(data[0]);
+			int y = int.Parse(data[1]);
+			int z = int.Parse(data[2]);
 
 			return new Vector3i(x, y, z);
 		}

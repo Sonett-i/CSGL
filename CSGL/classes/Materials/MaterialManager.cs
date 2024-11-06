@@ -12,7 +12,7 @@ namespace CSGL
 	public class MaterialManager
 	{
 		public static List<Material> Materials = new List<Material>();
-
+		public static Material Default;
 		public static void Import()
 		{
 			Log.Default("Importing Materials");
@@ -34,6 +34,11 @@ namespace CSGL
 					if (mat != null)
 					{
 						Materials.Add(mat);
+
+						if (mat.Name == "default")
+						{
+							Default = mat;
+						}
 					}
 				}
 			}
@@ -47,7 +52,7 @@ namespace CSGL
 					return mat;
 			}
 
-			return null;
+			return MaterialManager.Default;
 		}
 	}
 }

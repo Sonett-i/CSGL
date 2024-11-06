@@ -35,11 +35,6 @@ namespace CSGL
 			GL.UniformMatrix4(m_view, true, ref view);
 			GL.UniformMatrix4(m_projection, true, ref projection);
 
-
-			//this.Shader.SetUniform("model", model, true);
-			//this.Shader.SetUniform("view", Camera.main.m_View, true);
-			//this.Shader.SetUniform("projection", Camera.main.m_Projection, true);
-
 			GL.UseProgram(0);
 		}
 

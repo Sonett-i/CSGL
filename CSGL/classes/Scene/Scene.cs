@@ -13,7 +13,6 @@ namespace CSGL
 
 		public Camera camera;
 
-		public List<RenderObject> sceneObjects = new List<RenderObject>();
 		public List<GameObject> sceneGameObjects = new List<GameObject>();
 
 		public float lastUpdateTime = 0;
@@ -41,7 +40,15 @@ namespace CSGL
 		void InitializeObjects()
 		{
 
-			MeshRenderer meshRenderer = new MeshRenderer(ModelManager.LoadModel("cube.obj"), MaterialManager.GetMaterial("default"));
+			//MeshRenderer meshRenderer = new MeshRenderer(ModelManager.LoadModel("cube.obj"), MaterialManager.GetMaterial("default"));
+			//GameObject go = new GameObject(new Transform(new Vector3(0, 0, 0), Quaternion.Identity, Vector3.One), meshRenderer);
+			MeshFilter mf = ModelManager.LoadModel("Windmill.obj");
+
+			MeshRenderer windmill = new MeshRenderer(ModelManager.LoadModel("Windmill.obj"), MaterialManager.GetMaterial("default"));
+			GameObject wm = new GameObject(new Transform(new Vector3(0, 0, 0), Quaternion.Identity, Vector3.One), windmill);
+
+			//sceneGameObjects.Add(go);
+			sceneGameObjects.Add(wm);
 
 			foreach (GameObject obj in sceneGameObjects)
 			{

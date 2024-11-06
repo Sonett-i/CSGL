@@ -186,7 +186,7 @@ namespace CSGL
 				Log.Advanced($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
 			}
 
-			SceneManager.CurrentScene.Render();
+			//SceneManager.CurrentScene.Render();
 
 			this.Context.SwapBuffers();
 
@@ -212,9 +212,9 @@ namespace CSGL
 
 		protected override void OnUnload()
 		{
-			foreach (RenderObject renderObject in scene.sceneObjects)
+			foreach (GameObject gameObject in scene.sceneGameObjects)
 			{
-				renderObject.Dispose();
+				gameObject.MeshRenderer.Dispose();
 			}
 
 			base.OnUnload();

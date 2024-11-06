@@ -29,9 +29,10 @@ namespace CSGL
                 if (ext == ".obj")
                 {
 					Log.Default($"Importing {fileName}{ext}");
-					MeshFilter model = OBJ.Import(files[i]);
-					models.Add(model);
-					Log.Default($"Loaded {fileName + ext}: " + model.ToString() + "\n");
+
+					MeshFilter mesh = OBJ.ImportModel(files[i]);
+					ModelManager.AddModel(mesh);
+					Log.Default($"Loaded {fileName + ext}: " + mesh.ToString() + "\n");
                 }
 
 				/*
@@ -43,6 +44,11 @@ namespace CSGL
 				*/
                 
 			}
+		}
+
+		public static void AddModel(MeshFilter meshFilter)
+		{
+			models.Add(meshFilter);
 		}
 
 		public static MeshFilter LoadModel(string name)
