@@ -50,6 +50,8 @@ namespace CSGL
 			//sceneGameObjects.Add(go);
 			sceneGameObjects.Add(wm);
 
+			this.cubemap = new Cubemap();
+
 			foreach (GameObject obj in sceneGameObjects)
 			{
 				obj.OnAwake();
