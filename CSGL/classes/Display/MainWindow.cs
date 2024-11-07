@@ -161,32 +161,19 @@ namespace CSGL
 			if (WindowConfig.StickyMouse && IsFocused)
 				LockMouse();
 
-			base.OnUpdateFrame(e);
-		}
-
-		private void PollWindow(float time)
-		{
-			//Console.WriteLine(time + " " + Time.time);
-
-			if (Time.time >= Time.NextPoll)
+			if (Time.deltaTime > 0.15)
 			{
-				Title = WindowConfig.Name + $" (Vsync: {VSync}) FPS: {1f / time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")} Mouse: ({Input.Mouse.Position.X}, {Input.Mouse.Position.Y})";
-				Time.NextPoll = Time.time + Time.PollInterval;
+				Title = WindowConfig.Name + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")} Mouse: ({Input.Mouse.Position.X}, {Input.Mouse.Position.Y})";
+				//Log.Advanced($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
 			}
+
+			base.OnUpdateFrame(e);
 		}
 
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
-			PollWindow((float)e.Time);
-
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-			if (Time.deltaTime > 0.3)
-			{
-				Log.Advanced($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
-			}
-
-			//SceneManager.CurrentScene.Render();
+			SceneManager.CurrentScene.Render();
 
 			this.Context.SwapBuffers();
 

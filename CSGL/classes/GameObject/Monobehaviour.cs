@@ -39,6 +39,7 @@ namespace CSGL
 
 		public virtual void OnRender()
 		{
+			MeshRenderer.model_Matrix = MathU.TRS(this.Transform);
 			MeshRenderer.Render();
 		}
 	}

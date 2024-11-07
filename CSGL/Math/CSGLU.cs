@@ -34,5 +34,10 @@ namespace CSGL
 
 			return new Vector3i(x, y, z);
 		}
+
+		public static float KiB(float value)
+		{
+			return value / 1024;
+		}
 	}
 }
