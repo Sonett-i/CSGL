@@ -13,7 +13,7 @@ namespace CSGL
 
 		public Camera camera;
 
-		public List<GameObject> sceneGameObjects = new List<GameObject>();
+		public List<Monobehaviour> sceneGameObjects = new List<Monobehaviour>();
 
 		public float lastUpdateTime = 0;
 		public float lastRenderTime = 0;
@@ -25,7 +25,7 @@ namespace CSGL
 			this.ID = SceneManager.Scenes.Count + 1;
 			this.Name = name;
 
-			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 100f, 45f);
+			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 1000f, 45f);
 
 			if (!SceneManager.isReloading)
 				Camera.main = this.camera;
@@ -39,20 +39,25 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
+			//Windmill wm = new Windmill(new Transform(new Vector3(0, 0, 0), Quaternion.Identity, Vector3.One));
+			GameObject map = new GameObject(new Transform(), new MeshRenderer(ModelManager.LoadModel("MainMap.obj"), MaterialManager.GetMaterial("textured")));
+			map.Transform.Scale *= 15f;
 
-			//MeshRenderer meshRenderer = new MeshRenderer(ModelManager.LoadModel("cube.obj"), MaterialManager.GetMaterial("default"));
-			//GameObject go = new GameObject(new Transform(new Vector3(0, 0, 0), Quaternion.Identity, Vector3.One), meshRenderer);
-			MeshFilter mf = ModelManager.LoadModel("Windmill.obj");
+			for (int i = 0; i < 5; i++)
+			{
+				float x = CSGLU.Random(-20, 20);
+				float z = CSGLU.Random(-50, 50);
+				Vector3 randomVector = new Vector3(x, 0, z);
 
-			MeshRenderer windmill = new MeshRenderer(ModelManager.LoadModel("Windmill.obj"), MaterialManager.GetMaterial("default"));
-			GameObject wm = new GameObject(new Transform(new Vector3(0, 0, 0), Quaternion.Identity, Vector3.One), windmill);
-
+				Windmill wm = new Windmill(new Transform(randomVector, Quaternion.Identity, Vector3.One * 0.5f));
+			}
+			
 			//sceneGameObjects.Add(go);
-			sceneGameObjects.Add(wm);
+			//sceneGameObjects.Add(wm);
 
 			this.cubemap = new Cubemap();
 
-			foreach (GameObject obj in sceneGameObjects)
+			foreach (Monobehaviour obj in Monobehaviour.Monobehaviours)
 			{
 				obj.OnAwake();
 			}
@@ -66,7 +71,7 @@ namespace CSGL
 
 			Camera.main.Transform.Position = new Vector3(0, 10, -20);
 
-			foreach (GameObject obj in sceneGameObjects)
+			foreach (Monobehaviour obj in Monobehaviour.Monobehaviours)
 			{
 				obj.Start();
 			}
@@ -82,7 +87,7 @@ namespace CSGL
 		{
 			float start = Time.time;
 
-			foreach (GameObject obj in sceneGameObjects)
+			foreach (Monobehaviour obj in Monobehaviour.Monobehaviours)
 			{
 				obj.Update();
 			}
@@ -96,9 +101,9 @@ namespace CSGL
 		{
 			float start = Time.time;
 
-			foreach (GameObject gameObject in sceneGameObjects)
+			foreach (Monobehaviour obj in Monobehaviour.Monobehaviours)
 			{
-				gameObject.OnRender();
+				obj.OnRender();
 			}
 
 			float end = Time.time;
@@ -111,7 +116,7 @@ namespace CSGL
 
 		public void Unload()
 		{
-			foreach (GameObject gameObject in sceneGameObjects)
+			foreach (Monobehaviour gameObject in sceneGameObjects)
 			{
 				gameObject.MeshRenderer.Dispose();
 			}

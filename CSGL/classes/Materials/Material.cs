@@ -15,6 +15,8 @@ namespace CSGL
 		private int m_view;
 		private int m_projection;
 
+		public Matrix4 model_Matrix;
+
 		public Material(ShaderProgram shader, Texture2D[] texture, string name) 
 		{
 			this.Shader = shader;

@@ -79,9 +79,6 @@ namespace CSGL
 			SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
 			SceneManager.CurrentScene.Start();
 
-			if (!WindowConfig.CursorVisible)
-				Cursor = MouseCursor.Empty;
-
 			this.IsVisible = true;
 
 			base.OnLoad();
@@ -112,11 +109,19 @@ namespace CSGL
 
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
-			Input.Mouse.Update(MouseState);
+			if (this.IsFocused)
+			{
+				if (MouseState.IsButtonDown(MouseButton.Right))
+					this.CursorState = CursorState.Grabbed;
+				else if (MouseState.IsButtonReleased(MouseButton.Right))
+					this.CursorState = CursorState.Normal;
+				else
+					this.CursorState = CursorState.Normal;
+
+				Input.MouseMove(e);
+			}
 
 			//GLFW.SetCursorPos(WindowPtr, point.X, point.Y);
-
-
 			base.OnMouseMove(e);
 		}
 
@@ -148,7 +153,6 @@ namespace CSGL
 			HandleKeyboard();
 
 			SceneManager.CurrentScene.Update();
-			//scene.Update();
 
 			timeInterval += (float)e.Time;
 
@@ -157,9 +161,6 @@ namespace CSGL
 				FixedUpdate();
 				timeInterval = 0;
 			}
-
-			if (WindowConfig.StickyMouse && IsFocused)
-				LockMouse();
 
 			if (Time.deltaTime > 0.15)
 			{

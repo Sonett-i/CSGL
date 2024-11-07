@@ -6,14 +6,17 @@ namespace CSGL
 {
 	public class Monobehaviour
 	{
+		public static List<Monobehaviour> Monobehaviours = new List<Monobehaviour>();
+
 		public Transform Transform;
 		public MeshRenderer MeshRenderer;
 
-		
 		public Monobehaviour(Transform transform, MeshRenderer meshRenderer)
 		{
 			this.Transform = transform;
 			this.MeshRenderer = meshRenderer;
+
+			Monobehaviours.Add(this);
 		}
 
 		public virtual void OnAwake()
@@ -39,7 +42,7 @@ namespace CSGL
 
 		public virtual void OnRender()
 		{
-			MeshRenderer.model_Matrix = MathU.TRS(this.Transform);
+			this.MeshRenderer.m_model = MathU.TRS(this.Transform);
 			MeshRenderer.Render();
 		}
 	}

@@ -39,5 +39,12 @@ namespace CSGL
 		{
 			return value / 1024;
 		}
+
+		public static float Random(int min, int max)
+		{
+			Random r = new Random();
+
+			return r.Next(min, max);
+		}
 	}
 }

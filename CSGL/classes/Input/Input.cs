@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -17,9 +18,15 @@ namespace CSGL
 		public static void Update(KeyboardState keyboardState, MouseState mouseState)
 		{
 			KeyboardState = keyboardState;
-			MouseState = mouseState;
+
 
 			Mouse.Update(mouseState);
+		}
+
+		public static void MouseMove(MouseMoveEventArgs e)
+		{
+			Mouse.Delta = e.Delta;
+			Mouse.Position = e.Position;
 		}
 
 		public static unsafe void SetMousePosition(Window* window,int x, int y)
@@ -66,10 +73,12 @@ namespace CSGL
 		public bool RightButtonPressed = false;
 		public bool LeftButtonDown = false;
 		public bool RightButtonDown = false;
+		public Vector2 Delta = Vector2.Zero;
 
 		public void Update(MouseState mouseState)
 		{
 			this.Position = new Vector2(mouseState.Position.X, Viewport.Height - mouseState.Position.Y);
+			this.RightButtonPressed = mouseState.IsButtonDown(MouseButton.Right);
 		}
 
 		//	Config

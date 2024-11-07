@@ -10,18 +10,18 @@ namespace CSGL
 {
 	public class MeshRenderer
 	{
-		public Material material;
+		public Material[] material;
 		public MeshFilter MeshFilter;
 		public BufferUsageHint BufferUsageHint;
 
-		private VertexBuffer[] Buffers;
+		public Matrix4 m_model;
 
-		public Matrix4 model_Matrix;
+		private VertexBuffer[] Buffers;
 
 		public MeshRenderer(MeshFilter MeshFilter, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw) 
 		{
 			this.MeshFilter = MeshFilter;
-			this.material = material;
+			this.material = new Material[MeshFilter.Meshes.Length];
 			this.BufferUsageHint = hint;
 
 			this.Buffers = new VertexBuffer[MeshFilter.Meshes.Length];
@@ -29,20 +29,26 @@ namespace CSGL
 			for (int i = 0; i < MeshFilter.Meshes.Length; i++)
 			{
 				Buffers[i] = new VertexBuffer(MeshFilter.Meshes[i]);
+				this.material[i] = material;
 				Log.Default($"OpenGL: Bound model: {MeshFilter.Name} mesh: {MeshFilter.Meshes[i].Name} (Vertices: {MeshFilter.Meshes[i].VertexCount}, Faces: {MeshFilter.Meshes[i].Faces}) Size: {CSGLU.KiB(Buffers[i].Size)} KiB");
 			}
 		}
 
+
 		public void Render()
 		{
-			this.material.MVP(model_Matrix, Camera.main.m_View, Camera.main.m_Projection);
-			this.material.Render();
-
-			GL.UseProgram(this.material.Shader.ShaderProgramHandle);
 			for (int i = 0; i < this.Buffers.Length; i++)
 			{
+				this.material[i].MVP(m_model, Camera.main.m_View, Camera.main.m_Projection);
+				this.material[i].Render();
+				GL.UseProgram(this.material[i].Shader.ShaderProgramHandle);
 				Buffers[i].Render();
 			}
+		}
+
+		public Material GetMaterial(int index)
+		{
+			return this.material[index];
 		}
 
 		public void Dispose()

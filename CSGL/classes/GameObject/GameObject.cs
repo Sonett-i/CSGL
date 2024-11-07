@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 namespace CSGL
 {
@@ -18,22 +19,6 @@ namespace CSGL
 		{
 			base.Update();
 		}
-
-		// To-do instantiation with location, transforms etc
-		public static T Instantiate<T>(T original, MainWindow mainwindow) where T : GameObject, new()
-		{
-			T instance = new T();
-
-			instance.Transform.Position = original.Transform.Position;
-			instance.Transform.Rotation = original.Transform.Rotation;
-			instance.Transform.Scale = original.Transform.Scale;
-
-			mainwindow.scene.AddObjectToScene(instance);
-			instance.Start();
-
-			return instance;
-		}
-
 
 		public override void OnRender()
 		{

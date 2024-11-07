@@ -16,6 +16,13 @@ namespace CSGL
 			Scale = scale;
 		}
 
+		public Transform()
+		{
+			this.Position = Vector3.Zero;
+			this.Rotation = Quaternion.Identity;
+			this.Scale = Vector3.One;
+		}
+
 		public Vector3 LocalRotation
 		{
 			get
