@@ -7,12 +7,11 @@ namespace CSGL
 {
 	public class Monobehaviour
 	{
-		public static Dictionary<string, Type> ObjectTypes; // = Monobehaviour.GetDerivedTypesDictionary<Monobehaviour>();
+		public static Dictionary<string, Type> ObjectTypes = new Dictionary<string, Type>(); // = Monobehaviour.GetDerivedTypesDictionary<Monobehaviour>();
 		public static List<Monobehaviour> Monobehaviours = new List<Monobehaviour>();
 		public static List<Monobehaviour> GameObjects = new List<Monobehaviour>();
 
-		public Transform Transform;
-		public MeshRenderer MeshRenderer;
+		public List<Component> Components = new List<Component>();
 
 		public Monobehaviour()
 		{
@@ -21,7 +20,7 @@ namespace CSGL
 
 		public virtual void OnAwake()
 		{
-			Log.Default($"awake at: {Transform.Position.ToString()}");
+			Log.Default($"{this.GetType()} awake");
 			//RenderObject.m_Model = MathU.TRS(Transform);
 		}
 
@@ -32,7 +31,10 @@ namespace CSGL
 
 		public virtual void Update()
 		{
-
+			foreach (var component in Components)
+			{
+				component.Update();
+			}
 		}
 
 		public virtual void FixedUpdate()
@@ -45,18 +47,31 @@ namespace CSGL
 
 		}
 
-		public static Dictionary<string, Type> GetDerivedTypesDictionary<T>() where T : class
+		public void AddComponent(Component component)
 		{
-			Type baseType = typeof(T);
-			return Assembly.GetAssembly(baseType)
-				.GetTypes()
-				.Where(t=>t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType)).ToDictionary(t => t.Name, t=>t);
+			Components.Add(component);
 		}
 
-		public static List<Type> GetDerivedTypes<T>() where T : class
+		public T AddComponent<T>(Action<T> initializer = null) where T : Component, new()
 		{
-			Type baseType = typeof(T);
-			return Assembly.GetAssembly(baseType).GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType)).ToList();
+			T component = new T
+			{
+				Monobehaviour = this
+			};
+			Components.Add(component);
+			initializer?.Invoke(component);
+			component.Start();
+			return component;
+		}
+
+		public T GetComponent<T>() where T : Component
+		{
+			foreach (Component component in Components)
+			{
+				if (component is T matchingComponent)
+					return matchingComponent;
+			}
+			return null;
 		}
 	}
 }

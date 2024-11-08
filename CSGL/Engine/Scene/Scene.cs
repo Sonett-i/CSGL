@@ -102,7 +102,7 @@ namespace CSGL
 		{
 			foreach (Monobehaviour gameObject in sceneGameObjects)
 			{
-				gameObject.MeshRenderer.Dispose();
+				//gameObject.MeshRenderer.Dispose();
 			}
 
 			if (cubemap != null)

@@ -69,8 +69,11 @@ namespace CSGL
 		{
 			Log.Default($"Initializing {WindowConfig.Name}");
 
+			Monobehaviour.ObjectTypes = CSGLU.GetDerivedTypesDictionary<Monobehaviour>();
+			Component.ComponentTypes = CSGLU.GetDerivedTypesDictionary<Component>();
+
 			InitializeWindow();
-			Monobehaviour.ObjectTypes = Monobehaviour.GetDerivedTypesDictionary<Monobehaviour>();
+
 
 			Resources.Import();
 			AssetManager.Import();
@@ -206,7 +209,7 @@ namespace CSGL
 		{
 			foreach (GameObject gameObject in scene.sceneGameObjects)
 			{
-				gameObject.MeshRenderer.Dispose();
+				//gameObject.MeshRenderer.Dispose();
 			}
 
 			base.OnUnload();

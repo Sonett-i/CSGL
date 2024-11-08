@@ -34,7 +34,7 @@ namespace CSGL
 		public override void Update()
 		{
 			angle += rotationSpeed * Time.deltaTime;
-			propeller.Transform.Rotation = Quaternion.FromAxisAngle(spinAxis.Normalized(), angle);
+			//propeller.Transform.Rotation = Quaternion.FromAxisAngle(spinAxis.Normalized(), angle);
 			base.Update();
 		}
 

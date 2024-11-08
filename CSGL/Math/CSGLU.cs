@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,20 @@ namespace CSGL
 {
 	public static class CSGLU
 	{
+		public static Dictionary<string, Type> GetDerivedTypesDictionary<T>() where T : class
+		{
+			Type baseType = typeof(T);
+			return Assembly.GetAssembly(baseType)
+				.GetTypes()
+				.Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType)).ToDictionary(t => t.Name, t => t);
+		}
+
+		public static List<Type> GetDerivedTypes<T>() where T : class
+		{
+			Type baseType = typeof(T);
+			return Assembly.GetAssembly(baseType).GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType)).ToList();
+		}
+
 		public static Vector3 Vector3FromString(string[] data)
 		{
 			float x = float.Parse(data[1]); // x

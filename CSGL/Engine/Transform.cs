@@ -53,5 +53,10 @@ namespace CSGL
 				return Vector3.Cross(Forward, Vector3.UnitY).Normalized();
 			}
 		}
+
+		public override void Instance()
+		{
+
+		}
 	}
 }

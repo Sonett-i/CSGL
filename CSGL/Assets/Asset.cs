@@ -72,6 +72,8 @@ namespace CSGL
 			string objectModel = "";
 			string objectMaterial = "";
 			string objectClass = "";
+			List<string> objectComponents = new List<string>();
+			List<Component> components = new List<Component>();
 
 			using (JsonDocument document = JsonDocument.Parse(jsonString))
 			{
@@ -81,12 +83,65 @@ namespace CSGL
 				objectModel = root.GetProperty("model").ToString();
 				objectMaterial = root.GetProperty("material").ToString();
 				objectClass = root.GetProperty("objectclass").ToString();
+
+
+				if (root.TryGetProperty("components", out JsonElement componentsElement))
+				{
+					components = GetComponents(componentsElement);
+				}
 			}
+
+			Type classType = Monobehaviour.ObjectTypes[objectClass];
+
+			if (classType == null || !typeof(Monobehaviour).IsAssignableFrom(classType)) 
+			{
+				throw new Exception($"{objectClass} not found, or is not a valid monobehavior");
+			}
+
+			Monobehaviour gameobject = (Monobehaviour)Activator.CreateInstance(classType);
 
 
 			//GameObject go = new GameObject()
 
 			return null;
+		}
+
+		public static List<Component> GetComponents(JsonElement componentsElement)
+		{
+			List<Component> list = new List<Component>();
+
+			foreach (JsonProperty componentProperty in componentsElement.EnumerateObject())
+			{
+				string componentName = componentProperty.Name;
+
+				JsonElement componentConfig = componentProperty.Value;
+
+				if (Component.ComponentTypes.TryGetValue(componentName, out Type componentType))
+				{
+					Component component = (Component)Activator.CreateInstance(componentType);
+
+					component.Instance(new object[] {"test", "abc"});
+
+					foreach (JsonProperty property in componentConfig.EnumerateObject())
+					{
+						string propertyName = property.Name;
+						JsonElement propertyValue = property.Value;
+
+						PropertyInfo propInfo = componentType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+						if (propInfo != null && propInfo.CanWrite)
+						{
+							object value = Convert.ChangeType(propertyValue.ToString(), propInfo.PropertyType);
+							propInfo.SetValue(component, value);
+						}
+					}
+
+					list.Add(component);
+				}
+				//objectComponents.Add(objectComponent.GetString() ?? "null");
+			}
+
+
+			return list;
 		}
 
 		public static object CreateInstance(string typeName, params object[] args)

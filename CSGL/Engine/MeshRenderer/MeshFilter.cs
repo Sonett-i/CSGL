@@ -1,16 +1,20 @@
 ﻿using System;
 using CSGL.Math;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
 namespace CSGL
 {
-	public class MeshFilter
+	public class MeshFilter : Component
 	{
-		public string Name;
-		public Mesh[] Meshes;
-		public int Size;
+		public string Name = "";
+		public string modelname = "";
+		public Mesh[]? Meshes;
+		public int Size = 0;
 
+		public MeshFilter()
+		{
+
+		}
 
 		public MeshFilter(string name, Mesh[] mesh) 
 		{
@@ -18,9 +22,19 @@ namespace CSGL
 			this.Meshes = mesh;
 		}
 
+		public void SetModel(string model)
+		{
+			this.Name = model;
+		}
+
 		public override string ToString()
 		{
 			return $"{Name}";
+		}
+
+		public override void Instance()
+		{
+
 		}
 	}
 }

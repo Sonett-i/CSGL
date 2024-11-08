@@ -8,15 +8,22 @@ using System.Threading.Tasks;
 
 namespace CSGL
 {
-	public class MeshRenderer
+	public class MeshRenderer : Component
 	{
 		public Material[] material;
 		public MeshFilter MeshFilter;
 		public BufferUsageHint BufferUsageHint;
 
+		public string materialname;
+
 		public Matrix4 m_model;
 
 		private VertexBuffer[] Buffers;
+
+		public MeshRenderer()
+		{
+
+		}
 
 		public MeshRenderer(MeshFilter MeshFilter, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw) 
 		{
@@ -34,6 +41,11 @@ namespace CSGL
 			}
 		}
 
+		public override void Instance()
+		{
+
+		}
+
 
 		public void Render()
 		{
@@ -49,6 +61,11 @@ namespace CSGL
 		public Material GetMaterial(int index)
 		{
 			return this.material[index];
+		}
+
+		public void SetMaterial(string material)
+		{
+
 		}
 
 		public void Dispose()
