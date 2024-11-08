@@ -10,18 +10,12 @@ namespace CSGL
 	{
 		//	Config
 		public static string ConfigDirectory = Environment.CurrentDirectory + "\\Config\\";
-
-		//	Resources
-		public static string ShaderDirectory = Environment.CurrentDirectory + "\\Resources\\Shaders\\";
-		public static string ModelDirectory = Environment.CurrentDirectory + "\\Resources\\Models\\";
-		public static string TextureDirectory = Environment.CurrentDirectory + "\\Resources\\Textures\\";
-		public static string MaterialDirectory = Environment.CurrentDirectory + "\\Resources\\Materials\\";
-
-		//	GameObjects
-
+		
+		// Files
 		public static string ResourcesDirectory = Environment.CurrentDirectory + "\\Resources\\";
 		public static string AssetDirectory = Environment.CurrentDirectory + "\\Assets\\";
 
+		// Debugging
 		public static bool advancedDebug = true;
 	}
 }

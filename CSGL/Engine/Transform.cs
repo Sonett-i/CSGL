@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace CSGL
 {
-	public class Transform
+	public class Transform : Component
 	{
 		public Vector3 Position;
 		public Quaternion Rotation;

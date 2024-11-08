@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 using System.Text.Json;
 
 namespace CSGL
@@ -43,9 +44,7 @@ namespace CSGL
 		public static Asset? ImportFromJson(string filePath)
 		{
 			if (Path.GetExtension(filePath) != ".json")
-			{
 				return null;
-			}
 
 			Asset asset = new Asset("null", "null", "null");
 
@@ -54,7 +53,7 @@ namespace CSGL
 			using (JsonDocument document = JsonDocument.Parse(jsonString))
 			{
 				JsonElement root = document.RootElement;
-				string assetType = root.GetProperty("assetType").ToString();
+				string assetType = root.GetProperty("assetType").ToString().ToLower();
 				string name = root.GetProperty("name").ToString();
 
 				asset.Name = name;
@@ -65,10 +64,43 @@ namespace CSGL
 			return asset;
 		}
 
-		public static GameObject FromAsset(Asset asset)
+		public static Monobehaviour ImportObject(string file)
 		{
+			string jsonString = File.ReadAllText(file);
+
+			string objectName = "";
+			string objectModel = "";
+			string objectMaterial = "";
+			string objectClass = "";
+
+			using (JsonDocument document = JsonDocument.Parse(jsonString))
+			{
+				JsonElement root = document.RootElement;
+
+				objectName = root.GetProperty("name").ToString();
+				objectModel = root.GetProperty("model").ToString();
+				objectMaterial = root.GetProperty("material").ToString();
+				objectClass = root.GetProperty("objectclass").ToString();
+			}
+
+
 			//GameObject go = new GameObject()
 
+			return null;
+		}
+
+		public static object CreateInstance(string typeName, params object[] args)
+		{
+			if (Monobehaviour.ObjectTypes.TryGetValue(typeName, out Type type))
+			{
+				return Activator.CreateInstance(type, args); // Pass the parameters here
+			}
+
+			throw new ArgumentException($"Type '{typeName}' not found.");
+		}
+
+		public static Scene ImportScene(string file)
+		{
 			return null;
 		}
 	}

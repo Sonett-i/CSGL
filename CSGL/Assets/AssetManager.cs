@@ -9,18 +9,18 @@ namespace CSGL
 		public static List<Monobehaviour> GameObjects = new List<Monobehaviour>();
 
 		public static List<string> assetPaths = new List<string>();
-
-		public static void Initialize()
-		{
-			Resources.ImportShaders();
-			Resources.ImportTextures();
-			Resources.ImportMaterials();
-			Resources.ImportModels();
-
-			AssetManager.Import();
-		}
+		
+		public static List<string> gobjectAssets = new List<string>();
+		public static List<string> sceneAssets = new List<string>();
 
 		public static void Import()
+		{
+			Scan();
+
+			ImportGameObjects();
+		}
+
+		public static void Scan()
 		{
 			Log.Default("Importing assets from: " + EditorConfig.AssetDirectory);
 			string[] folders = Directory.GetDirectories(EditorConfig.AssetDirectory);
@@ -57,16 +57,29 @@ namespace CSGL
 					if (ext == ".json")
 					{
 						Asset? asset = Asset.ImportFromJson(files[i]);
-					}
 
-					if (ext == ".jpg" || ext == ".png")
-					{
-						//Resources.T TextureManager.Import(files[i], fileName);
+						switch (asset.Type)
+						{
+							case Asset.AssetType.ASSET_GAMEOBJECT:
+								gobjectAssets.Add(files[i]);
+								break;
+
+							case Asset.AssetType.ASSET_SCENE:
+								break;
+						}
 					}
 				}
 			}
 
 			return result;
+		}
+
+		public static void ImportGameObjects()
+		{
+			foreach (string gameobject in gobjectAssets)
+			{
+				Monobehaviour monobehavior = Asset.ImportObject(gameobject);
+			}
 		}
 	}
 }

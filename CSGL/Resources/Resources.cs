@@ -107,22 +107,26 @@ namespace CSGL
 						if (asset.Type == Asset.AssetType.ASSET_MATERIAL)
 						{
 							scannedMaterials.Add(files[i]);
+							continue;
 						}
 					}
 
 					if (ext == ".jpg" || ext == ".png")
 					{
 						scannedTextures.Add(files[i]);
+						continue;
 					}
 
 					if (ext == ".obj")
 					{
 						scannedModels.Add(files[i]);
+						continue;
 					}
 
 					if (ext == ".vert" || ext == ".frag")
 					{
 						scannedShaders.Add(files[i]);
+						continue;
 					}
 				}
 			}

@@ -60,17 +60,17 @@ namespace CSGL
 		private ShaderProgram shader;
 		private string[] facesCubeMap =
 		{
-			"Assets\\Skybox\\right.jpg",
-			"Assets\\Skybox\\left.jpg",
-			"Assets\\Skybox\\top.jpg",
-			"Assets\\Skybox\\bottom.jpg",
-			"Assets\\Skybox\\front.jpg",
-			"Assets\\Skybox\\back.jpg"
+			"Resources\\Textures\\Skybox\\right.jpg",
+			"Resources\\Textures\\Skybox\\left.jpg",
+			"Resources\\Textures\\Skybox\\top.jpg",
+			"Resources\\Textures\\Skybox\\bottom.jpg",
+			"Resources\\Textures\\Skybox\\front.jpg",
+			"Resources\\Textures\\Skybox\\back.jpg"
 		};
 
 		public Cubemap()
 		{
-			//this.shader = ShaderManager.GetShader("skybox");
+			this.shader = Resources.Shaders["skybox"].ShaderProgram;
 			LoadCubeMap();
 			Setup();
 		}

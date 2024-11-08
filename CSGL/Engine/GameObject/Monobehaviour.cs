@@ -1,21 +1,22 @@
 ﻿using System;
 using OpenTK;
 using OpenTK.Mathematics;
+using System.Reflection;
 
 namespace CSGL
 {
 	public class Monobehaviour
 	{
+		public static Dictionary<string, Type> ObjectTypes; // = Monobehaviour.GetDerivedTypesDictionary<Monobehaviour>();
 		public static List<Monobehaviour> Monobehaviours = new List<Monobehaviour>();
 		public static List<Monobehaviour> GameObjects = new List<Monobehaviour>();
 
 		public Transform Transform;
 		public MeshRenderer MeshRenderer;
 
-		public Monobehaviour(Transform transform, MeshRenderer meshRenderer)
+		public Monobehaviour()
 		{
-			this.Transform = transform;
-			this.MeshRenderer = meshRenderer;
+
 		}
 
 		public virtual void OnAwake()
@@ -31,7 +32,7 @@ namespace CSGL
 
 		public virtual void Update()
 		{
-			//MeshRenderer.m_model = MathU.TRS(Transform);
+
 		}
 
 		public virtual void FixedUpdate()
@@ -41,8 +42,21 @@ namespace CSGL
 
 		public virtual void OnRender()
 		{
-			this.MeshRenderer.m_model = MathU.TRS(this.Transform);
-			MeshRenderer.Render();
+
+		}
+
+		public static Dictionary<string, Type> GetDerivedTypesDictionary<T>() where T : class
+		{
+			Type baseType = typeof(T);
+			return Assembly.GetAssembly(baseType)
+				.GetTypes()
+				.Where(t=>t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType)).ToDictionary(t => t.Name, t=>t);
+		}
+
+		public static List<Type> GetDerivedTypes<T>() where T : class
+		{
+			Type baseType = typeof(T);
+			return Assembly.GetAssembly(baseType).GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(baseType)).ToList();
 		}
 	}
 }

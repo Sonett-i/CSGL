@@ -70,17 +70,19 @@ namespace CSGL
 			Log.Default($"Initializing {WindowConfig.Name}");
 
 			InitializeWindow();
+			Monobehaviour.ObjectTypes = Monobehaviour.GetDerivedTypesDictionary<Monobehaviour>();
 
 			Resources.Import();
+			AssetManager.Import();
 
 			//AssetManager.Initialize();
 
 			//SceneManager.Scenes.Add(scene);
 
-			//Scene scene = new Scene("debug");
+			Scene scene = new Scene("debug");
 
-			//SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
-			//SceneManager.CurrentScene.Start();
+			SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
+			SceneManager.CurrentScene.Start();
 
 			this.IsVisible = true;
 
@@ -176,7 +178,7 @@ namespace CSGL
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			//SceneManager.CurrentScene.Render();
+			SceneManager.CurrentScene.Render();
 
 			this.Context.SwapBuffers();
 
