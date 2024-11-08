@@ -19,7 +19,7 @@ namespace CSGL
 
 		//	GameObjects
 
-
+		public static string ResourcesDirectory = Environment.CurrentDirectory + "\\Resources\\";
 		public static string AssetDirectory = Environment.CurrentDirectory + "\\Assets\\";
 
 		public static bool advancedDebug = true;

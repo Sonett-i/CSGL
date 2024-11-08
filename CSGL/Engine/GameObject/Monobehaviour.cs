@@ -7,6 +7,7 @@ namespace CSGL
 	public class Monobehaviour
 	{
 		public static List<Monobehaviour> Monobehaviours = new List<Monobehaviour>();
+		public static List<Monobehaviour> GameObjects = new List<Monobehaviour>();
 
 		public Transform Transform;
 		public MeshRenderer MeshRenderer;
@@ -15,8 +16,6 @@ namespace CSGL
 		{
 			this.Transform = transform;
 			this.MeshRenderer = meshRenderer;
-
-			Monobehaviours.Add(this);
 		}
 
 		public virtual void OnAwake()

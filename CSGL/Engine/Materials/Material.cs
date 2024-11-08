@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json;
+using Assimp.Unmanaged;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
@@ -7,8 +8,13 @@ namespace CSGL
 {
 	public class Material
 	{
+		public static Material DefaultMaterial;
+		public static Material BadMaterial;
+
 		public string Name;
-		public ShaderProgram Shader;
+		public Shader Shader;
+
+		//public ShaderProgram Shader;
 		public Texture2D[] Textures;
 
 		public int m_model;
@@ -17,21 +23,21 @@ namespace CSGL
 
 		public Matrix4 model_Matrix;
 
-		public Material(ShaderProgram shader, Texture2D[] texture, string name) 
+		public Material(Shader shader, Texture2D[] texture, string name) 
 		{
 			this.Shader = shader;
 			this.Textures = texture;
 
 			this.Name = name;
 
-			m_model = GL.GetUniformLocation(shader.ShaderProgramHandle, "model");
-			m_view = GL.GetUniformLocation(shader.ShaderProgramHandle, "view");
-			m_projection = GL.GetUniformLocation(shader.ShaderProgramHandle, "projection");
+			m_model = GL.GetUniformLocation(Shader.ShaderProgram.ShaderProgramHandle, "model");
+			m_view = GL.GetUniformLocation(Shader.ShaderProgram.ShaderProgramHandle, "view");
+			m_projection = GL.GetUniformLocation(Shader.ShaderProgram.ShaderProgramHandle, "projection");
 		}
 		
 		public void MVP(Matrix4 model, Matrix4 view, Matrix4 projection)
 		{
-			GL.UseProgram(Shader.ShaderProgramHandle);
+			GL.UseProgram(Shader.ShaderProgram.ShaderProgramHandle);
 
 			GL.UniformMatrix4(m_model, true, ref model);
 			GL.UniformMatrix4(m_view, true, ref view);
@@ -55,40 +61,43 @@ namespace CSGL
 		{
 			string jsonString = File.ReadAllText(filePath);
 
+			string materialName = "";
+			string shaderFile = "";
+			List<string> textures = new List<string>();
+
 			using (JsonDocument document = JsonDocument.Parse(jsonString))
 			{
 				JsonElement root = document.RootElement;
 
-				ShaderProgram shader = ShaderManager.GetShader(root.GetProperty("shader").GetString() ?? "default");
-
-				List<Texture2D> textures = new List<Texture2D>();
+				materialName = root.GetProperty("name").GetString() ?? "default";
+				shaderFile = root.GetProperty("shader").GetString() ?? "default";
 
 				if (root.TryGetProperty("textures", out JsonElement texturesElement))
 				{
 					foreach (JsonElement textureElement in texturesElement.EnumerateArray())
 					{
-						string texturePath = textureElement.GetString() ?? "default";
-
-						Texture2D texture = TextureManager.GetTexture(texturePath);
-						if (texture != null)
-							textures.Add(texture);
+						textures.Add(textureElement.GetString() ?? "default");	
 					}
 				}
 
 				if (textures.Count > 32)
 				{
-					throw new Exception("Number of textures exceeds max");
-				}
-
-				if (shader != null)
-				{
-					string fileName = Path.GetFileNameWithoutExtension(filePath);
-					Material mat = new Material(shader, textures.ToArray(), fileName);
-					return mat;
+					return Material.DefaultMaterial;
 				}
 			}
 
-			return MaterialManager.GetMaterial("default");
+			Shader shader = Resources.Shaders[shaderFile];
+
+			Texture2D[] materialTextures = new Texture2D[textures.Count];
+
+			for (int i = 0; i < textures.Count; i++)
+			{
+				materialTextures[i] = Resources.Textures[textures[i]];
+			}
+
+			Material material = new Material(shader, materialTextures, materialName) ?? Material.DefaultMaterial;
+
+			return material;
 		}
 
 	}

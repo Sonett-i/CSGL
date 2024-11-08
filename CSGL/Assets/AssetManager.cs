@@ -6,16 +6,18 @@ namespace CSGL
 	public static class AssetManager
 	{
 		public static List<Asset> assetList = new List<Asset>();
+		public static List<Monobehaviour> GameObjects = new List<Monobehaviour>();
+
+		public static List<string> assetPaths = new List<string>();
 
 		public static void Initialize()
 		{
-			ShaderManager.Import();
-			ModelManager.Import();
+			Resources.ImportShaders();
+			Resources.ImportTextures();
+			Resources.ImportMaterials();
+			Resources.ImportModels();
 
-			TextureManager.Import();
-			MaterialManager.Import();
-
-			//AssetManager.Import();
+			AssetManager.Import();
 		}
 
 		public static void Import()
@@ -59,7 +61,7 @@ namespace CSGL
 
 					if (ext == ".jpg" || ext == ".png")
 					{
-						TextureManager.Import(files[i], fileName);
+						//Resources.T TextureManager.Import(files[i], fileName);
 					}
 				}
 			}

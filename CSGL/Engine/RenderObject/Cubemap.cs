@@ -70,7 +70,7 @@ namespace CSGL
 
 		public Cubemap()
 		{
-			this.shader = ShaderManager.GetShader("skybox");
+			//this.shader = ShaderManager.GetShader("skybox");
 			LoadCubeMap();
 			Setup();
 		}

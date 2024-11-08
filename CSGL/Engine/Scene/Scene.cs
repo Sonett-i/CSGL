@@ -39,22 +39,6 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
-			//Windmill wm = new Windmill(new Transform(new Vector3(0, 0, 0), Quaternion.Identity, Vector3.One));
-			GameObject map = new GameObject(new Transform(), new MeshRenderer(ModelManager.LoadModel("MainMap.obj"), MaterialManager.GetMaterial("textured")));
-			map.Transform.Scale *= 15f;
-
-			for (int i = 0; i < 5; i++)
-			{
-				float x = CSGLU.Random(-20, 20);
-				float z = CSGLU.Random(-50, 50);
-				Vector3 randomVector = new Vector3(x, 0, z);
-
-				Windmill wm = new Windmill(new Transform(randomVector, Quaternion.Identity, Vector3.One * 0.5f));
-			}
-			
-			//sceneGameObjects.Add(go);
-			//sceneGameObjects.Add(wm);
-
 			this.cubemap = new Cubemap();
 
 			foreach (Monobehaviour obj in Monobehaviour.Monobehaviours)

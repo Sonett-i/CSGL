@@ -15,10 +15,10 @@ namespace CSGL
 		float angle = 0;
 		float rotationSpeed = 2.5f;
 
-		public Windmill(Transform transform) : base(transform, new MeshRenderer(ModelManager.LoadModel("Windmill.obj"), MaterialManager.Default))
+		public Windmill(Transform transform) : base(transform, null)
 		{
 			Transform prop = new Transform(transform.Position + propellerOffset * 0.5f, transform.Rotation, transform.Scale);
-			propeller = new GameObject(prop, new MeshRenderer(ModelManager.LoadModel("Propeller.obj"), MaterialManager.Default));
+			//propeller = new GameObject(prop, new MeshRenderer(ModelManager.LoadModel("Propeller.obj"), MaterialManager.Default));
 			
 		}
 

@@ -6,6 +6,10 @@ namespace CSGL
 {
 	public class Texture2D
 	{
+		public static Texture2D DefaultTexture;
+		public static Texture2D BadTexture;
+
+
 		public int TextureHandle;
 		public string Name;
 

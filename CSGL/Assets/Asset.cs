@@ -9,6 +9,15 @@ namespace CSGL
 {
 	public class Asset
 	{
+		public static Dictionary<string, AssetType> AssetTypes = new Dictionary<string, AssetType>()
+		{
+			["model"] = AssetType.ASSET_MODEL,
+			["material"] = AssetType.ASSET_MATERIAL,
+			["scene"] = AssetType.ASSET_SCENE,
+			["gameobject"] = AssetType.ASSET_GAMEOBJECT,
+
+		};
+
 		public enum AssetType
 		{
 			ASSET_MODEL,
@@ -50,29 +59,7 @@ namespace CSGL
 
 				asset.Name = name;
 				asset.filePath = filePath;
-
-				if (assetType == "scene")
-				{
-					Scene scene = SceneManager.ImportFromJson(root, filePath);
-
-					if (scene != null)
-					{
-						SceneManager.Scenes.Add(scene);
-					}
-				}
-
-				if (assetType == "GameObject")
-				{
-					asset.Type = AssetType.ASSET_GAMEOBJECT;
-
-					//GameObject go = FromAsset(asset);
-				}
-
-				if (assetType == "Cubemap")
-				{
-
-				}
-
+				asset.Type = AssetTypes[assetType];
 			}
 
 			return asset;
@@ -81,6 +68,7 @@ namespace CSGL
 		public static GameObject FromAsset(Asset asset)
 		{
 			//GameObject go = new GameObject()
+
 			return null;
 		}
 	}

@@ -70,14 +70,17 @@ namespace CSGL
 			Log.Default($"Initializing {WindowConfig.Name}");
 
 			InitializeWindow();
-			AssetManager.Initialize();
+
+			Resources.Import();
+
+			//AssetManager.Initialize();
 
 			//SceneManager.Scenes.Add(scene);
 
-			Scene scene = new Scene("debug");
+			//Scene scene = new Scene("debug");
 
-			SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
-			SceneManager.CurrentScene.Start();
+			//SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
+			//SceneManager.CurrentScene.Start();
 
 			this.IsVisible = true;
 
@@ -98,7 +101,7 @@ namespace CSGL
 
 			if (KeyboardState.IsKeyReleased(Keys.R))
 			{
-				ShaderManager.HotReload();
+				Resources.ReloadShaders();
 			}
 
 			if (KeyboardState.IsKeyReleased(Keys.P))
@@ -121,7 +124,6 @@ namespace CSGL
 				Input.MouseMove(e);
 			}
 
-			//GLFW.SetCursorPos(WindowPtr, point.X, point.Y);
 			base.OnMouseMove(e);
 		}
 
@@ -174,7 +176,7 @@ namespace CSGL
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			SceneManager.CurrentScene.Render();
+			//SceneManager.CurrentScene.Render();
 
 			this.Context.SwapBuffers();
 

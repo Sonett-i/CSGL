@@ -41,7 +41,7 @@ namespace CSGL
 			{
 				this.material[i].MVP(m_model, Camera.main.m_View, Camera.main.m_Projection);
 				this.material[i].Render();
-				GL.UseProgram(this.material[i].Shader.ShaderProgramHandle);
+				//GL.UseProgram(this.material[i].Shader.ShaderProgramHandle);
 				Buffers[i].Render();
 			}
 		}
