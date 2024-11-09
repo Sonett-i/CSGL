@@ -12,10 +12,10 @@ namespace CSGL
 		public static Dictionary<string, Type> ComponentTypes = new Dictionary<string, Type>();
 		public virtual void Start() { }
 		public virtual void Update() { }
-		public Monobehaviour Monobehaviour { get; set; }
+		public Monobehaviour? Monobehaviour { get; set; }
 
 		// When importing from json, we use instance method to pass initializing variables into each component instance
-		public virtual void Instance(object[] paramaters)
+		public virtual void Instance(Monobehaviour parent, Dictionary<string, JsonElement> serialized)
 		{
 
 		}

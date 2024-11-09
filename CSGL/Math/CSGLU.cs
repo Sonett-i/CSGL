@@ -1,15 +1,36 @@
 ﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
+
+#pragma warning disable CS8602
 
 namespace CSGL
 {
 	public static class CSGLU
 	{
+
+		public static object? ConvertJsonElement(JsonElement element, Type targetType)
+		{
+			if (targetType == typeof(string) && element.ValueKind == JsonValueKind.String)
+			{
+				return element.GetString();
+			}
+			else if (targetType == typeof(int) && element.ValueKind == JsonValueKind.Number)
+			{
+				return element.GetInt32();
+			}
+			else if (targetType == typeof(float) && element.ValueKind == JsonValueKind.Number)
+			{
+				return element.GetSingle();
+			}
+			else if (targetType == typeof(double) && element.ValueKind == JsonValueKind.Number)
+			{
+				return element.GetDouble();
+			}
+
+			return null;
+		}
+
 		public static Dictionary<string, Type> GetDerivedTypesDictionary<T>() where T : class
 		{
 			Type baseType = typeof(T);
@@ -55,11 +76,18 @@ namespace CSGL
 			return value / 1024;
 		}
 
-		public static float Random(int min, int max)
+		public static int Random(int min, int max)
 		{
 			Random r = new Random();
 
 			return r.Next(min, max);
+		}
+
+		public static float Random(float min, float max)
+		{
+			Random r = new Random();
+
+			return (float)(min + r.NextDouble() * (max - min));
 		}
 	}
 }

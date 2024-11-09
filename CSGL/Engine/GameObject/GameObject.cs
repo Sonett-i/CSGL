@@ -26,6 +26,7 @@ namespace CSGL
 
 		public override void OnRender()
 		{
+			this.GetComponent<MeshRenderer>().Render();
 			base.OnRender();
 		}
 	}

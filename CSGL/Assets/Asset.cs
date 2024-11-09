@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
-using System.Text.Json;
+﻿using System.Text.Json;
+
+#pragma warning disable CS8602
 
 namespace CSGL
 {
@@ -32,7 +28,7 @@ namespace CSGL
 		public string filePath;
 		public string extension;
 		public AssetType Type;
-		public JsonDocument Contents;
+		public JsonDocument? Contents;
 
 		public Asset(string name, string filePath, string extension)
 		{
@@ -64,7 +60,7 @@ namespace CSGL
 			return asset;
 		}
 
-		public static Monobehaviour ImportObject(string file)
+		public static Monobehaviour? ImportObject(string file)
 		{
 			string jsonString = File.ReadAllText(file);
 
@@ -84,69 +80,60 @@ namespace CSGL
 				objectMaterial = root.GetProperty("material").ToString();
 				objectClass = root.GetProperty("objectclass").ToString();
 
+				Type classType = Monobehaviour.ObjectTypes[objectClass];
+
+				if (classType == null || !typeof(Monobehaviour).IsAssignableFrom(classType))
+				{
+					throw new Exception($"{objectClass} not found, or is not a valid monobehavior");
+				}
+
+				Monobehaviour? gameobject = Activator.CreateInstance(classType) as Monobehaviour;
 
 				if (root.TryGetProperty("components", out JsonElement componentsElement))
 				{
-					components = GetComponents(componentsElement);
+					foreach (JsonProperty componentProperty in componentsElement.EnumerateObject())
+					{
+						string componentName = componentProperty.Name;
+
+						JsonElement componentConfig = componentProperty.Value;
+
+						if (Component.ComponentTypes.TryGetValue(componentName, out Type? componentType))
+						{
+							Dictionary<string, JsonElement> jsonElements = new Dictionary<string, JsonElement>();
+							Component? component = Activator.CreateInstance(componentType) as Component;
+
+							foreach (JsonProperty property in componentConfig.EnumerateObject())
+							{
+								string propertyName = property.Name;
+								JsonElement propertyValue = property.Value;
+
+								jsonElements.Add(propertyName, property.Value);
+
+							}
+
+							if (gameobject != null)
+							{
+								component.Instance(gameobject, jsonElements);
+								gameobject.AddComponent(component);
+							}
+						}
+					}
+				}
+
+				if (gameobject != null)
+				{
+					AssetManager.Monobehaviours.Add(objectName, gameobject);
 				}
 			}
-
-			Type classType = Monobehaviour.ObjectTypes[objectClass];
-
-			if (classType == null || !typeof(Monobehaviour).IsAssignableFrom(classType)) 
-			{
-				throw new Exception($"{objectClass} not found, or is not a valid monobehavior");
-			}
-
-			Monobehaviour gameobject = (Monobehaviour)Activator.CreateInstance(classType);
-
 
 			//GameObject go = new GameObject()
 
 			return null;
 		}
 
-		public static List<Component> GetComponents(JsonElement componentsElement)
+		public static object? CreateInstance(string typeName, params object[] args)
 		{
-			List<Component> list = new List<Component>();
-
-			foreach (JsonProperty componentProperty in componentsElement.EnumerateObject())
-			{
-				string componentName = componentProperty.Name;
-
-				JsonElement componentConfig = componentProperty.Value;
-
-				if (Component.ComponentTypes.TryGetValue(componentName, out Type componentType))
-				{
-					Component component = (Component)Activator.CreateInstance(componentType);
-
-					component.Instance(new object[] {"test", "abc"});
-
-					foreach (JsonProperty property in componentConfig.EnumerateObject())
-					{
-						string propertyName = property.Name;
-						JsonElement propertyValue = property.Value;
-
-						PropertyInfo propInfo = componentType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
-						if (propInfo != null && propInfo.CanWrite)
-						{
-							object value = Convert.ChangeType(propertyValue.ToString(), propInfo.PropertyType);
-							propInfo.SetValue(component, value);
-						}
-					}
-
-					list.Add(component);
-				}
-				//objectComponents.Add(objectComponent.GetString() ?? "null");
-			}
-
-
-			return list;
-		}
-
-		public static object CreateInstance(string typeName, params object[] args)
-		{
-			if (Monobehaviour.ObjectTypes.TryGetValue(typeName, out Type type))
+			if (Monobehaviour.ObjectTypes.TryGetValue(typeName, out var type))
 			{
 				return Activator.CreateInstance(type, args); // Pass the parameters here
 			}
@@ -154,7 +141,7 @@ namespace CSGL
 			throw new ArgumentException($"Type '{typeName}' not found.");
 		}
 
-		public static Scene ImportScene(string file)
+		public static Scene? ImportScene(string file)
 		{
 			return null;
 		}

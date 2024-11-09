@@ -8,20 +8,25 @@ namespace CSGL
 {
 	public class Material
 	{
-		public static Material DefaultMaterial;
-		public static Material BadMaterial;
+		public static Material? DefaultMaterial = new Material();
+		public static Material? BadMaterial = new Material();
 
-		public string Name;
-		public Shader Shader;
+		public string? Name = "default";
+		public Shader? Shader;
 
 		//public ShaderProgram Shader;
-		public Texture2D[] Textures;
+		public Texture2D[]? Textures;
 
 		public int m_model;
 		private int m_view;
 		private int m_projection;
 
 		public Matrix4 model_Matrix;
+
+		public Material()
+		{
+
+		}
 
 		public Material(Shader shader, Texture2D[] texture, string name) 
 		{
@@ -37,17 +42,23 @@ namespace CSGL
 		
 		public void MVP(Matrix4 model, Matrix4 view, Matrix4 projection)
 		{
-			GL.UseProgram(Shader.ShaderProgram.ShaderProgramHandle);
+			if (this.Shader != null)
+			{
+				GL.UseProgram(Shader.ShaderProgram.ShaderProgramHandle);
 
-			GL.UniformMatrix4(m_model, true, ref model);
-			GL.UniformMatrix4(m_view, true, ref view);
-			GL.UniformMatrix4(m_projection, true, ref projection);
-
+				GL.UniformMatrix4(m_model, true, ref model);
+				GL.UniformMatrix4(m_view, true, ref view);
+				GL.UniformMatrix4(m_projection, true, ref projection);
+			}
+			
 			GL.UseProgram(0);
 		}
 
 		public void Render()
 		{
+			if (Textures == null)
+				return;
+
 			if (Textures.Length > 0)
 			{
 				for (int i = 0; i < Textures.Length; i++)
@@ -57,7 +68,7 @@ namespace CSGL
 			}
 		}
 
-		public static Material LoadFromJson(string filePath)
+		public static Material? LoadFromJson(string filePath)
 		{
 			string jsonString = File.ReadAllText(filePath);
 
@@ -95,7 +106,7 @@ namespace CSGL
 				materialTextures[i] = Resources.Textures[textures[i]];
 			}
 
-			Material material = new Material(shader, materialTextures, materialName) ?? Material.DefaultMaterial;
+			Material? material = new Material(shader, materialTextures, materialName) ?? Material.DefaultMaterial;
 
 			return material;
 		}

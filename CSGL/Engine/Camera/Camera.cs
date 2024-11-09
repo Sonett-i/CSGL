@@ -16,6 +16,8 @@ namespace CSGL
 	{
 		public static Camera main = new Camera(Vector3.Zero, ProjectionType.PROJECTION_PROJECTION, 0.1f, 10.0f, 45f);
 
+		Monobehaviour Target = null!;
+
 		public Transform Transform;
 
 		// Axes
@@ -28,8 +30,6 @@ namespace CSGL
 		public Vector3 Right => right;
 
 		public Vector3 Direction => (Transform.Position + Front);
-
-		
 
 		private float pitch;
 		public float Pitch
@@ -63,7 +63,7 @@ namespace CSGL
 			}
 		}
 
-		public float Speed = 5.0f;
+		public float Speed = 15.5f;
 		public float Sensitivity = 0.30f;
 
 
@@ -89,7 +89,13 @@ namespace CSGL
 		Vector3 currentPosition = Vector3.Zero;
 		Vector3 currentForce = Vector3.Zero;
 		Vector3 previousForce = Vector3.Zero;
-		float decay = 0.5f;
+		float decay = 1.0f;
+
+		// Follow
+		bool toggleFollow = false;
+
+		float orbitDistance = 1.0f;
+		float orbitAngle = 0.5f;
 
 		public Camera(Vector3 position, ProjectionType projectionType, float nearClip, float farClip, float fov)
 		{
@@ -100,6 +106,11 @@ namespace CSGL
 			FOV = fov;
 
 			Camera.main = this;
+		}
+
+		public void SetTarget(Monobehaviour target)
+		{
+			this.Target = target;
 		}
 
 		void HandleMouseInput()
@@ -133,23 +144,45 @@ namespace CSGL
 			right = Vector3.Cross(front, up).Normalized();
 		}
 
+		void FollowTarget()
+		{
+			Vector3 target = (Target.Transform.Position - this.Transform.Position) * Time.deltaTime * orbitDistance;
+			currentForce = Vector3.Lerp(currentForce, target, smoothing);
+
+			previousForce = currentForce;
+		}
+
 		void HandleKeyboardInput()
 		{
-			Vector3 forward = this.Front * Input.GetAxisRaw("Vertical");
-			Vector3 right = this.Right * Input.GetAxisRaw("Horizontal");
-
-			Vector3 targetForce = (forward + right) * Time.deltaTime * Speed;
-
-			if (targetForce != Vector3.Zero)
+			if (Input.KeyboardState.IsKeyReleased(Keys.Space))
 			{
-				currentForce = Vector3.Lerp(previousForce, targetForce, smoothing);
+				toggleFollow = !toggleFollow;
+				Log.Default("Camera movement: " + (toggleFollow));
+			}
 
-				previousForce = currentForce;
+			if (toggleFollow)
+			{
+				Vector3 forward = this.Front * Input.GetAxisRaw("Vertical");
+				Vector3 right = this.Right * Input.GetAxisRaw("Horizontal");
+
+				Vector3 targetForce = (forward + right) * Time.deltaTime * Speed;
+
+				if (targetForce != Vector3.Zero)
+				{
+					currentForce = Vector3.Lerp(previousForce, targetForce, smoothing);
+
+					previousForce = currentForce;
+				}
+				else
+				{
+					currentForce *= decay;
+				}
 			}
 			else
 			{
-				//currentForce *= decay;
+				FollowTarget();
 			}
+
 		}
 
 		void ApplyForce()
@@ -161,8 +194,14 @@ namespace CSGL
 		{
 			HandleMouseInput();
 			HandleKeyboardInput();
+			//FollowTarget();
 
+		}
+
+		public void FixedUpdate()
+		{
 			ApplyForce();
+			UpdateView();
 		}
 
 		public Matrix4 GetViewMatrix() => Matrix4.LookAt(Transform.Position, Transform.Position + Front, Up);
@@ -171,7 +210,16 @@ namespace CSGL
 
 		void UpdateView()
 		{
-			m_View = GetViewMatrix();
+			if (toggleFollow)
+			{
+				m_View = GetViewMatrix();
+			}
+			else
+			{
+				m_View = Matrix4.LookAt(Transform.Position, Target.Transform.Position, Up);
+			}
+				
+
 			m_Projection = GetProjectionMatrix();
 		}
 	}

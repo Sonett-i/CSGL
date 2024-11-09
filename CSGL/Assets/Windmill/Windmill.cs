@@ -6,9 +6,7 @@ namespace CSGL
 	public class Windmill : Monobehaviour
 	{
 		public Vector3 spinAxis = Vector3.UnitX;
-		float t = 0;
 
-		GameObject propeller;
 		Transform propellerRotation = new Transform(Vector3.Zero, Quaternion.Identity, Vector3.One);
 		Vector3 propellerOffset = (-1.5f, 19.0f, 0.0f);
 

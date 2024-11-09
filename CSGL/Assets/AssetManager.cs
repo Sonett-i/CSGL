@@ -7,6 +7,7 @@ namespace CSGL
 	{
 		public static List<Asset> assetList = new List<Asset>();
 		public static List<Monobehaviour> GameObjects = new List<Monobehaviour>();
+		public static Dictionary<string, Monobehaviour> Monobehaviours = new Dictionary<string, Monobehaviour>();
 
 		public static List<string> assetPaths = new List<string>();
 		
@@ -58,15 +59,19 @@ namespace CSGL
 					{
 						Asset? asset = Asset.ImportFromJson(files[i]);
 
-						switch (asset.Type)
+						if (asset != null)
 						{
-							case Asset.AssetType.ASSET_GAMEOBJECT:
-								gobjectAssets.Add(files[i]);
-								break;
+							switch (asset.Type)
+							{
+								case Asset.AssetType.ASSET_GAMEOBJECT:
+									gobjectAssets.Add(files[i]);
+									break;
 
-							case Asset.AssetType.ASSET_SCENE:
-								break;
+								case Asset.AssetType.ASSET_SCENE:
+									break;
+							}
 						}
+
 					}
 				}
 			}
@@ -78,7 +83,7 @@ namespace CSGL
 		{
 			foreach (string gameobject in gobjectAssets)
 			{
-				Monobehaviour monobehavior = Asset.ImportObject(gameobject);
+				Monobehaviour? monobehavior = Asset.ImportObject(gameobject);
 			}
 		}
 	}

@@ -64,6 +64,38 @@ namespace CSGL
 
 			return 0;
 		}
+
+		public static float GetArrowInput(string axis)
+		{
+			if (axis == "Horizontal")
+			{
+				if (KeyboardState.IsKeyDown(Keys.Left))
+				{
+					return -1.0f;
+				}
+
+				if (KeyboardState.IsKeyDown(Keys.Right))
+				{
+					return 1.0f;
+				}
+			}
+
+			if (axis == "Vertical")
+			{
+				if (KeyboardState.IsKeyDown(Keys.Up))
+				{
+					return 1.0f;
+				}
+
+				if (KeyboardState.IsKeyDown(Keys.Down))
+				{
+					return -1.0f;
+				}
+			}
+
+			return 0;
+		}
+
 	}
 
 	public class Mouse

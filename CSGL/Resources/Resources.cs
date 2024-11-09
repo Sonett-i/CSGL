@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 
+#pragma warning disable CS8604
+
 namespace CSGL
 {
 	internal class Resources
@@ -43,11 +45,16 @@ namespace CSGL
 
 		public static void AddMaterial(Material material)
 		{
+			if (material == null)
+				return;
+
 			if (!Materials.ContainsKey(material.Name))
 			{
 				Materials[material.Name] = material;
 			}
 		}
+
+		// Imports resources from the resources directory
 
 		public static void Import()
 		{
@@ -56,10 +63,13 @@ namespace CSGL
 			scannedShaders = new List<string>();
 			scannedModels = new List<string>();
 			scannedMaterials = new List<string>();
+
 			// Scan resources directory first
 			Scan();
 
-			ImportTextures();
+			// Import textures first, then shaders, then we can bind them in our custom material class. Models are imported last.
+
+			ImportTextures(); 
 			ImportShaders();
 			ImportMaterials();
 			ImportModels();
@@ -76,8 +86,9 @@ namespace CSGL
 			}
 
 			Log.Default($"Found: \nMaterials: {scannedMaterials.Count}\nShaders: {scannedShaders.Count}\nTextures: {scannedTextures.Count}\nModels {scannedModels.Count}");
-
 		}
+
+		// Recursive Explore function that explores subdirectories
 		public static string Explore(string path)
 		{
 			string result = "";
@@ -88,7 +99,7 @@ namespace CSGL
 			{
 				for (int i = 0; i < subDirectory.Length; i++)
 				{
-					result = Explore(subDirectory[i]);
+					result = Explore(subDirectory[i]); // Recursively explore the subdirectory
 				}
 			}
 
@@ -104,10 +115,14 @@ namespace CSGL
 					if (ext == ".json")
 					{
 						Asset? asset = Asset.ImportFromJson(files[i]);
-						if (asset.Type == Asset.AssetType.ASSET_MATERIAL)
+
+						if (asset != null)
 						{
-							scannedMaterials.Add(files[i]);
-							continue;
+							if (asset.Type == Asset.AssetType.ASSET_MATERIAL)
+							{
+								scannedMaterials.Add(files[i]);
+								continue;
+							}
 						}
 					}
 
@@ -218,11 +233,13 @@ namespace CSGL
 
 			foreach(string materialFile in scannedMaterials)
 			{
-				Material mat = Material.LoadFromJson(materialFile);
-				Materials.Add(mat.Name, mat);
-				Log.Default($"Loaded material: {mat.Name}");
+				Material? mat = Material.LoadFromJson(materialFile);
+				if (mat != null)
+				{
+					Materials.Add(mat.Name, mat);
+					Log.Default($"Loaded material: {mat.Name}");
+				}
 			}
-
 			Log.Default("Imported " + Materials.Count + " materials\n");
 		}
 

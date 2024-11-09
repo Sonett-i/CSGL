@@ -12,6 +12,7 @@ using OpenTK.Windowing.Common.Input;
 
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604
 
 namespace CSGL
 {
@@ -78,17 +79,11 @@ namespace CSGL
 			Resources.Import();
 			AssetManager.Import();
 
-			//AssetManager.Initialize();
-
-			//SceneManager.Scenes.Add(scene);
-
 			Scene scene = new Scene("debug");
-
-			SceneManager.CurrentScene = scene; //SceneManager.LoadScene("DefaultScene");
+			SceneManager.CurrentScene = scene;
 			SceneManager.CurrentScene.Start();
 
-			this.IsVisible = true;
-
+			this.IsVisible = true; // make openGL window visible
 			base.OnLoad();
 		}
 
@@ -109,10 +104,13 @@ namespace CSGL
 				Resources.ReloadShaders();
 			}
 
+			// To-do hot-reloading of scenes from json files
+			/*
 			if (KeyboardState.IsKeyReleased(Keys.P))
 			{
 				SceneManager.ReloadScene(SceneManager.CurrentScene.FilePath);
 			}
+			*/
 		}
 
 		protected override void OnMouseMove(MouseMoveEventArgs e)
@@ -147,6 +145,7 @@ namespace CSGL
 			scene.FixedUpdate();
 		}
 
+		float pollTime = 0;
 		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
@@ -162,6 +161,7 @@ namespace CSGL
 			SceneManager.CurrentScene.Update();
 
 			timeInterval += (float)e.Time;
+			pollTime += (float)e.Time;
 
 			if (timeInterval >= WindowConfig.FixedInterval)
 			{
@@ -169,9 +169,10 @@ namespace CSGL
 				timeInterval = 0;
 			}
 
-			if (Time.deltaTime > 0.15)
+			if (pollTime > 1.0f)
 			{
 				Title = WindowConfig.Name + $" (Vsync: {VSync}) FPS: {1f / e.Time:0} : Time {Time.time.ToString("0.00")} : Delta: {Time.deltaTime.ToString("0.00")} Mouse: ({Input.Mouse.Position.X}, {Input.Mouse.Position.Y})";
+				pollTime = 0;
 				//Log.Advanced($"Slow frame: Scene update: {scene.lastUpdateTime} Render: {scene.lastRenderTime}");
 			}
 

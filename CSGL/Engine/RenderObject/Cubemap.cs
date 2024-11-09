@@ -58,14 +58,15 @@ namespace CSGL
 		private int cubemapID;
 
 		private ShaderProgram shader;
+
 		private string[] facesCubeMap =
-		{
-			"Resources\\Textures\\Skybox\\right.jpg",
-			"Resources\\Textures\\Skybox\\left.jpg",
-			"Resources\\Textures\\Skybox\\top.jpg",
-			"Resources\\Textures\\Skybox\\bottom.jpg",
-			"Resources\\Textures\\Skybox\\front.jpg",
-			"Resources\\Textures\\Skybox\\back.jpg"
+{
+			"Resources\\Textures\\Nebula\\starry-top.jpg",
+			"Resources\\Textures\\Nebula\\starry-top.jpg",
+			"Resources\\Textures\\Nebula\\starry-top.jpg",
+			"Resources\\Textures\\Nebula\\starry-top.jpg",
+			"Resources\\Textures\\Nebula\\starry-top.jpg",
+			"Resources\\Textures\\Nebula\\starry-top.jpg"
 		};
 
 		public Cubemap()
@@ -109,7 +110,6 @@ namespace CSGL
 			GL.EnableVertexAttribArray(0);
 			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
-			
 			GL.UseProgram(shader.ShaderProgramHandle);
 
 			GL.Uniform1(GL.GetUniformLocation(shader.ShaderProgramHandle, "skybox"), 0);
@@ -128,6 +128,13 @@ namespace CSGL
 				{
 					ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 					GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+
+					var error = GL.GetError();
+
+					if (error != ErrorCode.NoError)
+					{
+						Log.Error($"Error with face {i}: {currentFace}: {error} ");
+					}
 				}
 			}
 

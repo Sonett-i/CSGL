@@ -3,22 +3,24 @@ using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+
+#pragma warning disable CS8602
 
 namespace CSGL
 {
 	public class MeshRenderer : Component
 	{
-		public Material[] material;
-		public MeshFilter MeshFilter;
+		public Material[]? material;
+		public MeshFilter? MeshFilter;
 		public BufferUsageHint BufferUsageHint;
-
-		public string materialname;
 
 		public Matrix4 m_model;
 
-		private VertexBuffer[] Buffers;
+		private VertexBuffer[]? Buffers;
 
 		public MeshRenderer()
 		{
@@ -41,19 +43,37 @@ namespace CSGL
 			}
 		}
 
-		public override void Instance()
-		{
-
-		}
-
-
 		public void Render()
 		{
+			if (this.Buffers == null)
+				return;
+
+			m_model = MathU.TRS(this.Monobehaviour.Transform);
+
 			for (int i = 0; i < this.Buffers.Length; i++)
 			{
 				this.material[i].MVP(m_model, Camera.main.m_View, Camera.main.m_Projection);
 				this.material[i].Render();
-				//GL.UseProgram(this.material[i].Shader.ShaderProgramHandle);
+				GL.UseProgram(this.material[i].Shader.ShaderProgram.ShaderProgramHandle);
+				Buffers[i].Render();
+			}
+		}
+
+		public void Render(Transform[] transforms)
+		{
+			if (this.Buffers == null)
+				return;
+
+			if (transforms.Length != this.Buffers.Length)
+			{
+				throw new Exception("Invalid number of transforms");
+			}
+
+			for (int i = 0; i < this.Buffers.Length; i++)
+			{
+				this.material[i].MVP(transforms[i].Matrix, Camera.main.m_View, Camera.main.m_Projection);
+				this.material[i].Render();
+				GL.UseProgram(this.material[i].Shader.ShaderProgram.ShaderProgramHandle);
 				Buffers[i].Render();
 			}
 		}
@@ -66,6 +86,57 @@ namespace CSGL
 		public void SetMaterial(string material)
 		{
 
+		}
+
+		public void Create(MeshFilter MeshFilter, Material material, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		{
+			this.MeshFilter = MeshFilter;
+			this.material = new Material[MeshFilter.Meshes.Length];
+			this.BufferUsageHint = hint;
+
+			this.Buffers = new VertexBuffer[MeshFilter.Meshes.Length];
+
+			for (int i = 0; i < MeshFilter.Meshes.Length; i++)
+			{
+				Buffers[i] = new VertexBuffer(MeshFilter.Meshes[i]);
+				this.material[i] = material;
+				Log.Default($"OpenGL: Bound model: {MeshFilter.Name} mesh: {MeshFilter.Meshes[i].Name} (Vertices: {MeshFilter.Meshes[i].VertexCount}, Faces: {MeshFilter.Meshes[i].Faces}) Size: {CSGLU.KiB(Buffers[i].Size)} KiB");
+			}
+		}
+
+		// Requires parent to have meshfilter
+		public override void Instance(Monobehaviour parent, Dictionary<string, JsonElement> serialized)
+		{
+			bool valid = false;
+
+			foreach (Component component in parent.Components)
+			{
+				if (component.GetType() == typeof(MeshFilter))
+				{
+					valid = true;
+					continue;
+				}	
+			}
+
+			if (!valid)
+			{
+				throw new Exception("Meshrenderer requires a meshfilter component");
+			}
+
+			string materialName = "";
+
+			foreach (KeyValuePair<string, JsonElement> property in serialized)
+			{
+				if (property.Key == "materialname")
+				{
+					materialName = property.Value.GetString() ?? "default";
+				}
+			}
+
+			MeshFilter mf = parent.GetComponent<MeshFilter>();
+			Material material = Resources.Materials[materialName];
+
+			this.Create(mf, material);
 		}
 
 		public void Dispose()

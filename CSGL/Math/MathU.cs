@@ -49,6 +49,70 @@ namespace CSGL
 			return scale * rotation * translation;
 		}
 
+		public static Matrix4 TRS(Vector3 position, Quaternion rotation, Vector3 scale)
+		{
+			Matrix4 Translate = Matrix4.CreateTranslation(position);
+			Matrix4 Rotate = Matrix4.CreateFromQuaternion(rotation);
+			Matrix4 Scale = Matrix4.CreateScale(scale);
+
+			return Scale * Rotate * Translate;
+		}
+
+		public static Quaternion LookRotation(Vector3 forward, Vector3 up)
+		{
+			forward = forward.Normalized();
+
+			Vector3 right = Vector3.Cross(up, forward).Normalized();
+			Vector3 cameraUp = Vector3.Cross(forward, right);
+
+			Quaternion rotation = new Quaternion();
+			rotation.W = MathF.Sqrt(1.0f + right.X + cameraUp.Y + forward.Z) * 0.5f;
+			float w4 = (4.0f * rotation.W);
+			rotation.X = (cameraUp.Z - forward.Z) / w4;
+			rotation.Y = (forward.X - right.Z) / w4;
+			rotation.Z = (right.Y - cameraUp.X) / w4;
+
+			return rotation;
+		}
+
+		public static Matrix4 CreateLookAt(Vector3 cameraPosition, Vector3 targetPosition, Vector3 upVector)
+		{
+			Vector3 forward = (targetPosition - cameraPosition).Normalized();
+			forward = -forward;
+
+			Vector3 right = Vector3.Cross(upVector, forward).Normalized();
+			Vector3 up = Vector3.Cross(forward, right);
+
+			Matrix4 lookAtMatrix = new Matrix4();
+
+			lookAtMatrix[0, 0] = right.X;
+			lookAtMatrix[1, 0] = right.Y;
+			lookAtMatrix[2, 0] = right.Z;
+			lookAtMatrix[3, 0] = 0.0f;
+
+			lookAtMatrix[0, 1] = up.X;
+			lookAtMatrix[1, 1] = up.Y;
+			lookAtMatrix[2, 1] = up.Z;
+			lookAtMatrix[3, 1] = 0.0f;
+
+			lookAtMatrix[0, 2] = forward.X;
+			lookAtMatrix[1, 2] = forward.Y;
+			lookAtMatrix[2, 2] = forward.Z;
+			lookAtMatrix[3, 2] = 0.0f;
+
+			lookAtMatrix[0, 3] = 0.0f;
+			lookAtMatrix[1, 3] = 0.0f;
+			lookAtMatrix[2, 3] = 0.0f;
+			lookAtMatrix[3, 3] = 1.0f;
+
+			Matrix4 TranslationMatrix = Matrix4.Identity;
+			TranslationMatrix[0, 3] = -cameraPosition.X;
+			TranslationMatrix[1, 3] = -cameraPosition.Y;
+			TranslationMatrix[2, 3] = -cameraPosition.Z;
+
+			return lookAtMatrix * TranslationMatrix;
+		}
+
 		public static float Rad(float degrees)
 		{
 			return MathF.PI * degrees / 180;

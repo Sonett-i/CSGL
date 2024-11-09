@@ -13,9 +13,13 @@ namespace CSGL
 
 		public List<Component> Components = new List<Component>();
 
+		public Scene? Scene { get; set; }
+
+		public Transform Transform;
+
 		public Monobehaviour()
 		{
-
+			Transform = new Transform();
 		}
 
 		public virtual void OnAwake()
@@ -44,15 +48,16 @@ namespace CSGL
 
 		public virtual void OnRender()
 		{
-
+			this.GetComponent<MeshRenderer>().Render();
 		}
 
 		public void AddComponent(Component component)
 		{
+			component.Monobehaviour = this;
 			Components.Add(component);
 		}
 
-		public T AddComponent<T>(Action<T> initializer = null) where T : Component, new()
+		public T AddComponent<T>(Action<T>? initializer = null) where T : Component, new()
 		{
 			T component = new T
 			{
@@ -64,14 +69,18 @@ namespace CSGL
 			return component;
 		}
 
-		public T GetComponent<T>() where T : Component
+		// Return component from list, or create and add one if it does not exist
+		public T GetComponent<T>(Action<T>? initializer = null) where T : Component, new()
 		{
+			// Look for the component in the existing list
 			foreach (Component component in Components)
 			{
 				if (component is T matchingComponent)
 					return matchingComponent;
 			}
-			return null;
+
+			// If not found, add a new component
+			return AddComponent(initializer);
 		}
 	}
 }
