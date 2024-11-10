@@ -96,6 +96,50 @@ namespace CSGL
 			return 0;
 		}
 
+		public static float GetNumpadInput(string axis)
+		{
+			if (axis == "Horizontal")
+			{
+				if (KeyboardState.IsKeyDown(Keys.KeyPad4))
+				{
+					return -1.0f;
+				}
+
+				if (KeyboardState.IsKeyDown(Keys.KeyPad6))
+				{
+					return 1.0f;
+				}
+			}
+
+			if (axis == "Vertical")
+			{
+				if (KeyboardState.IsKeyDown(Keys.KeyPad8))
+				{
+					return 1.0f;
+				}
+
+				if (KeyboardState.IsKeyDown(Keys.KeyPad2))
+				{
+					return -1.0f;
+				}
+			}
+
+			if (axis == "Diagonal")
+			{
+				if (KeyboardState.IsKeyDown(Keys.KeyPad9))
+				{
+					return 1.0f;
+				}
+
+				if (KeyboardState.IsKeyDown(Keys.KeyPad1))
+				{
+					return -1.0f;
+				}
+			}
+
+			return 0;
+		}
+
 	}
 
 	public class Mouse

@@ -11,8 +11,11 @@ namespace CSGL
 		public readonly string Name = "";
 		public readonly int VertexCount;
 		public readonly int Faces;
+		public readonly Material material;
 
-		public Mesh(Vertex[] vertices, uint[] indices, string name, int vertexCount, int faces)
+		//public Matrix4 modelMatrix;
+
+		public Mesh(Vertex[] vertices, uint[] indices, string name, int vertexCount, int faces, Material material)
 		{
 			this.Vertices = vertices;
 			this.Indices = indices;
@@ -20,6 +23,8 @@ namespace CSGL
 
 			this.VertexCount = vertexCount;
 			this.Faces = faces;
+
+			this.material = material;
 		}
 	}
 

@@ -8,8 +8,8 @@ namespace CSGL
 {
 	public class Material
 	{
-		public static Material? DefaultMaterial = new Material();
-		public static Material? BadMaterial = new Material();
+		public static Material? DefaultMaterial = null!;
+		public static Material? BadMaterial = null!;
 
 		public string? Name = "default";
 		public Shader? Shader;

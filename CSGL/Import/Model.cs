@@ -3,6 +3,8 @@ using OpenTK.Mathematics;
 using System.IO;
 using Assimp;
 
+#pragma warning disable CS8604
+
 namespace CSGL
 {
 	public class Model
@@ -25,11 +27,30 @@ namespace CSGL
 
 			Mesh[] mesh = new Mesh[scene.Meshes.Count];
 
+			List<Material> materials = new List<Material>();
+
+			// Get all object materials
+			foreach (Assimp.Material mat in scene.Materials) 
+			{
+				string matName = mat.Name;
+
+				if (Resources.Materials.TryGetValue(matName, out Material? material))
+				{
+					materials.Add(material);
+				}
+				else
+				{
+					materials.Add(Material.DefaultMaterial); // return default material if material not found
+				}
+			}
+
 			for (int i = 0; i < scene.Meshes.Count; i++)
 			{
 				string name = scene.Meshes[i].Name;
 				List<Vertex> vertices = new List<Vertex>();
 				List<uint> indices = new List<uint>();
+				
+				Material meshMaterial = materials[scene.Meshes[i].MaterialIndex]; // get current meshes material index
 
 				for (int j = 0; j < scene.Meshes[i].VertexCount; j++)
 				{
@@ -50,7 +71,7 @@ namespace CSGL
 						indices.Add((uint)index);
 					}
 				}
-				mesh[i] = new Mesh(vertices.ToArray(), indices.ToArray(), name, vertices.Count, scene.Meshes[i].FaceCount);
+				mesh[i] = new Mesh(vertices.ToArray(), indices.ToArray(), name, vertices.Count, scene.Meshes[i].FaceCount, meshMaterial);
 			}
 
 			MeshFilter meshFilter = new MeshFilter(Path.GetFileName(filePath), mesh);
@@ -58,12 +79,4 @@ namespace CSGL
 		}
 	}
 }
-
-
-
-// https://en.wikipedia.org/wiki/Wavefront_.obj_file
-
-// https://cs418.cs.illinois.edu/website/text/obj.html
-
-// https://cs.wellesley.edu/~cs307/readings/obj-ojects.html
 

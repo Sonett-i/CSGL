@@ -237,6 +237,10 @@ namespace CSGL
 				if (mat != null)
 				{
 					Materials.Add(mat.Name, mat);
+
+					if (mat.Name == "default")
+						Material.DefaultMaterial = mat;
+
 					Log.Default($"Loaded material: {mat.Name}");
 				}
 			}

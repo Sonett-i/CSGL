@@ -14,10 +14,10 @@ namespace CSGL
 		public virtual void Update() { }
 		public Monobehaviour? Monobehaviour { get; set; }
 
-		// When importing from json, we use instance method to pass initializing variables into each component instance
+		// When importing from json to various components, we override this instance method to pass initializing variables into each component instance
 		public virtual void Instance(Monobehaviour parent, Dictionary<string, JsonElement> serialized)
 		{
-
+			
 		}
 
 	}

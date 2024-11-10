@@ -1,7 +1,6 @@
 ﻿using System;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace CSGL
 {
@@ -20,13 +19,12 @@ namespace CSGL
 		public Cubemap? cubemap;
 		public Player player;
 
-		bool initialized = false;
 		public Scene(string name)
 		{
 			this.ID = SceneManager.Scenes.Count + 1;
 			this.Name = name;
 
-			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 1000f, 45f);
+			this.camera = new Camera(new Vector3(0.0f, 0.0f, -8.0f), ProjectionType.PROJECTION_PROJECTION, 0.1f, 10000f, 45f);
 
 			player = new Player();
 
@@ -34,6 +32,7 @@ namespace CSGL
 				Camera.main = this.camera;
 		}
 
+		// Add objects to the scene to be updated and rendered each frame
 		public void AddObjectToScene(GameObject obj)
 		{
 			obj.Scene = this;
@@ -42,22 +41,37 @@ namespace CSGL
 
 		void InitializeObjects()
 		{
-			this.cubemap = new Cubemap();
+			/*
+			this.cubemap = new Cubemap(new string[]{ 
+				"nebula_right.jpg",
+				"nebula_left.jpg",
+				"nebula_top.jpg",
+				"nebula_bottom.jpg",
+				"nebula_front.jpg",
+				"nebula_back.jpg",
+			});
+			*/
+
+			//this.cubemap = new Cubemap();
+
+			this.cubemap = new Cubemap(new string[]{
+				"starry-top.jpg",
+				"starry-right.jpg",
+			});
+
 
 			player.OnAwake();
 			Camera.main.SetTarget(player);
-			
 
 			Moon moon = new Moon();
 			sceneGameObjects.Add(moon);
 
-			for (int i = 0; i < 3; i++)
-			{
-				Satellite satellite = new Satellite();
+			Satellite satellite = new Satellite();
 
-				satellite.SetMoon(moon);
-				sceneGameObjects.Add(satellite);
-			}
+			satellite.Transform.LocalScale = Vector3.One * 10f;
+			satellite.SetMoon(moon);
+
+			sceneGameObjects.Add(satellite);
 
 			player.SetOrbit((Monobehaviour)moon);
 
@@ -65,7 +79,6 @@ namespace CSGL
 			{
 				obj.OnAwake();
 			}
-			initialized = true;
 		}
 
 		public void Start()
@@ -79,7 +92,6 @@ namespace CSGL
 			{
 				obj.Start();
 			}
-
 		}
 
 		public void FixedUpdate()
@@ -109,6 +121,7 @@ namespace CSGL
 			lastUpdateTime = end - start;
 		}
 
+		// Render each object in the scene
 		public void Render()
 		{
 			float start = Time.time;
@@ -122,12 +135,14 @@ namespace CSGL
 
 			float end = Time.time;
 
+			// Draw the cubemap last (if not null)
 			if (cubemap != null)
-				cubemap.Draw(Camera.main.m_View, Camera.main.m_Projection);
+				cubemap.Draw();
 			
 			lastRenderTime = end - start;
 		}
 
+		// Remove objects from memory when the scene unloads
 		public void Unload()
 		{
 			foreach (Monobehaviour gameObject in sceneGameObjects)
@@ -137,7 +152,6 @@ namespace CSGL
 
 			if (cubemap != null)
 				cubemap.Dispose();
-
 			
 			sceneGameObjects.Clear();
 		}

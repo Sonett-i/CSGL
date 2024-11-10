@@ -95,7 +95,6 @@ namespace CSGL
 		bool toggleFollow = false;
 
 		float orbitDistance = 1.0f;
-		float orbitAngle = 0.5f;
 
 		public Camera(Vector3 position, ProjectionType projectionType, float nearClip, float farClip, float fov)
 		{
@@ -160,12 +159,21 @@ namespace CSGL
 				Log.Default("Camera movement: " + (toggleFollow));
 			}
 
+			float vertical = 0;
+
+			if (Input.KeyboardState.IsKeyDown(Keys.Q))
+				vertical = -1;
+
+			if (Input.KeyboardState.IsKeyDown(Keys.E))
+				vertical = 1;
+				
+
 			if (toggleFollow)
 			{
 				Vector3 forward = this.Front * Input.GetAxisRaw("Vertical");
 				Vector3 right = this.Right * Input.GetAxisRaw("Horizontal");
 
-				Vector3 targetForce = (forward + right) * Time.deltaTime * Speed;
+				Vector3 targetForce = (forward + right + (up * vertical)) * Time.deltaTime * Speed;
 
 				if (targetForce != Vector3.Zero)
 				{
@@ -182,7 +190,6 @@ namespace CSGL
 			{
 				FollowTarget();
 			}
-
 		}
 
 		void ApplyForce()
@@ -195,7 +202,6 @@ namespace CSGL
 			HandleMouseInput();
 			HandleKeyboardInput();
 			//FollowTarget();
-
 		}
 
 		public void FixedUpdate()
@@ -218,7 +224,6 @@ namespace CSGL
 			{
 				m_View = Matrix4.LookAt(Transform.Position, Target.Transform.Position, Up);
 			}
-				
 
 			m_Projection = GetProjectionMatrix();
 		}

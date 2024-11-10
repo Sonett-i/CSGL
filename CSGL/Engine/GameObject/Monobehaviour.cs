@@ -5,6 +5,10 @@ using System.Reflection;
 
 namespace CSGL
 {
+	// The Monobehaviour class is the base class for all gameobjects, and handles instantiation by reflection
+	/*
+	 *	https://learn.microsoft.com/en-us/dotnet/api/system.reflection.propertyinfo?view=net-8.0&redirectedfrom=MSDN
+	 */
 	public class Monobehaviour
 	{
 		public static Dictionary<string, Type> ObjectTypes = new Dictionary<string, Type>(); // = Monobehaviour.GetDerivedTypesDictionary<Monobehaviour>();
@@ -35,12 +39,17 @@ namespace CSGL
 
 		public virtual void Update()
 		{
+			// Update each component in the monobehavior to take into account changes in transforms etc between frames
 			foreach (var component in Components)
 			{
 				component.Update();
 			}
+
+			// Update transform matrices for the monobehavior
+			this.Transform.UpdateTransforms();
 		}
 
+		// Unscaled update
 		public virtual void FixedUpdate()
 		{
 
@@ -57,6 +66,7 @@ namespace CSGL
 			Components.Add(component);
 		}
 
+		// Adds a component to this monobehaviour, using an initializing method (if applicable)
 		public T AddComponent<T>(Action<T>? initializer = null) where T : Component, new()
 		{
 			T component = new T
@@ -84,3 +94,5 @@ namespace CSGL
 		}
 	}
 }
+
+// https://learn.microsoft.com/en-us/dotnet/api/system.reflection.propertyinfo?view=net-8.0&redirectedfrom=MSDN

@@ -44,6 +44,22 @@ namespace CSGL
 			this.CenterWindow();
 		}
 
+		// Set Global GL parameters
+		void SetGlobalGLParams()
+		{
+			// Enable depth test to ensure proper depth render of geometry
+			GL.Enable(EnableCap.DepthTest);
+
+			// Enable edge interpolating across the faces of the cubemap
+			GL.Enable(EnableCap.TextureCubeMapSeamless);
+
+			//Stbimage reverses images, set true flag to conform to OpenGL standard
+			StbImage.stbi_set_flip_vertically_on_load(1);
+
+			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
+			GL.ClearColor(backColour);
+		}
+
 		void InitializeWindow()
 		{
 			int[] viewport = new int[4];
@@ -58,12 +74,7 @@ namespace CSGL
 
 			Viewport.SetScreen(point, PointToClient(point));
 
-			GL.Enable(EnableCap.DepthTest);
-
-			//Stbimage reverses images, set true flag to conform to OpenGL standard
-			StbImage.stbi_set_flip_vertically_on_load(1);
-			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
-			GL.ClearColor(backColour);
+			SetGlobalGLParams();
 		}
 
 		protected override void OnLoad()
