@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Log
+namespace Logging
 {
 	public class Log
 	{
@@ -13,6 +13,16 @@ namespace Log
 		public static void Error(string message)
 		{
 			Console.WriteLine(message);
+		}
+
+		public static void Fatal(string message)
+		{
+
+		}
+
+		public static void Init()
+		{
+			// Erase logging files and start writing
 		}
 	}
 }

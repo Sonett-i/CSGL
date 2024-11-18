@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CSGL\CSGL.csproj" />
+    <ProjectReference Include="..\Import\Import.csproj" />
+    <ProjectReference Include="..\Logging\Logging.csproj" />
   </ItemGroup>
 
 </Project>

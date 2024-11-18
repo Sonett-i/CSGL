@@ -18,4 +18,9 @@
     <Folder Include="Bindings\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Import\Import.csproj" />
+    <ProjectReference Include="..\Logging\Logging.csproj" />
+  </ItemGroup>
+
 </Project>
