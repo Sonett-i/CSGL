@@ -9,10 +9,13 @@ namespace Interface
 
 		public static int Main(string[] args)
 		{
-			LoadConfig.ImportFromJson();
+			int width = 1024;
+			int height = 768;
+			string WindowTitle = "CSGL: 3";
 
-			// GPR202 Assessment 2
-			using (MainWindow game = new MainWindow(WindowConfig.Width, WindowConfig.Height, WindowConfig.Name + ": A2"))
+
+			// GPR202 Assessment 3
+			using (MainWindow game = new MainWindow(width, height, WindowTitle))
 			{
 				game.Run();
 			}

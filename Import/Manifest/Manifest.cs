@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Import.Manifest
 {
-	internal class Manifest
+	public class Manifest
 	{
+		public static Dictionary<int, Asset> FileManifest = new Dictionary<int, Asset>();
 	}
 }

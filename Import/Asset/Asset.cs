@@ -16,7 +16,7 @@ namespace Import
 		ASSET_BINARY
 	}
 
-	internal class Asset
+	public class Asset
 	{
 		public AssetType Type = AssetType.ASSET_BINARY;
 		public string? Name = "";
