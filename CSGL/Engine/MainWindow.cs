@@ -4,7 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
-
+using Logging;
 
 namespace CSGL
 {
@@ -86,8 +86,13 @@ namespace CSGL
 
 		protected override void OnUnload()
 		{
-
+			ShutDown();
 			base.OnUnload();
+		}
+
+		void ShutDown()
+		{
+			Log.Default("CSGL Shut down");
 		}
 	}
 }

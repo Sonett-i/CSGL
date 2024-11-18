@@ -18,13 +18,24 @@ namespace Import
 
 	public class Asset
 	{
-		public AssetType Type = AssetType.ASSET_BINARY;
-		public string? Name = "";
 		public int ID = -1;
+
+		public string? Name = "";
+		public string FilePath = "";
+		public string ext = "";
+		public AssetType Type = AssetType.ASSET_BINARY;
 
 		public Asset()
 		{
 
+		}
+
+
+		public static Asset Import(string filePath)
+		{
+			Asset asset = new Asset();
+
+			return asset;
 		}
 	}
 }
