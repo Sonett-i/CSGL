@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace CSGL.Engine.OpenGL
 {
-	internal class VAO
+	internal class VAO : IDisposable
 	{
+		int Handle;
+
+		public void Dispose()
+		{
+			GC.SuppressFinalize(this);
+		}
 	}
 }
