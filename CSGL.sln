@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interface", "Interface\Inte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Import", "Import\Import.csproj", "{7C4FA036-BD8C-4D31-A143-E93CB7A8E9E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Log\Logging.csproj", "{C436588E-AEDA-44D6-9F1E-43D053134E4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logging\Logging.csproj", "{15996EF0-F68B-4FCA-8CE4-B776C37E9CE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{7C4FA036-BD8C-4D31-A143-E93CB7A8E9E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C4FA036-BD8C-4D31-A143-E93CB7A8E9E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C4FA036-BD8C-4D31-A143-E93CB7A8E9E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C436588E-AEDA-44D6-9F1E-43D053134E4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C436588E-AEDA-44D6-9F1E-43D053134E4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C436588E-AEDA-44D6-9F1E-43D053134E4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C436588E-AEDA-44D6-9F1E-43D053134E4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15996EF0-F68B-4FCA-8CE4-B776C37E9CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15996EF0-F68B-4FCA-8CE4-B776C37E9CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15996EF0-F68B-4FCA-8CE4-B776C37E9CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15996EF0-F68B-4FCA-8CE4-B776C37E9CE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
