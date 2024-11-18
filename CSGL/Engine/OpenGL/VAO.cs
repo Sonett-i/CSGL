@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGL.Engine.Shaders
+namespace CSGL.Engine.OpenGL
 {
-	internal class Shader
+	internal class VAO
 	{
 	}
 }

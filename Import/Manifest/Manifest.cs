@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSGL.Engine.Shaders
+namespace Import.Manifest
 {
-	internal class Shader
+	internal class Manifest
 	{
 	}
 }
