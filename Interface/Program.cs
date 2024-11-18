@@ -12,6 +12,8 @@ namespace Interface
 		{
 			Log.Init(Import.ManagedDirectories.LogDirectory);
 			LoadConfig();
+			Log.Default($"CSGL: {CSGL.EngineConfig.Name}\nVersion: {EngineConfig.Version}");
+
 			Manifest.UpdateFileManifest();
 		}
 
@@ -20,7 +22,11 @@ namespace Interface
 			INI? config = Import.Config.Import();
 
 			if (config != null)
+			{
 				CSGL.Config.Set(config);
+				Import.ManagedFormats.Configure(config);
+			}
+				
 		}
 
 		static void UpdateManifest()
@@ -32,7 +38,7 @@ namespace Interface
 		{
 			Init();
 			
-			Log.Default($"CSGL: {CSGL.EngineConfig.Name}\n\tVersion: {EngineConfig.Version}");
+			
 
 			
 			// GPR202 Assessment 3

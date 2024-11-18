@@ -21,8 +21,6 @@ namespace Import
 				Explore(folder);
 			}
 
-			Log.Default($"{scannedFiles.Count} files found");
-
 			return true;
 		}
 
@@ -30,6 +28,7 @@ namespace Import
 		{
 			string result = "";
 
+			Log.Default(path);
 			string[] subDirectory = Directory.GetDirectories(path);
 
 			if (subDirectory.Length > 0)
@@ -44,7 +43,12 @@ namespace Import
 
 			foreach (string file in files)
 			{
-				scannedFiles.Add(file);
+				string ext = Path.GetExtension(file);
+
+				if (ManagedFormats.Extensions.ContainsKey(ext))
+				{
+					scannedFiles.Add(file);
+				}
 			}
 
 			return result;

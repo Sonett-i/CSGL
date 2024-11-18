@@ -30,6 +30,8 @@ namespace CSGL
 			this.CenterWindow();
 		}
 
+		Scene debugScene = new DebugScene("debug");
+
 		void InitializeWindow()
 		{
 			int[] viewport = new int[4];
@@ -38,8 +40,9 @@ namespace CSGL
 
 		protected override void OnLoad()
 		{
-			
 			this.IsVisible = true; // make openGL window visible
+
+			debugScene.Start();
 			base.OnLoad();
 		}
 
@@ -48,6 +51,7 @@ namespace CSGL
 
 			base.OnMouseMove(e);
 		}
+		
 
 		private void FixedUpdate()
 		{
