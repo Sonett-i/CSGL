@@ -12,8 +12,12 @@ namespace CSGL
 
 		public static int AddScene(Scene scene)
 		{
-
-			return 0;
+			if (!scenes.ContainsKey(scene.sceneID))
+			{
+				scene.sceneID = scenes.Count;
+				scenes[scene.sceneID] = scene;
+			}
+			return scene.sceneID;
 		}
 	}
 }
