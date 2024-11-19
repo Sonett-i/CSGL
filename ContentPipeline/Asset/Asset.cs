@@ -3,22 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ContentPipeline
 {
-	public enum AssetType
+	public abstract class Asset
 	{
-		ASSET_TEXT,
-		ASSET_IMAGE,
-		ASSET_MODEL,
-		ASSET_SHADER,
-		ASSET_MATERIAL,
-		ASSET_BINARY
-	}
-
-	public class Asset
-	{
-		public int ID = -1;
+		public Guid ID { get; private set; }
 
 		public string? Name = "";
 		public string FilePath = "";
@@ -27,17 +18,31 @@ namespace ContentPipeline
 
 		public Asset()
 		{
+			ID = Guid.NewGuid();
+		}
+
+		public Asset(string filePath)
+		{
 
 		}
 
-
-		public static Asset Import(string filePath)
+		public virtual void SaveToFile()
 		{
-			Asset asset = new Asset();
 
+		}
 
+		public virtual void LoadFromFile(string filePath)
+		{
+			if (FilePath != "")
+			{
+				this.Name = Path.GetFileName(FilePath);
+				this.ext = Path.GetExtension(FilePath);
+			}
 
-			return asset;
+			if (File.Exists(filePath + ".json"))
+			{
+
+			}
 		}
 	}
 }

@@ -9,29 +9,41 @@ namespace ContentPipeline
 {
 	public class Manifest
 	{
-		public static Dictionary<int, Asset> FileManifest = new Dictionary<int, Asset>();
+		public static Dictionary<AssetType, Dictionary<Guid, Asset>> FileManifest = Enum.GetValues(typeof(AssetType))
+			.Cast<AssetType>()
+			.ToDictionary(
+				type => type,
+				type => new Dictionary<Guid, Asset>()
+			);
+
 		public static void UpdateFileManifest()
 		{
 			Log.Default($"Updating File Manifest");
-			
+
+			// scan all files first
 			Scan.ScanFolders();
-			
+
+			// then add to File Manifest
 			for (int i = 0; i < Scan.scannedFiles.Count; i++)
 			{
 				string file = Scan.scannedFiles[i];
 
 				Log.Default(i + " " + file);
-				Asset asset = Asset.Import(file);
+				Asset? asset = AssetManager.Import(file);
 
 				if (asset != null)
 				{
-					FileManifest.Add(i, asset);
+					try
+					{
+						FileManifest[asset.Type].Add(asset.ID, asset);
+					}
+					catch (Exception ex)
+					{
+						Log.Error(ex.Message);
+					}
 				}
 			}
-			// scan all files first
-
-
-			// then add to File Manifest
+			
 			Log.Default($"Manifest Updated: {Scan.scannedFiles.Count} files found");
 		}
 

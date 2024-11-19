@@ -11,7 +11,13 @@ namespace ContentPipeline
 	{
 		// formats that CSGL manages
 
-		public static Dictionary<string, bool> Extensions = new Dictionary<string, bool>();
+		public static Dictionary<string, AssetType> Extensions = new Dictionary<string, AssetType>();
+
+		public static Dictionary<AssetType, Func<string, Asset>> FactoryMethods = new Dictionary<AssetType, Func<string, Asset>>()
+		{
+			{ AssetType.ASSET_MODEL, filePath => { Model model = new Model(filePath); model.InitializeFields(filePath); return model; } },
+			//{AssetType.ASSET_TEXTURE, filePath => new T { FilePath = filePath } },
+		};
 
 		public static void Configure(INI Config)
 		{
@@ -23,7 +29,8 @@ namespace ContentPipeline
 					{
 						if (!Extensions.ContainsKey(kvp.Key))
 						{
-							Extensions.Add(kvp.Key, bool.Parse(kvp.Value));
+							AssetType type = AssetManager.GetAssetType(kvp.Value);
+							Extensions.Add(kvp.Key, type);
 						}
 					}
 				}
