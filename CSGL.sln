@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSGL", "CSGL\CSGL.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interface", "Interface\Interface.csproj", "{A7006A28-7617-4D88-8650-A3ADFFC3638D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Import", "Import\Import.csproj", "{7C4FA036-BD8C-4D31-A143-E93CB7A8E9E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContentPipeline", "Import\ContentPipeline.csproj", "{7C4FA036-BD8C-4D31-A143-E93CB7A8E9E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "Logging\Logging.csproj", "{15996EF0-F68B-4FCA-8CE4-B776C37E9CE1}"
 EndProject

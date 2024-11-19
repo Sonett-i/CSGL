@@ -1,6 +1,6 @@
 ﻿using System;
-using Import;
-using Import.Extensions;
+using ContentPipeline;
+using ContentPipeline.Extensions;
 using Logging;
 
 namespace CSGL

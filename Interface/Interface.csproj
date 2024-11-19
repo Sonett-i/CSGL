@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CSGL\CSGL.csproj" />
-    <ProjectReference Include="..\Import\Import.csproj" />
+    <ProjectReference Include="..\Import\ContentPipeline.csproj" />
     <ProjectReference Include="..\Logging\Logging.csproj" />
   </ItemGroup>
 

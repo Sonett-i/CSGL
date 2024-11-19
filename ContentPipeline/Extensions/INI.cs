@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Import.Extensions
+namespace ContentPipeline.Extensions
 {
 	public class INI
 	{

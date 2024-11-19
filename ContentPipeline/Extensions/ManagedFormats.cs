@@ -1,11 +1,11 @@
-﻿using Import.Extensions;
+﻿using ContentPipeline.Extensions;
 using Logging;
 using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Import
+namespace ContentPipeline
 {
 	public class ManagedFormats
 	{

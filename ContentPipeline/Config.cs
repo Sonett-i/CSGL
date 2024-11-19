@@ -1,9 +1,9 @@
-﻿using Import.Extensions;
+﻿using ContentPipeline.Extensions;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Import
+namespace ContentPipeline
 {
 	public static class Config
 	{

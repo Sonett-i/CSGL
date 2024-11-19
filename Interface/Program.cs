@@ -1,7 +1,7 @@
 ﻿using System;
 using CSGL;
-using Import;
-using Import.Extensions;
+using ContentPipeline;
+using ContentPipeline.Extensions;
 using Logging;
 
 namespace Interface
@@ -10,7 +10,7 @@ namespace Interface
 	{
 		static void Init()
 		{
-			Log.Init(Import.ManagedDirectories.LogDirectory);
+			Log.Init(ManagedDirectories.LogDirectory);
 			LoadConfig();
 			Log.Default($"CSGL: {CSGL.EngineConfig.Name}\nVersion: {EngineConfig.Version}");
 
@@ -19,12 +19,12 @@ namespace Interface
 
 		static void LoadConfig()
 		{
-			INI? config = Import.Config.Import();
+			INI? config = ContentPipeline.Config.Import();
 
 			if (config != null)
 			{
 				CSGL.Config.Set(config);
-				Import.ManagedFormats.Configure(config);
+				ContentPipeline.ManagedFormats.Configure(config);
 			}
 				
 		}

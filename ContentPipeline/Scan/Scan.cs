@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Logging;
 
-namespace Import
+namespace ContentPipeline
 {
 	public static class Scan
 	{

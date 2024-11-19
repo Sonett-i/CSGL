@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 
-namespace Import.Extensions
+namespace ContentPipeline.Extensions
 {
 	internal class JSON
 	{
