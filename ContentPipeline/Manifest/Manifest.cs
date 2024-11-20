@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ContentPipeline.Utilities;
 using Logging;
 
 namespace ContentPipeline
@@ -36,6 +33,7 @@ namespace ContentPipeline
 					try
 					{
 						FileManifest[asset.Type].Add(asset.ID, asset);
+						Log.Info($"{asset.Type}:{asset.Name} added to manifest: {asset.ToString()}");
 					}
 					catch (Exception ex)
 					{

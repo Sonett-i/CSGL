@@ -1,16 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ContentPipeline.Components;
+using OpenTK.Graphics.OpenGL;
 
 namespace CSGL.Engine.OpenGL
 {
-	internal class VBO : IDisposable
+	internal class VBO : GLBuffer
 	{
-		public void Dispose()
+		public readonly float[] buffer;
+		public readonly uint[] indices;
+		
+		private BufferUsageHint usageHint;
+
+		public VBO(Mesh mesh, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
-			GC.SuppressFinalize(this);
+			base.ID = GL.GenBuffer();
+			this.usageHint = hint;
+
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
+		}
+
+		public override void Dispose()
+		{
+			base.Dispose();
 		}
 	}
 }

@@ -1,29 +1,23 @@
 ﻿using System;
+using OpenTK.Mathematics;
 
 namespace ContentPipeline.Components
 {
 	public struct Vertex
 	{
-		public readonly float X;
-		public readonly float Y;
-		public readonly float Z;
+		public readonly Vector3 position;
+		public readonly Vector3 normal;
+		public readonly Vector3 tangent;
 
-		public readonly float normalX;
-		public readonly float normalY;
-		public readonly float normalZ;
+		public readonly Vector2 UVs;
 
-		public readonly float U, V;
-
-		public Vertex(float x, float y, float z, float normalX, float normalY, float normalZ, float u, float v)
+		public Vertex(Vector3 position, Vector3 normals, Vector3 tangent, Vector2 uvs)
 		{
-			X = x;
-			Y = y;
-			Z = z;
-			this.normalX = normalX;
-			this.normalY = normalY;
-			this.normalZ = normalZ;
-			U = u;
-			V = v;
+			this.position = position;
+			this.normal = normals;
+			this.tangent = tangent;
+
+			this.UVs = uvs;
 		}
 	}
 }

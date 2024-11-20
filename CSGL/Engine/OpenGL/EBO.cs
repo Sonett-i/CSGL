@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL;
 
 namespace CSGL.Engine.OpenGL
 {
-	internal class EBO : IDisposable
+	internal class EBO : GLBuffer
 	{
-		int Handle;
 
-		public void Dispose()
+		public override void Dispose()
 		{
 			GC.SuppressFinalize(this);
 		}

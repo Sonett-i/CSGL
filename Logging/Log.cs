@@ -10,13 +10,16 @@ namespace Logging
 		{
 			LOG_DEFAULT,
 			LOG_ERROR,
-			LOG_FATAL
+			LOG_FATAL,
+			LOG_INFO
 		}
 
 		static string directory = "";
 		static string currentRun = "";
 
 		static Dictionary<LogType, string> logFiles = new Dictionary<LogType, string>();
+
+
 
 		public static void Default(string message)
 		{
@@ -33,6 +36,12 @@ namespace Logging
 		public static void Fatal(string message)
 		{
 			LogToFile(LogType.LOG_FATAL, message);
+		}
+
+		public static void Info(string message)
+		{
+			Console.WriteLine($"{message}");
+			LogToFile(LogType.LOG_INFO, message);
 		}
 
 		public static void LogToFile(LogType logType, string message)
@@ -60,6 +69,7 @@ namespace Logging
 			logFiles[LogType.LOG_DEFAULT] = CreateLogFile("Default");
 			logFiles[LogType.LOG_ERROR] = CreateLogFile("Error");
 			logFiles[LogType.LOG_FATAL] = CreateLogFile("Fatal");
+			logFiles[LogType.LOG_INFO] = CreateLogFile("Info");
 		}
 
 		public static string CreateLogFile(string logTypeName)

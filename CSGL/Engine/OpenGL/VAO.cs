@@ -1,18 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenTK.Graphics.OpenGL;
 
 namespace CSGL.Engine.OpenGL
 {
-	internal class VAO : IDisposable
+	internal class VAO : GLBuffer
 	{
-		int Handle;
 
-		public void Dispose()
+		public void LinkVBO(VBO VBO, uint layout)
 		{
-			GC.SuppressFinalize(this);
+			VBO.Bind();
+
+
+			VBO.Unbind();
+		}
+
+
+
+		public override void Dispose()
+		{
+			base.Dispose();
 		}
 	}
 }
