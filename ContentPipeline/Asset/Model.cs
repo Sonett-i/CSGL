@@ -7,11 +7,11 @@ using ContentPipeline.Components;
 
 namespace ContentPipeline
 {
-	internal class Model : Asset
+	public class Model : Asset
 	{
 		public int Vertices = 0;
 		public int SubMeshes = 0;
-		public Mesh[] Meshes = null!;
+		public MeshData[] Meshes = null!;
 		public Material[] Materials = null!;
 
 		public Model() 
@@ -52,7 +52,7 @@ namespace ContentPipeline
 			string output = "";
 			float size = 0.0f;
 
-			foreach (Mesh mesh in Meshes)
+			foreach (MeshData mesh in Meshes)
 			{
 				output += mesh.ToString() + "\n";
 				size += mesh.Size;

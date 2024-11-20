@@ -19,7 +19,7 @@ namespace ContentPipeline
 
 	public class AssetManager
 	{
-		public static Dictionary<AssetType, Dictionary<Guid, Asset>> Assets = new Dictionary<AssetType, Dictionary<Guid, Asset>>();
+		//public static Dictionary<AssetType, Dictionary<Guid, Asset>> Assets = new Dictionary<AssetType, Dictionary<Guid, Asset>>();
 
 		public static AssetType GetAssetType(string asset)
 		{
@@ -30,6 +30,17 @@ namespace ContentPipeline
 				Logging.Log.Error("Invalid asset type");
 				throw new Exception("Invalid asset type");
 			}
+		}
+
+		public static AssetType GetAssetFromType(Type type)
+		{
+			return type switch
+			{
+				_ when type == typeof(Model) => AssetType.ASSET_MODEL,
+				_ when type == typeof(Material) => AssetType.ASSET_MATERIAL,
+				_ when type == typeof(Texture2D) => AssetType.ASSET_TEXTURE,
+				_ => throw new Exception($"Unknown asset type")
+			};
 		}
 
 		public static Asset? GetAssetByName<T>(string assetName) where T : Type

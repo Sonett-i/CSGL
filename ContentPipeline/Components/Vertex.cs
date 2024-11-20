@@ -9,7 +9,7 @@ namespace ContentPipeline.Components
 		public readonly Vector3 normal;
 		public readonly Vector3 tangent;
 
-		public readonly Vector2 UVs;
+		public readonly Vector2 UV;
 
 		public Vertex(Vector3 position, Vector3 normals, Vector3 tangent, Vector2 uvs)
 		{
@@ -17,7 +17,9 @@ namespace ContentPipeline.Components
 			this.normal = normals;
 			this.tangent = tangent;
 
-			this.UVs = uvs;
+			this.UV = uvs;
 		}
+
+		public static int Stride = 11;
 	}
 }

@@ -11,7 +11,8 @@ namespace Logging
 			LOG_DEFAULT,
 			LOG_ERROR,
 			LOG_FATAL,
-			LOG_INFO
+			LOG_INFO,
+			LOG_GL
 		}
 
 		static string directory = "";
@@ -29,7 +30,7 @@ namespace Logging
 
 		public static void Error(string message)
 		{
-			Console.WriteLine(message);
+			Console.WriteLine($"[Error]: {message}");
 			LogToFile(LogType.LOG_ERROR, message);
 		}
 
@@ -42,6 +43,12 @@ namespace Logging
 		{
 			Console.WriteLine($"{message}");
 			LogToFile(LogType.LOG_INFO, message);
+		}
+
+		public static void GL(string message)
+		{
+			Console.Write($"[OpenGL]: {message}");
+			LogToFile(Log.LogType.LOG_GL, message);
 		}
 
 		public static void LogToFile(LogType logType, string message)
@@ -70,6 +77,7 @@ namespace Logging
 			logFiles[LogType.LOG_ERROR] = CreateLogFile("Error");
 			logFiles[LogType.LOG_FATAL] = CreateLogFile("Fatal");
 			logFiles[LogType.LOG_INFO] = CreateLogFile("Info");
+			logFiles[LogType.LOG_GL] = CreateLogFile("OpenGL");
 		}
 
 		public static string CreateLogFile(string logTypeName)

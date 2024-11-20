@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Logging;
+using ContentPipeline;
 
 namespace CSGL
 {
@@ -15,6 +17,10 @@ namespace CSGL
 
 		public override void Awake()
 		{
+			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
+
+			Model? test = Manifest.GetAsset<Model>("cube.obj");
+
 			base.Awake();
 		}
 

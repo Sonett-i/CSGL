@@ -5,6 +5,7 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Logging;
+using CSGL.Engine.Shaders;
 
 namespace CSGL
 {
@@ -28,19 +29,22 @@ namespace CSGL
 		{
 			this.Title = $"OpenGL";
 			this.CenterWindow();
+			InitializeWindow();
 		}
 
-		Scene debugScene = new DebugScene("debug");
+		
 
 		void InitializeWindow()
 		{
 			int[] viewport = new int[4];
-			
+			ShaderManager.CompileShaders();
 		}
 
 		protected override void OnLoad()
 		{
 			this.IsVisible = true; // make openGL window visible
+
+			Scene debugScene = new DebugScene("debug");
 
 			debugScene.Start();
 			base.OnLoad();

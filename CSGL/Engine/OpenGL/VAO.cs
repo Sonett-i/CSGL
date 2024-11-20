@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
+using Logging;
 
 namespace CSGL.Engine.OpenGL
 {

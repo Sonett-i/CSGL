@@ -1,6 +1,7 @@
 ﻿using System;
 using ContentPipeline.Components;
 using OpenTK.Graphics.OpenGL;
+using Logging;
 
 namespace CSGL.Engine.OpenGL
 {
@@ -11,10 +12,13 @@ namespace CSGL.Engine.OpenGL
 		
 		private BufferUsageHint usageHint;
 
-		public VBO(Mesh mesh, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		public VBO(Vertex[] vertices, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
+			//this.buffer = mesh.ToVertexBuffer();
+
 			base.ID = GL.GenBuffer();
 			this.usageHint = hint;
+
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
 		}

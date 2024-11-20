@@ -11,7 +11,7 @@ namespace ContentPipeline
 	{
 		public Guid ID { get; private set; }
 
-		public string? Name = "";
+		public string Name = "";
 		public string FilePath = "";
 		public string ext = "";
 		public AssetType Type = AssetType.ASSET_BINARY;

@@ -7,7 +7,7 @@ namespace ContentPipeline.Extensions
 {
 	public class Obj
 	{
-		public static ContentPipeline.Components.Mesh[] Import(string filePath)
+		public static MeshData[] Import(string filePath)
 		{
 			
 			AssimpContext context = new AssimpContext();
@@ -17,7 +17,7 @@ namespace ContentPipeline.Extensions
 			List<Assimp.Mesh> meshes = scene.Meshes;
 			List<Assimp.Material> materials = scene.Materials;
 
-			ContentPipeline.Components.Mesh[] _meshes = new Components.Mesh[meshes.Count];
+			MeshData[] _meshes = new MeshData[meshes.Count];
 
 			for (int i = 0; i < meshes.Count; i++)
 			{
@@ -46,7 +46,7 @@ namespace ContentPipeline.Extensions
 					}
 				}
 
-				_meshes[i] = new Components.Mesh((uint)i, vertices.ToArray(), indices.ToArray(), meshes[i].FaceCount);
+				_meshes[i] = new MeshData((uint)i, vertices.ToArray(), indices.ToArray(), meshes[i].FaceCount);
 			}
 
 			return _meshes;

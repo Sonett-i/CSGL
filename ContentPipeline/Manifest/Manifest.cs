@@ -25,15 +25,21 @@ namespace ContentPipeline
 			{
 				string file = Scan.scannedFiles[i];
 
-				Log.Default(i + " " + file);
 				Asset? asset = AssetManager.Import(file);
 
 				if (asset != null)
 				{
 					try
 					{
-						FileManifest[asset.Type].Add(asset.ID, asset);
-						Log.Info($"{asset.Type}:{asset.Name} added to manifest: {asset.ToString()}");
+						if (!FileManifest[asset.Type].ContainsKey(asset.ID))
+						{
+							FileManifest[asset.Type].Add(asset.ID, asset);
+							Log.Info($"{asset.Type}:{asset.Name} added to manifest: {asset.ToString()}");
+						}
+						else
+						{
+							throw new Exception("File already exists in manifest");
+						}
 					}
 					catch (Exception ex)
 					{
@@ -42,15 +48,36 @@ namespace ContentPipeline
 				}
 			}
 			
-			Log.Default($"Manifest Updated: {Scan.scannedFiles.Count} files found");
+
+
+			Log.Default($"Manifest Updated: {Scan.scannedFiles.Count} files found\n{Info()}");
+		}
+
+		public static T? GetAsset<T>(string name) where T : Asset
+		{
+			Type type = typeof(T);
+			AssetType aType = AssetManager.GetAssetFromType(type);
+
+			foreach (KeyValuePair<Guid, Asset> kvp in FileManifest[aType])
+			{
+				if (kvp.Value.Name == name)
+				{
+					return kvp.Value as T;
+				}
+			}
+
+			throw new Exception("File not found");
 		}
 
 		public static string Info()
 		{
-			string output = "Shaders: 0" +
-				"Textures: 0" +
-				"Models: 0" +
-				"Materials: 0";
+			string output = "";
+
+			foreach (KeyValuePair<AssetType, Dictionary<Guid, Asset>> kvp in FileManifest)
+			{
+				output += $"{kvp.Key.ToString()}: {kvp.Value.Count}\n";
+			}
+
 			return output;
 		}
 	}
