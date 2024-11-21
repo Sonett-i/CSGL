@@ -41,9 +41,6 @@ namespace CSGL
 			GL.ClearColor(backColour);
 
 			GL.Enable(EnableCap.DepthTest);
-			GL.Enable(EnableCap.CullFace);
-			GL.CullFace(CullFaceMode.Back);
-			GL.FrontFace(FrontFaceDirection.Ccw);
 		}
 
 		protected override void OnLoad()
