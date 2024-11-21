@@ -5,27 +5,39 @@ using Logging;
 
 namespace CSGL.Engine.OpenGL
 {
-	internal class VBO : GLBuffer
+	public class VBO : IDisposable
 	{
-		public readonly float[] buffer;
-		public readonly uint[] indices;
+		public int ID;
+		public readonly float[] buffer = null!;
 		
 		private BufferUsageHint usageHint;
 
 		public VBO(Vertex[] vertices, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
-			//this.buffer = mesh.ToVertexBuffer();
-
-			base.ID = GL.GenBuffer();
 			this.usageHint = hint;
 
+			this.buffer = MeshData.Buffer(vertices);
 
+			this.ID = GL.GenBuffer();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
+			GL.BufferData(BufferTarget.ArrayBuffer, this.buffer.Length * sizeof(float), this.buffer, this.usageHint);
+
+			Log.GL($"Generated VBO: {this.ID}");
+		}
+
+		public void Bind()
+		{
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
 		}
 
-		public override void Dispose()
+		public void Unbind()
 		{
-			base.Dispose();
+			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+		}
+
+		public void Dispose()
+		{
+			GL.DeleteBuffer(this.ID);
 		}
 	}
 }

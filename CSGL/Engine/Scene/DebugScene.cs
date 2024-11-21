@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Logging;
 using ContentPipeline;
+using CSGL.Engine;
+using CSGL.Engine.Shaders;
+using ContentPipeline.Components;
+using OpenTK.Mathematics;
 
 namespace CSGL
 {
@@ -15,11 +19,35 @@ namespace CSGL
 
 		}
 
+		List<Mesh> renderScene = new List<Mesh>();
+
 		public override void Awake()
 		{
 			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
 
 			Model? test = Manifest.GetAsset<Model>("cube.obj");
+
+			Shader defaultShader = ShaderManager.Shaders["default.shader"];
+
+			Vertex[] vertices =
+			{
+				new Vertex(new Vector3(0.5f, 0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
+				new Vertex(new Vector3(0.5f, -0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
+				new Vertex(new Vector3(-0.5f, -0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
+				new Vertex(new Vector3(-0.5f, 0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
+			};
+
+			uint[] indices =
+			{
+				0, 1, 3,
+				1, 2, 3
+			};
+
+			Mesh mesh = new Mesh(vertices, indices, null, defaultShader);
+
+			renderScene.Add(mesh);
+
+			//Mesh mesh = new Mesh(test.m)
 
 			base.Awake();
 		}
@@ -32,6 +60,15 @@ namespace CSGL
 		public override void Update()
 		{
 			base.Update();
+		}
+
+		public override void Render()
+		{
+			foreach (Mesh mesh in renderScene)
+			{
+				mesh.Draw();
+			}
+			base.Render();
 		}
 	}
 }

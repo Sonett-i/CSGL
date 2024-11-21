@@ -47,7 +47,7 @@ namespace Logging
 
 		public static void GL(string message)
 		{
-			Console.Write($"[OpenGL]: {message}");
+			Console.WriteLine($"[OpenGL]: {message}");
 			LogToFile(Log.LogType.LOG_GL, message);
 		}
 
@@ -56,7 +56,7 @@ namespace Logging
 			if (logFiles.ContainsKey(logType))
 			{
 				string filePath  = logFiles[logType];
-				File.AppendAllText(filePath, $"{DateTime.Now:dd-mm-yy-HH:mm} - {message}\n");
+				File.AppendAllText(filePath, $"{DateTime.Now:dd-mm-yy-HH:mm:ss} - {message}\n");
 			}
 		}
 

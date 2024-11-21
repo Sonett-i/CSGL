@@ -10,6 +10,7 @@ namespace CSGL
 	{
 		public static Dictionary<int, Scene> scenes = new Dictionary<int, Scene>();
 
+		public static Scene ActiveScene = null!;
 		public static int AddScene(Scene scene)
 		{
 			if (!scenes.ContainsKey(scene.sceneID))

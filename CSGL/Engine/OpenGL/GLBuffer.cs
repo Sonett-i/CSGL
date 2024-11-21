@@ -7,12 +7,13 @@ namespace CSGL.Engine.OpenGL
 	public abstract class GLBuffer : IDisposable
 	{
 		public int ID;
-		private bool _disposed = false;
-		private bool initialized = false;
+		private bool disposed = false;
+		public bool initialized = false;
 
 		~GLBuffer()
 		{
-			this.Dispose();
+			if (initialized)
+				this.Dispose();
 		}
 
 		public virtual void Bind()
@@ -27,9 +28,10 @@ namespace CSGL.Engine.OpenGL
 
 		public virtual void Dispose() 
 		{
-			if (_disposed) return;
+			if (disposed) return;
 
 			GC.SuppressFinalize(this);
+			disposed = true;
 		}
 	}
 }

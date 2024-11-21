@@ -1,25 +1,70 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
 using Logging;
+using ContentPipeline.Components;
 
 namespace CSGL.Engine.OpenGL
 {
-	internal class VAO : GLBuffer
+	public class VAO : IDisposable
 	{
-
-		public void LinkVBO(VBO VBO, uint layout)
+		public int ID;
+		private bool initialized;
+		public VAO() 
 		{
+			this.ID = GL.GenVertexArray();
+			Log.GL($"Generated VAO: {this.ID}");
+			initialized = true;
+		}
+
+		public void BindVBO(VBO VBO)
+		{
+			GL.BindVertexArray(this.ID);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, VBO.ID);
+
+			Log.GL($"VAO {this.ID} Bind VBO {VBO.ID}");
+			// Positional Data (vec3): Uniform Layout 0
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 0);
+			GL.EnableVertexAttribArray(0);
+
+			// Vertex Normals (vec3): Uniform Layout 1
+			GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 3 * sizeof(float));
+			GL.EnableVertexAttribArray(1);
+
+			// Tangent Data (vec3): Uniform Layout 2
+			GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 6 * sizeof(float));
+			GL.EnableVertexAttribArray(2);
+
+			// TexCoord (vec2): Uniform Layout 3
+			GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 12 * sizeof(float), 9 * sizeof(float));
+			GL.EnableVertexAttribArray(3);
+			
+		}
+
+		public void LinkAttrib(VBO VBO, int layout, int numComponents, VertexAttribPointerType type, int stride, int offset)
+		{
+			Log.GL($"VAO:{this.ID} bind VBO:{VBO.ID} (Layout: {layout}, {numComponents}, {type.ToString()}) stride: {stride}, offset: {offset}");
 			VBO.Bind();
-
-
+			GL.VertexAttribPointer(layout, numComponents, type, false, stride * sizeof(float), offset * sizeof(float));
+			GL.EnableVertexAttribArray(layout);
 			VBO.Unbind();
 		}
 
-
-
-		public override void Dispose()
+		public void Bind()
 		{
-			base.Dispose();
+			GL.BindVertexArray(this.ID);
+		}
+
+		public void Unbind()
+		{
+			GL.BindVertexArray(0);
+		}
+
+		public void Dispose()
+		{
+			if (!this.initialized)
+				return;
+
+			GL.DeleteVertexArray(this.ID);
 		}
 	}
 }

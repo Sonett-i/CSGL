@@ -32,12 +32,18 @@ namespace CSGL
 			InitializeWindow();
 		}
 
-		
-
 		void InitializeWindow()
 		{
 			int[] viewport = new int[4];
 			ShaderManager.CompileShaders();
+
+			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
+			GL.ClearColor(backColour);
+
+			GL.Enable(EnableCap.DepthTest);
+			GL.Enable(EnableCap.CullFace);
+			GL.CullFace(CullFaceMode.Back);
+			GL.FrontFace(FrontFaceDirection.Ccw);
 		}
 
 		protected override void OnLoad()
@@ -47,6 +53,8 @@ namespace CSGL
 			Scene debugScene = new DebugScene("debug");
 
 			debugScene.Start();
+			SceneManager.ActiveScene = debugScene;
+
 			base.OnLoad();
 		}
 
@@ -71,8 +79,9 @@ namespace CSGL
 
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
-
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			SceneManager.ActiveScene.Render();
 			this.Context.SwapBuffers();
 			GL.Finish();
 
