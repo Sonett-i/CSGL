@@ -48,8 +48,6 @@ namespace ContentPipeline
 				}
 			}
 			
-
-
 			Log.Default($"Manifest Updated: {Scan.scannedFiles.Count} files found\n{Info()}");
 		}
 

@@ -10,10 +10,10 @@ namespace ContentPipeline.Components
 	{
 		public string Name { get; set; }
 
-		public Texture2D DiffuseTexture {  get; set; }
-		public Texture2D NormalTexture { get; set; }
+		public TextureAsset DiffuseTexture {  get; set; }
+		public TextureAsset NormalTexture { get; set; }
 
-		public Material(string name, Texture2D diffuseTexture, Texture2D normalTexture)
+		public Material(string name, TextureAsset diffuseTexture, TextureAsset normalTexture)
 		{
 			this.Name = name;
 			this.DiffuseTexture = diffuseTexture;
