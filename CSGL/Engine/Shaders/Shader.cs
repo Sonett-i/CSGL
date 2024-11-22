@@ -2,6 +2,7 @@
 using Assimp;
 using OpenTK.Graphics.OpenGL;
 using Logging;
+using OpenTK.Mathematics;
 
 namespace CSGL.Engine
 {
@@ -11,7 +12,7 @@ namespace CSGL.Engine
 		public int ID;
 		public string Name;
 
-		public Dictionary<string, int> Uniforms = new Dictionary<string, int>();
+		public Dictionary<string, Uniform> Uniforms = new Dictionary<string, Uniform>();
 		public Dictionary<string, int> Attributes = new Dictionary<string, int>();
 
 		private VertexShader vertexShader;
@@ -38,6 +39,8 @@ namespace CSGL.Engine
 			if (CheckProgramLinkStatus() == 0)
 				throw new Exception("Fragment Shader Failed to Compile");
 
+			GetUniforms();
+
 		}
 
 		public void Activate()
@@ -45,10 +48,81 @@ namespace CSGL.Engine
 			GL.UseProgram(ID);
 		}
 
+		public void SetUniform(string uniformName, object value)
+		{
+			if (!Uniforms.TryGetValue(uniformName, out Uniform? uniform))
+			{
+				throw new ArgumentException($"Uniform with {uniformName} does not exist");
+			}
+
+			if (value == null)
+				throw new Exception("Uniform is null");
+
+			this.Activate();
+
+			switch (uniform.Type)
+			{
+				case ActiveUniformType.Float:
+					if (value is float floatValue)
+						uniform.SetValue(floatValue);
+					else
+						throw new Exception($"Uniform {uniform.Name} expects a float");
+					break;
+				case ActiveUniformType.FloatVec2:
+					if (value is Vector2 vec2Value)
+						uniform.SetValue(vec2Value);
+					else
+						throw new Exception($"Uniform {uniform.Name} expects a vector2");
+					break;
+				case ActiveUniformType.FloatVec3:
+					if (value is Vector3 vec3Value)
+						uniform.SetValue(vec3Value);
+					else
+						throw new Exception($"Uniform {uniform.Name} expects a vector3");
+					break;
+				case ActiveUniformType.FloatVec4:
+					if (value is Vector4 vec4Value)
+						uniform.SetValue(vec4Value);
+					else
+						throw new Exception($"Uniform {uniform.Name} expects a vector4");
+					break;
+				case ActiveUniformType.FloatMat4:
+					if (value is Matrix4 mat4Value)
+						uniform.SetValue(mat4Value);
+					else
+						throw new Exception($"Uniform {uniform.Name} expects a mat4");
+					break;
+			}
+		}
+
+		private void GetUniforms()
+		{
+			this.Activate();
+
+			int uniformCount;
+			GL.GetProgram(this.ID, GetProgramParameterName.ActiveUniforms, out uniformCount);
+
+			for (int i = 0; i < uniformCount; i++)
+			{
+				int size;
+				ActiveUniformType type;
+
+				string name = GL.GetActiveUniform(this.ID, i, out size, out type);
+				int location = GL.GetUniformLocation(this.ID, name);
+
+				if (location != -1)
+				{
+					Uniforms[name] = new Uniform(name, location, type, size);
+					Log.GL($"{this.Name} uniform: {name} at loc {location}");
+				}
+			}
+		}
+
 		public void Delete()
 		{
 			this.Dispose();
 		}
+
 
 		int Compile(VertexShader vertexShader, FragmentShader fragmentShader)
 		{

@@ -70,7 +70,7 @@ namespace CSGL
 		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
-
+			SceneManager.ActiveScene.Update();
 			base.OnUpdateFrame(e);
 		}
 

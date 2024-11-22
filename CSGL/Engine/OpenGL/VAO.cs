@@ -41,8 +41,9 @@ namespace CSGL.Engine.OpenGL
 
 		public void LinkAttrib(VBO VBO, int layout, int numComponents, VertexAttribPointerType type, int stride, int offset)
 		{
-			Log.GL($"VAO:{this.ID} bind VBO:{VBO.ID} (Layout: {layout}, {numComponents}, {type.ToString()}) stride: {stride}, offset: {offset}");
 			VBO.Bind();
+			Log.GL($"VAO:{this.ID} bind VBO:{VBO.ID} (Layout: {layout}, {numComponents}, {type.ToString()}) stride: {stride}, offset: {offset}");
+			
 			GL.VertexAttribPointer(layout, numComponents, type, false, stride * sizeof(float), offset * sizeof(float));
 			GL.EnableVertexAttribArray(layout);
 			VBO.Unbind();

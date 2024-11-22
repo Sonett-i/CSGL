@@ -9,6 +9,7 @@ using CSGL.Engine;
 using CSGL.Engine.Shaders;
 using ContentPipeline.Components;
 using OpenTK.Mathematics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CSGL
 {
@@ -20,33 +21,27 @@ namespace CSGL
 		}
 
 		List<Mesh> renderScene = new List<Mesh>();
+		Mesh mesh;
 
-		public override void Awake()
+		void InitScene()
 		{
-			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
-
 			Model? test = Manifest.GetAsset<Model>("cube.obj");
 
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 
-			Vertex[] vertices =
-			{
-				new Vertex(new Vector3(0.5f, 0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
-				new Vertex(new Vector3(0.5f, -0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
-				new Vertex(new Vector3(-0.5f, -0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
-				new Vertex(new Vector3(-0.5f, 0.5f, 0), Vector3.Zero, Vector3.Zero, Vector2.Zero),
-			};
+			mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, null, defaultShader);
 
-			uint[] indices =
-			{
-				0, 1, 3,
-				1, 2, 3
-			};
-
-			Mesh mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, null, defaultShader);
+			mesh.Shader.SetUniform("scale", 2f);
 
 			renderScene.Add(mesh);
+		}
 
+		public override void Awake()
+		{
+
+			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
+			InitScene();
+			
 			//Mesh mesh = new Mesh(test.m)
 
 			base.Awake();
@@ -57,8 +52,10 @@ namespace CSGL
 			base.Start();
 		}
 
+		float t = 0;
 		public override void Update()
 		{
+
 			base.Update();
 		}
 
