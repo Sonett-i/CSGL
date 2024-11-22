@@ -43,7 +43,7 @@ namespace CSGL
 				1, 2, 3
 			};
 
-			Mesh mesh = new Mesh(vertices, indices, null, defaultShader);
+			Mesh mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, null, defaultShader);
 
 			renderScene.Add(mesh);
 

@@ -21,7 +21,6 @@ namespace CSGL.Engine.OpenGL
 			GL.BindVertexArray(this.ID);
 			GL.BindBuffer(BufferTarget.ArrayBuffer, VBO.ID);
 
-			Log.GL($"VAO {this.ID} Bind VBO {VBO.ID}");
 			// Positional Data (vec3): Uniform Layout 0
 			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 0);
 			GL.EnableVertexAttribArray(0);
@@ -37,7 +36,7 @@ namespace CSGL.Engine.OpenGL
 			// TexCoord (vec2): Uniform Layout 3
 			GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 12 * sizeof(float), 9 * sizeof(float));
 			GL.EnableVertexAttribArray(3);
-			
+
 		}
 
 		public void LinkAttrib(VBO VBO, int layout, int numComponents, VertexAttribPointerType type, int stride, int offset)

@@ -35,9 +35,11 @@ namespace CSGL.Engine
 		}
 		*/
 
-		public int VAO;
-		public int VBO;
-		public int EBO;
+		public VAO VAO;
+		public VBO VBO;
+		public EBO EBO;
+
+		public VBO vbo;
 
 		float[] vertexBuffer;
 		uint[] indexBuffer;
@@ -45,39 +47,20 @@ namespace CSGL.Engine
 
 		public Mesh(Vertex[] vertices, uint[] indices, List<Texture2D> textures, Shader shader)
 		{
+			//this.vbo = new VBO(vertices);
+
 			this.vertexBuffer = MeshData.Buffer(vertices);
 			this.indexBuffer = indices;
 			this.shader = shader;
 			BufferUsageHint hint = BufferUsageHint.StaticDraw;
 
-			this.VBO = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.VBO);
-			GL.BufferData(BufferTarget.ArrayBuffer, this.vertexBuffer.Length * sizeof(float), this.vertexBuffer, hint);
+			this.VBO = new VBO(vertices);
 
-			this.VAO = GL.GenVertexArray();
-			GL.BindVertexArray(this.VAO);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.VBO);
+			this.VAO = new VAO();
+			this.VAO.BindVBO(VBO);
 
-			// Positional Data (vec3): Uniform Layout 0
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 0);
-			GL.EnableVertexAttribArray(0);
+			this.EBO = new EBO(indices); // GL.GenBuffer();
 
-			// Vertex Normals (vec3): Uniform Layout 1
-			GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 3 * sizeof(float));
-			GL.EnableVertexAttribArray(1);
-
-			// Tangent Data (vec3): Uniform Layout 2
-			GL.VertexAttribPointer(2, 3, VertexAttribPointerType.Float, false, 12 * sizeof(float), 6 * sizeof(float));
-			GL.EnableVertexAttribArray(2);
-
-			// TexCoord (vec2): Uniform Layout 3
-			GL.VertexAttribPointer(3, 2, VertexAttribPointerType.Float, false, 12 * sizeof(float), 9 * sizeof(float));
-			GL.EnableVertexAttribArray(3);
-
-			this.EBO = GL.GenBuffer();
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.EBO);
-			GL.BufferData(BufferTarget.ElementArrayBuffer, indexBuffer.Length * sizeof(uint), indexBuffer, hint);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
 			GL.BindVertexArray(0);
 			
@@ -87,10 +70,11 @@ namespace CSGL.Engine
 		{
 			shader.Activate();
 
-			GL.BindVertexArray(this.VAO);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.EBO);
+			this.VAO.Bind();
+			this.EBO.Bind();
+			//GL.BindVertexArray(this.VAO.ID);
 
-			GL.DrawElements(PrimitiveType.Triangles, indexBuffer.Length, DrawElementsType.UnsignedInt, 0);
+			GL.DrawElements(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0);
 
 			ErrorCode error = GL.GetError();
 

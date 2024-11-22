@@ -20,7 +20,7 @@ namespace CSGL.Engine.OpenGL
 
 			this.ID = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
-			GL.BufferData(BufferTarget.ArrayBuffer, this.buffer.Length * sizeof(float), this.buffer, this.usageHint);
+			GL.BufferData(BufferTarget.ArrayBuffer, this.buffer.Length * sizeof(float), this.buffer, hint);
 
 			Log.GL($"Generated VBO: {this.ID}");
 		}
