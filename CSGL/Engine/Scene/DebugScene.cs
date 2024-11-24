@@ -9,7 +9,6 @@ using CSGL.Engine;
 using CSGL.Engine.Shaders;
 using ContentPipeline.Components;
 using OpenTK.Mathematics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CSGL
 {

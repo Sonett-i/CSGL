@@ -6,7 +6,7 @@ using Logging;
 
 namespace CSGL.Engine
 {
-	public class Mesh
+	public class Mesh : Component
 	{
 		private List<Texture> textures = new List<Texture>();
 		public Shader Shader;
