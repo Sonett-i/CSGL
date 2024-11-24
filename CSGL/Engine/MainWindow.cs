@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Logging;
 using CSGL.Engine.Shaders;
+using CSGL.Engine;
 
 namespace CSGL
 {
@@ -35,7 +36,11 @@ namespace CSGL
 		void InitializeWindow()
 		{
 			int[] viewport = new int[4];
+
+			Config.SetOpenGLConfig();
+
 			ShaderManager.CompileShaders();
+			//TextureManager.CompileTextures();
 
 			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
 			GL.ClearColor(backColour);

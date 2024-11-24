@@ -34,7 +34,7 @@ namespace ContentPipeline
 						if (!FileManifest[asset.Type].ContainsKey(asset.ID))
 						{
 							FileManifest[asset.Type].Add(asset.ID, asset);
-							Log.Info($"{asset.Type}:{asset.Name} added to manifest: {asset.ToString()}");
+							//Log.Info($"{asset.Type}:{asset.Name} added to manifest: {asset.ToString()}");
 						}
 						else
 						{

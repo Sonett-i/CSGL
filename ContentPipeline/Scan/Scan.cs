@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,13 @@ namespace ContentPipeline
 
 			foreach (string folder in folders)
 			{
+				string currentDir = $"\\{new DirectoryInfo(folder).Name}\\";
+
+				if (ManagedDirectories.IgnoredDirectories.ContainsKey(currentDir))
+				{
+					continue;
+				}
+
 				Explore(folder);
 			}
 
@@ -27,8 +35,14 @@ namespace ContentPipeline
 		public static string Explore(string path)
 		{
 			string result = "";
-
+			string currentDir = $"\\{new DirectoryInfo(Path.GetDirectoryName(path)).Name}\\";
 			Log.Default(path);
+
+			if (ManagedDirectories.IgnoredDirectories.ContainsKey(currentDir))
+			{
+				return "";
+			}
+
 			string[] subDirectory = Directory.GetDirectories(path);
 
 			if (subDirectory.Length > 0)

@@ -8,7 +8,7 @@ namespace CSGL.Engine
 {
 	public class Mesh
 	{
-		private List<Texture2D> _texture = new List<Texture2D>();
+		private List<Texture> _texture = new List<Texture>();
 		public Shader Shader;
 
 		public VAO VAO;
@@ -21,7 +21,7 @@ namespace CSGL.Engine
 		uint[] indexBuffer;
 
 
-		public Mesh(Vertex[] vertices, uint[] indices, List<Texture2D> textures, Shader shader)
+		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, Shader shader)
 		{
 			//this.vbo = new VBO(vertices);
 
@@ -35,15 +35,23 @@ namespace CSGL.Engine
 			this.VAO = new VAO();
 
 			VAO.Bind();
+
 			this.VAO.LinkAttrib(VBO, 0, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.PositionOffset);
 			this.VAO.LinkAttrib(VBO, 1, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.NormalOffset);
 			this.VAO.LinkAttrib(VBO, 2, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.TangentOffset);
 			this.VAO.LinkAttrib(VBO, 3, 2, VertexAttribPointerType.Float, Vertex.Stride, Vertex.UVOffset);
 
 
+			ErrorCode error = GL.GetError();
+			if (error != ErrorCode.NoError)
+			{
+				Log.GL($"Error drawing {this.ToString()}");
+			}
+
 			this.EBO = new EBO(indices);
 
-			VAO.Unbind();			
+
+			VAO.Unbind();
 		}
 
 		public void Draw()

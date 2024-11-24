@@ -2,6 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using ContentPipeline.Components;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CSGL.Engine.OpenGL
 {
@@ -46,6 +47,13 @@ namespace CSGL.Engine.OpenGL
 			
 			GL.VertexAttribPointer(layout, numComponents, type, false, stride * sizeof(float), offset * sizeof(float));
 			GL.EnableVertexAttribArray(layout);
+			ErrorCode error = GL.GetError();
+
+			if (error != ErrorCode.NoError)
+			{
+				Log.GL($"Error linking attribute: {this.ToString()}");
+			}
+
 			VBO.Unbind();
 		}
 

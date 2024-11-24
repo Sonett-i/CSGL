@@ -1,7 +1,9 @@
 ﻿using System;
 using ContentPipeline;
 using ContentPipeline.Extensions;
+using OpenTK.Graphics.OpenGL;
 using Logging;
+using CSGL.Engine;
 
 namespace CSGL
 {
@@ -37,6 +39,12 @@ namespace CSGL
 			{
 				Log.Error(ex.Message);
 			}
+		}
+
+		public static void SetOpenGLConfig()
+		{
+			TextureManager.MaxTextures = GL.GetInteger(GetPName.MaxTextureImageUnits);
+			TextureManager.MaxTextureSize = GL.GetInteger(GetPName.MaxTextureSize);
 		}
 	}
 }

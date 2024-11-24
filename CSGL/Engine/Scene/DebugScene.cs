@@ -15,7 +15,7 @@ namespace CSGL
 {
 	public class DebugScene : Scene
 	{
-		public DebugScene(string name) : base(name) 
+		public DebugScene(string name) : base(name)
 		{
 
 		}
@@ -41,7 +41,7 @@ namespace CSGL
 
 			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
 			InitScene();
-			
+
 			//Mesh mesh = new Mesh(test.m)
 
 			base.Awake();
