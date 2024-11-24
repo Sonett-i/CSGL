@@ -49,6 +49,7 @@ namespace ContentPipeline.Extensions
 				_meshes[i] = new MeshData((uint)i, vertices.ToArray(), indices.ToArray(), meshes[i].FaceCount);
 			}
 
+			context.Dispose();
 			return _meshes;
 		}
 	}

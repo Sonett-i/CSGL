@@ -2,21 +2,29 @@
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using ContentPipeline;
+using SharedLibrary;
 
 namespace CSGL.Engine
 {
+	public enum TextureType
+	{
+		diffuse,
+		specular,
+		normal
+	}
+
 	public class Texture : IDisposable
 	{
 		public readonly int ID;
-		public TextureTarget Type;
+		public TextureType Type;
 		public TextureUnit Slot;
 		public PixelFormat PixelFormat;
 		public PixelType PixelType;
 
-		public Texture(int handle, TextureTarget type)
+		public Texture(int handle, TextureType textureType)
 		{
 			this.ID = handle;
-			this.Type = type;
+			this.Type = textureType;
 		}
 
 		public void texUnit(Shader shader, string uniform, int unit)
@@ -34,7 +42,7 @@ namespace CSGL.Engine
 
 		public void Unbind()
 		{
-			GL.BindTexture(Type, 0);
+			GL.BindTexture(TextureTarget.Texture2D, 0);
 		}
 
 		~Texture()
@@ -64,7 +72,7 @@ namespace CSGL.Engine
 
 			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-			return new Texture(handle, TextureTarget.Texture2D);
+			return new Texture(handle, TextureType.diffuse);
 		}
 	}
 }

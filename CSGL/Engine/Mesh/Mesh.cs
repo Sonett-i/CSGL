@@ -8,7 +8,7 @@ namespace CSGL.Engine
 {
 	public class Mesh
 	{
-		private List<Texture> _texture = new List<Texture>();
+		private List<Texture> textures = new List<Texture>();
 		public Shader Shader;
 
 		public VAO VAO;
@@ -29,6 +29,7 @@ namespace CSGL.Engine
 			this.indexBuffer = indices;
 			this.Shader = shader;
 			BufferUsageHint hint = BufferUsageHint.StaticDraw;
+			this.textures = textures;
 
 			this.VBO = new VBO(vertices);
 
@@ -60,6 +61,12 @@ namespace CSGL.Engine
 
 			this.VAO.Bind();
 			this.EBO.Bind();
+
+			for (int i = 0; i < this.textures.Count; i++)
+			{
+				GL.ActiveTexture(TextureUnit.Texture0 + i);
+				GL.BindTexture(TextureTarget.Texture2D, textures[i].ID);
+			}
 
 			GL.DrawElements(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0);
 

@@ -25,11 +25,18 @@ namespace CSGL
 
 		void InitScene()
 		{
-			Model? test = Manifest.GetAsset<Model>("cube.obj");
+			Model test = Manifest.GetAsset<Model>("cube.obj");
 
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 
-			mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, null, defaultShader);
+			List<Texture> texList = new List<Texture>();
+
+			Texture tex = Texture.LoadFromAsset(Manifest.GetAsset<TextureAsset>("wall.jpg"));
+			tex.texUnit(defaultShader, "tex0", 0);
+
+			texList.Add(tex);
+
+			mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, texList, defaultShader);
 
 			mesh.Shader.SetUniform("scale", 2f);
 

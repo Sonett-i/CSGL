@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using StbImageSharp;
 using Logging;
+using SharedLibrary;
 
 namespace ContentPipeline
 {
@@ -12,6 +13,7 @@ namespace ContentPipeline
 
 		public bool isFlipped = false;
 		public byte[] data = null!;
+		public TextureType TextureType;
 
 
 		public TextureAsset(string filePath)
@@ -24,16 +26,22 @@ namespace ContentPipeline
 			if (filePath == "")
 				return;
 
+			TextureType texType = TextureType.DIFFUSE;
+
 			int flip = 1;
 			if (filePath.Contains("Skybox", StringComparison.OrdinalIgnoreCase))
 			{
 				flip = 0;
 			}
 
+			if (filePath.Contains("diffuse"))
+				texType = TextureType.DIFFUSE;
+
 			StbImage.stbi_set_flip_vertically_on_load(flip);
 
 			this.Name = Path.GetFileName(filePath);
 			this.ext = Path.GetExtension(filePath);
+			this.TextureType = texType;
 
 			using (FileStream stream = File.OpenRead(filePath))
 			{
