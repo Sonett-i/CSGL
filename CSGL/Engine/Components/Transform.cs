@@ -11,23 +11,23 @@ namespace CSGL.Engine
 	{
 		public Transform(Vector3 position, Quaternion rotation, Vector3 scale)
 		{
-			Position = position;
-			Rotation = rotation;
-			Scale = scale;
+			this.position = position;
+			this.rotation = rotation;
+			this.scale = scale;
 		}
 
 		public Transform()
 		{
-			this.Position = Vector3.Zero;
-			this.Rotation = Quaternion.Identity;
-			this.Scale = Vector3.One;
+			this.position = Vector3.Zero;
+			this.rotation = Quaternion.Identity;
+			this.scale = Vector3.One;
 		}
 
 		// Matrix representing the transformation (TRS) of this transform
 		public Matrix4 Transform_Matrix = Matrix4.Identity;
 
 		// Public property for world position
-		public Vector3 Position
+		public Vector3 position
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace CSGL.Engine
 		}
 
 		// Public property for world rotation
-		public Quaternion Rotation
+		public Quaternion rotation
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace CSGL.Engine
 			}
 		}
 
-		public Vector3 Scale;
+		public Vector3 scale;
 
 		// Parent transform (dictates world position/rotation inheritance
 		private Transform? _parent = null!;
@@ -112,7 +112,7 @@ namespace CSGL.Engine
 			{
 				// Return local position if no parent present, otherwise transform this object's local transform based on parent's position and rotation
 				if (Parent == null) return LocalPosition;
-				return Parent.WorldPosition + Vector3.Transform(LocalPosition, Parent.Rotation);
+				return Parent.WorldPosition + Vector3.Transform(LocalPosition, Parent.rotation);
 			}
 			set
 			{
@@ -122,7 +122,7 @@ namespace CSGL.Engine
 				}
 				else
 				{
-					LocalPosition = Vector3.Transform(value - Parent.WorldPosition, Quaternion.Invert(Parent.Rotation));
+					LocalPosition = Vector3.Transform(value - Parent.WorldPosition, Quaternion.Invert(Parent.rotation));
 				}
 			}
 		}

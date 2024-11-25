@@ -81,6 +81,8 @@ namespace CSGL
 		{
 			Time.accumulatedTime += Time.deltaTime;
 
+			Input.Update(KeyboardState, MouseState);
+
 			SceneManager.ActiveScene.Update();
 
 			while (Time.accumulatedTime >= Time.fixedDeltaTime)

@@ -83,5 +83,12 @@ namespace CSGL.Engine
 				Log.GL($"Error drawing {this.ToString()}");
 			}
 		}
+
+		public static Mesh FromModel(Model model, List<Texture> Textures, Shader shader)
+		{
+			Mesh mesh = new Mesh(model.Meshes[0].Vertices, model.Meshes[0].Indices, Textures, shader);
+
+			return mesh;
+		}
 	}
 }

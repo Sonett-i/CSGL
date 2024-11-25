@@ -43,6 +43,11 @@ namespace CSGL.Engine
 
 		public virtual void Update()
 		{
+			this.transform.UpdateTransforms();
+		}
+
+		public virtual void FixedUpdate()
+		{
 
 		}
 

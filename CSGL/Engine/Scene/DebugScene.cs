@@ -9,11 +9,13 @@ using CSGL.Engine;
 using CSGL.Engine.Shaders;
 using ContentPipeline.Components;
 using OpenTK.Mathematics;
+using CSGL.Assets; 
 
 namespace CSGL
 {
 	public class DebugScene : Scene
 	{
+
 		public DebugScene(string name) : base(name)
 		{
 
@@ -21,24 +23,9 @@ namespace CSGL
 
 		void InitScene()
 		{
-			Model test = Manifest.GetAsset<Model>("cube.obj");
+			Box box = new Box();
 
-			Shader defaultShader = ShaderManager.Shaders["default.shader"];
-
-			List<Texture> texList = new List<Texture>();
-
-			Texture tex = Texture.LoadFromAsset(Manifest.GetAsset<TextureAsset>("pop_cat.png"));
-			tex.texUnit(defaultShader, "tex0", 0);
-
-			texList.Add(tex);
-
-			Mesh mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, texList, defaultShader);
-
-			GameObject testEnt = new GameObject("test");
-
-			testEnt.mesh = mesh;
-
-			renderScene.Add(testEnt);
+			renderScene.Add(box);
 		}
 
 		public override void Awake()
@@ -54,18 +41,22 @@ namespace CSGL
 
 		public override void Start()
 		{
+			Camera.main.transform.position = new Vector3(0, 0, 10);
 			base.Start();
 		}
 
 		float t = 0;
 		public override void Update()
 		{
-			Vector3 position = Camera.main.transform.Position;
+			t += 1;
 
-			position.Z += MathF.Cos(t) * 0.001f;
-			Camera.main.transform.WorldPosition = position;
 
 			base.Update();
+		}
+
+		public override void FixedUpdate()
+		{		
+			base.FixedUpdate();
 		}
 
 		public override void Render()

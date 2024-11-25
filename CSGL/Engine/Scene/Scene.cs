@@ -14,6 +14,9 @@ namespace CSGL.Engine
 		public readonly string Name = "";
 
 		public List<Entity> renderScene = new List<Entity>();
+		public List<Light> lights = new List<Light>();
+
+		public Light MainLight = new Light();
 
 		public Camera camera;
 
@@ -35,17 +38,29 @@ namespace CSGL.Engine
 
 		public virtual void Start()
 		{
-
+			Camera.main.Start();
+			foreach (Entity entity in renderScene)
+			{
+				entity.Start();
+			}
 		}
 
 		public virtual void Update()
 		{
-			
+			Camera.main.Update();
+			foreach (Entity entity in renderScene)
+			{
+				entity.Update();
+			}
 		}
 
 		public virtual void FixedUpdate()
 		{
-
+			Camera.main?.FixedUpdate();
+			foreach (Entity entity in renderScene)
+			{
+				entity.FixedUpdate();
+			}
 		}
 
 		public virtual void Render()
