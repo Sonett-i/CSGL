@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Logging;
-using ContentPipeline;
+﻿using Logging;
 using CSGL.Engine;
-using CSGL.Engine.Shaders;
-using ContentPipeline.Components;
 using OpenTK.Mathematics;
 using CSGL.Assets; 
 
@@ -30,7 +22,6 @@ namespace CSGL
 
 		public override void Awake()
 		{
-
 			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
 			InitScene();
 
@@ -41,7 +32,7 @@ namespace CSGL
 
 		public override void Start()
 		{
-			Camera.main.transform.position = new Vector3(0, 0, 10);
+			MainLight.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
 			base.Start();
 		}
 

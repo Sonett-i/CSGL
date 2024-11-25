@@ -1,11 +1,9 @@
-﻿using System;
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Logging;
-using CSGL.Engine.Shaders;
 using CSGL.Engine;
 
 namespace CSGL
@@ -122,13 +120,14 @@ namespace CSGL
 
 		protected override void OnUnload()
 		{
-			ShutDown();
+			Log.Default("CSGL Shut down");
+			SceneManager.ActiveScene.Unload();
 			base.OnUnload();
 		}
 
 		void ShutDown()
 		{
-			Log.Default("CSGL Shut down");
+			
 		}
 	}
 }

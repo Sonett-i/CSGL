@@ -21,6 +21,11 @@ namespace CSGL.Engine
 
 
 			Mouse.Update(mouseState);
+
+			if (KeyboardState.IsKeyDown(Keys.Escape))
+			{
+				MainWindow.Instance.Close();
+			}
 		}
 
 		public static void MouseMove(MouseMoveEventArgs e)

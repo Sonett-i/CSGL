@@ -40,7 +40,7 @@ namespace CSGL.Engine
 
 		public static void Poll()
 		{
-			MainWindow.Instance.Title = $"{EngineConfig.Name}:{EngineConfig.Version}: {Time.deltaTime}";
+			MainWindow.Instance.Title = $"({EngineConfig.Name}:{EngineConfig.Version}) delta: {Time.deltaTime} (Yaw: {Camera.main.Yaw}, Pitch: {Camera.main.Pitch} Roll: {Camera.main.Roll}) ";
 		}
 	}
 }

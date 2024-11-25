@@ -53,7 +53,12 @@ namespace CSGL.Engine
 
 		public virtual void Render()
 		{
+			this.mesh.Draw();
+		}
 
+		public void Dispose()
+		{
+			this.GetComponent<Mesh>().Dispose();
 		}
 
 		// Adds a component to this monobehaviour, using an initializing method (if applicable)

@@ -6,31 +6,30 @@ using Logging;
 
 namespace CSGL.Engine
 {
-	public class Mesh : Component
+	public class Mesh : Component, IDisposable
 	{
 		private List<Texture> textures = new List<Texture>();
-		public Shader Shader;
+		public Shader Shader = null!;
 
-		public VAO VAO;
-		public VBO VBO;
-		public EBO EBO;
+		public VAO VAO = null!;
+		public VBO VBO = null!;
+		public EBO EBO = null!;
 
-		public VBO vbo;
+		float[] vertexBuffer = null!;
+		uint[] indexBuffer = null!;
 
-		float[] vertexBuffer;
-		uint[] indexBuffer;
-
+		BufferUsageHint hint;
 		public Mesh() { }
 
-
-		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, Shader shader)
+		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, Shader shader, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			//this.vbo = new VBO(vertices);
 
 			this.vertexBuffer = MeshData.Buffer(vertices);
 			this.indexBuffer = indices;
 			this.Shader = shader;
-			BufferUsageHint hint = BufferUsageHint.StaticDraw;
+
+			this.hint = hint;
 			this.textures = textures;
 
 			this.VBO = new VBO(vertices);
@@ -61,10 +60,6 @@ namespace CSGL.Engine
 		{
 			Shader.Activate();
 
-			Shader.Uniforms["model"].SetValue(this.ParentEntity.GetComponent<Transform>().Transform_Matrix);
-			Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
-			Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
-
 			this.VAO.Bind();
 			this.EBO.Bind();
 
@@ -84,11 +79,47 @@ namespace CSGL.Engine
 			}
 		}
 
+		public void Dispose()
+		{
+			VAO.Dispose();
+			VBO.Dispose();
+			EBO.Dispose();
+			Shader.Dispose();
+			foreach (Texture tex in textures) 
+			{
+				tex.Dispose();
+			}
+		}
+
 		public static Mesh FromModel(Model model, List<Texture> Textures, Shader shader)
 		{
 			Mesh mesh = new Mesh(model.Meshes[0].Vertices, model.Meshes[0].Indices, Textures, shader);
 
 			return mesh;
+		}
+
+		public override string ToString()
+		{
+			string output = "VertexBuffer\n\tx\ty\tz\tx\ty\tz\tx\ty\tz\tu\tv";
+
+			for (int i = 0; i < this.vertexBuffer.Length; i++)
+			{
+				if (i % Vertex.Stride == 0)
+					output += "\n";
+
+				output += "\t" + this.vertexBuffer[i];
+			}
+
+			output += "\nIndex Buffer\n";
+
+			for (int i = 0; i < this.indexBuffer.Length; i++)
+			{
+				if (i % 3 == 0)
+					output += "\n";
+				output += "\t" + this.indexBuffer[i];
+			}
+
+			return output;
 		}
 	}
 }

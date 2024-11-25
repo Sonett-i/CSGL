@@ -12,7 +12,7 @@ namespace CSGL.Engine
 		public static Dictionary<string, Type> ComponentTypes = new Dictionary<string, Type>();
 		public virtual void Start() { }
 		public virtual void Update() { }
-		public Entity? ParentEntity { get; set; }
+		public Entity ParentEntity = null!;
 
 		// When importing from json to various components, we override this instance method to pass initializing variables into each component instance
 		public virtual void Instance(Entity parent)

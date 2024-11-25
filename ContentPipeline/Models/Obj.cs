@@ -31,7 +31,6 @@ namespace ContentPipeline.Extensions
 					Vector3 tangent = new Vector3(meshes[i].Tangents[j].X, meshes[i].Tangents[j].Y, meshes[i].Tangents[j].Z);
 					Vector3 normal = new Vector3(meshes[i].Normals[j].X, meshes[i].Normals[j].Y, meshes[i].Normals[j].Z);
 
-
 					Vector2 uv = new Vector2(meshes[i].TextureCoordinateChannels[0][j].X, meshes[i].TextureCoordinateChannels[0][j].Y);
 
 

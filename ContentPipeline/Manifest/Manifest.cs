@@ -2,6 +2,8 @@
 using ContentPipeline.Utilities;
 using Logging;
 
+#pragma warning disable 8603
+
 namespace ContentPipeline
 {
 	public class Manifest
@@ -51,7 +53,7 @@ namespace ContentPipeline
 			Log.Default($"Manifest Updated: {Scan.scannedFiles.Count} files found\n{Info()}");
 		}
 
-		public static T? GetAsset<T>(string name) where T : Asset
+		public static T GetAsset<T>(string name) where T : Asset
 		{
 			Type type = typeof(T);
 			AssetType aType = AssetManager.GetAssetFromType(type);

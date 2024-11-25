@@ -46,7 +46,7 @@ namespace CSGL.Engine
 		Vector3 currentForce = Vector3.Zero;
 		Vector3 previousForce = Vector3.Zero;
 
-		public float decay = 0.65f;
+		public float decay = 0.95f;
 
 		private float pitch;
 		public float Pitch
@@ -98,7 +98,9 @@ namespace CSGL.Engine
 
 		public override void Start()
 		{
-			
+			this.yaw = 270;
+			this.pitch = -22.5f;
+			this.transform.position = new Vector3(0, 20, 20);
 		}
 
 		void HandleMouseInput()
@@ -146,8 +148,6 @@ namespace CSGL.Engine
 				currentForce = Vector3.Lerp(previousForce, targetForce, smoothing);
 
 				previousForce = currentForce;
-
-				currentForce *= decay;
 			}
 		}
 
@@ -159,6 +159,7 @@ namespace CSGL.Engine
 
 		public override void FixedUpdate()
 		{
+			currentForce *= decay;
 			this.transform.position += currentForce;
 		}
 

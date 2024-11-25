@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assimp;
+﻿using OpenTK.Mathematics;
 using Logging;
 
 namespace CSGL.Engine
@@ -16,7 +11,7 @@ namespace CSGL.Engine
 		public List<Entity> renderScene = new List<Entity>();
 		public List<Light> lights = new List<Light>();
 
-		public Light MainLight = new Light();
+		public Light MainLight = new Light(new Color4(1f, 1f, 1f, 1f), 1f);
 
 		public Camera camera;
 
@@ -69,7 +64,15 @@ namespace CSGL.Engine
 
 			foreach (Entity entity in renderScene)
 			{
-				entity.GetComponent<Mesh>().Draw();
+				entity.Render();
+			}
+		}
+
+		public virtual void Unload()
+		{
+			foreach (Entity entity in renderScene)
+			{
+				entity.Dispose();
 			}
 		}
 	}

@@ -20,7 +20,7 @@ namespace ContentPipeline.Components
 			this.UV = uvs;
 		}
 
-		public static int Stride = 12;
+		public static int Stride = 11;
 
 		public static int PositionOffset = 0;
 		public static int NormalOffset = PositionOffset + 3;

@@ -2,7 +2,7 @@
 using ContentPipeline;
 using Logging;
 
-namespace CSGL.Engine.Shaders
+namespace CSGL.Engine
 {
 	public class ShaderManager
 	{

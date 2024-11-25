@@ -42,5 +42,10 @@ namespace CSGL.Engine
 		{
 			GL.UniformMatrix4(this.Location, false, ref value);
 		}
+
+		public void SetValue(Color4 value)
+		{
+			SetValue(new Vector4(value.R, value.G, value.B, value.A));
+		}
 	}
 }

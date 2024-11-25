@@ -58,18 +58,22 @@ namespace ContentPipeline.Components
 			{
 				vIndex = i * Vertex.Stride;
 
+				// Position
 				buf[vIndex] = vertices[i].position.X;
 				buf[vIndex + 1] = vertices[i].position.Y;
 				buf[vIndex + 2] = vertices[i].position.Z;
 
+				// Normal
 				buf[vIndex + 3] = vertices[i].normal.X;
 				buf[vIndex + 4] = vertices[i].normal.Y;
 				buf[vIndex + 5] = vertices[i].normal.Z;
 
+				// Tangent
 				buf[vIndex + 6] = vertices[i].tangent.X;
 				buf[vIndex + 7] = vertices[i].tangent.Y;
 				buf[vIndex + 8] = vertices[i].tangent.Z;
 
+				// UV
 				buf[vIndex + 9] = vertices[i].UV.X;
 				buf[vIndex + 10] = vertices[i].UV.Y;
 			}

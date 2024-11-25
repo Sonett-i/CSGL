@@ -151,11 +151,7 @@ namespace CSGL.Engine
 
 		public void UpdateTransforms()
 		{
-			this.Transform_Matrix = Matrix4.Identity;
-
-			this.Transform_Matrix *= Matrix4.CreateFromQuaternion(this.LocalRotation);
-			this.Transform_Matrix *= Matrix4.CreateTranslation(this.LocalPosition);
-			this.Transform_Matrix *= Matrix4.CreateScale(this.LocalScale);
+			this.Transform_Matrix = MathU.TRS(this);
 
 			if (this.Parent != null)
 				this.Transform_Matrix *= this.Parent.Transform_Matrix;
