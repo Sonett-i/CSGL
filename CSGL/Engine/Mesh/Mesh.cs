@@ -20,6 +20,8 @@ namespace CSGL.Engine
 		float[] vertexBuffer;
 		uint[] indexBuffer;
 
+		public Mesh() { }
+
 
 		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, Shader shader)
 		{
@@ -58,6 +60,10 @@ namespace CSGL.Engine
 		public void Draw()
 		{
 			Shader.Activate();
+
+			Shader.Uniforms["model"].SetValue(this.ParentEntity.GetComponent<Transform>().Transform_Matrix);
+			Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
+			Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
 
 			this.VAO.Bind();
 			this.EBO.Bind();

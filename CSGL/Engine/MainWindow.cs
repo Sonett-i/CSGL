@@ -12,6 +12,7 @@ namespace CSGL
 {
 	public class MainWindow : GameWindow
 	{
+		public static MainWindow Instance = null!;
 
 		public MainWindow(int width, int height, string title) :
 			base(GameWindowSettings.Default,
@@ -25,17 +26,20 @@ namespace CSGL
 					API = ContextAPI.OpenGL,
 					Profile = ContextProfile.Core,
 					APIVersion = new Version(4, 1),
-					Vsync = VSyncMode.On,
+					Vsync = VSyncMode.Off,
 				})
 		{
 			this.Title = $"OpenGL";
 			this.CenterWindow();
+			Instance = this;
 			InitializeWindow();
 		}
 
 		void InitializeWindow()
 		{
 			int[] viewport = new int[4];
+
+			UpdateFrequency = WindowConfig.TargetFrameRate;
 
 			Config.SetOpenGLConfig();
 
@@ -69,18 +73,29 @@ namespace CSGL
 
 		private void FixedUpdate()
 		{
-
+			SceneManager.ActiveScene.FixedUpdate();
 		}
 
 		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
+			Time.accumulatedTime += Time.deltaTime;
+
 			SceneManager.ActiveScene.Update();
+
+			while (Time.accumulatedTime >= Time.fixedDeltaTime)
+			{
+				FixedUpdate();
+				Time.accumulatedTime -= Time.fixedDeltaTime;
+			}
+			
 			base.OnUpdateFrame(e);
 		}
 
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
+			Time.Update(e);
+			
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			SceneManager.ActiveScene.Render();

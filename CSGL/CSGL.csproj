@@ -17,6 +17,7 @@
     <Folder Include="Bindings\" />
     <Folder Include="Engine\Light\" />
     <Folder Include="Engine\Cubemap\" />
+    <Folder Include="Diagnostics\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -207,7 +207,7 @@ namespace CSGL.Engine
 				string vertexShaderInfo = GL.GetShaderInfoLog(vertexShaderHandle);
 				if (vertexShaderInfo != string.Empty)
 				{
-					Log.GL($"Error compiling vertex shader {shaderCode}");
+					Log.GL($"Error compiling vertex shader {shaderCode}\n{vertexShaderInfo}");
 					return 0;
 				}
 
@@ -255,7 +255,7 @@ namespace CSGL.Engine
 				string fragmentShaderInfo = GL.GetShaderInfoLog(fragmentShaderHandle);
 				if (fragmentShaderInfo != string.Empty)
 				{
-					Log.GL($"Error compiling vertex shader {shaderCode}");
+					Log.GL($"Error compiling vertex shader {shaderCode}\n{fragmentShaderInfo}");
 				}
 
 				Log.GL($"{fileName} successfully compiled using handle: {fragmentShaderHandle}");

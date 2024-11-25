@@ -20,8 +20,6 @@ namespace Logging
 
 		static Dictionary<LogType, string> logFiles = new Dictionary<LogType, string>();
 
-
-
 		public static void Default(string message)
 		{
 			Console.WriteLine(message);

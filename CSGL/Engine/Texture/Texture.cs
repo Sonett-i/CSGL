@@ -27,6 +27,7 @@ namespace CSGL.Engine
 			this.Type = textureType;
 		}
 
+		// Sets the tex unit in the shader
 		public void texUnit(Shader shader, string uniform, int unit)
 		{
 			int texUni = GL.GetUniformLocation(shader.ID, uniform);
@@ -34,6 +35,7 @@ namespace CSGL.Engine
 			GL.Uniform1(texUni, unit);
 		}
 
+		// Sets the active texture at the given texture slot
 		public void Bind(TextureUnit unit)
 		{
 			GL.ActiveTexture(unit);

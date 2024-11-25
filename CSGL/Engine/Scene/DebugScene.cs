@@ -19,9 +19,6 @@ namespace CSGL
 
 		}
 
-		List<Mesh> renderScene = new List<Mesh>();
-		Mesh mesh;
-
 		void InitScene()
 		{
 			Model test = Manifest.GetAsset<Model>("cube.obj");
@@ -30,16 +27,18 @@ namespace CSGL
 
 			List<Texture> texList = new List<Texture>();
 
-			Texture tex = Texture.LoadFromAsset(Manifest.GetAsset<TextureAsset>("wall.jpg"));
+			Texture tex = Texture.LoadFromAsset(Manifest.GetAsset<TextureAsset>("pop_cat.png"));
 			tex.texUnit(defaultShader, "tex0", 0);
 
 			texList.Add(tex);
 
-			mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, texList, defaultShader);
+			Mesh mesh = new Mesh(test.Meshes[0].Vertices, test.Meshes[0].Indices, texList, defaultShader);
 
-			mesh.Shader.SetUniform("scale", 2f);
+			GameObject testEnt = new GameObject("test");
 
-			renderScene.Add(mesh);
+			testEnt.mesh = mesh;
+
+			renderScene.Add(testEnt);
 		}
 
 		public override void Awake()
@@ -61,16 +60,16 @@ namespace CSGL
 		float t = 0;
 		public override void Update()
 		{
+			Vector3 position = Camera.main.transform.Position;
+
+			position.Z += MathF.Cos(t) * 0.001f;
+			Camera.main.transform.WorldPosition = position;
 
 			base.Update();
 		}
 
 		public override void Render()
 		{
-			foreach (Mesh mesh in renderScene)
-			{
-				mesh.Draw();
-			}
 			base.Render();
 		}
 	}

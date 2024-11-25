@@ -38,9 +38,6 @@ namespace Interface
 		{
 			Init();
 			
-			
-
-			
 			// GPR202 Assessment 3
 			using (MainWindow game = new MainWindow(CSGL.WindowConfig.Width, CSGL.WindowConfig.Height, $"{CSGL.EngineConfig.Name}:{CSGL.EngineConfig.Name}"))
 			{
