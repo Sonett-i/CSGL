@@ -53,7 +53,17 @@ namespace CSGL.Engine
 			}
 		}
 
-		public Vector3 scale;
+		public Vector3 scale
+		{
+			get 
+			{
+				return LocalScale;
+			}
+			set 
+			{
+				LocalScale = value;
+			}
+		}
 
 		// Parent transform (dictates world position/rotation inheritance
 		private Transform? _parent = null!;
@@ -174,6 +184,14 @@ namespace CSGL.Engine
 			LocalRotation = rotation * LocalRotation;
 		}
 
+		public Matrix4 TRS()
+		{
+			Matrix4 translation = Matrix4.CreateTranslation(this.LocalPosition);
+			Matrix4 rotation = Matrix4.CreateFromQuaternion(this.LocalRotation);
+			Matrix4 scale = Matrix4.CreateScale(this.LocalScale);
+
+			return scale * rotation * translation;
+		}
 		public override void Instance(Entity parent)
 		{
 

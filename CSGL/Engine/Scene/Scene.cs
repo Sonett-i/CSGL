@@ -34,6 +34,7 @@ namespace CSGL.Engine
 		public virtual void Start()
 		{
 			Camera.main.Start();
+			MainLight.Start();
 			foreach (Entity entity in renderScene)
 			{
 				entity.Start();
@@ -43,6 +44,7 @@ namespace CSGL.Engine
 		public virtual void Update()
 		{
 			Camera.main.Update();
+			MainLight.Update();
 			foreach (Entity entity in renderScene)
 			{
 				entity.Update();
@@ -66,6 +68,7 @@ namespace CSGL.Engine
 			{
 				entity.Render();
 			}
+			MainLight.Render();
 		}
 
 		public virtual void Unload()

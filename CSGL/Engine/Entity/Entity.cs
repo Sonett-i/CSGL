@@ -21,6 +21,7 @@ namespace CSGL.Engine
 
 			this.AddComponent<Transform>();
 			this.AddComponent<Mesh>();
+
 		}
 
 		public Transform transform => this.GetComponent<Transform>();

@@ -32,7 +32,7 @@ namespace CSGL.Engine
 		public Matrix4 ViewMatrix { get; set; }
 		public Matrix4 ProjectionMatrix { get; set; }
 
-		public float MovementSpeed = 15.5f;
+		public float MovementSpeed = 6.5f;
 		public float Sensitivity = 0.30f;
 
 		// Smoothing
@@ -98,9 +98,7 @@ namespace CSGL.Engine
 
 		public override void Start()
 		{
-			this.yaw = 270;
-			this.pitch = -22.5f;
-			this.transform.position = new Vector3(0, 20, 20);
+			
 		}
 
 		void HandleMouseInput()

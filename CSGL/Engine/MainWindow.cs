@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using Logging;
 using CSGL.Engine;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace CSGL
 {
@@ -62,8 +63,24 @@ namespace CSGL
 			base.OnLoad();
 		}
 
+		void UpdateCursor()
+		{
+			if (MouseState.IsButtonDown(MouseButton.Right))
+				this.CursorState = CursorState.Grabbed;
+			else if (MouseState.IsButtonReleased(MouseButton.Right))
+				this.CursorState = CursorState.Normal;
+			else
+				this.CursorState = CursorState.Normal;
+		}
+
 		protected override void OnMouseMove(MouseMoveEventArgs e)
 		{
+			if (this.IsFocused)
+			{
+				UpdateCursor();
+
+				Input.MouseMove(e);
+			}
 
 			base.OnMouseMove(e);
 		}
@@ -77,6 +94,8 @@ namespace CSGL
 		// Is executed before render frame
 		protected override void OnUpdateFrame(FrameEventArgs e)
 		{
+			UpdateCursor();
+
 			Time.accumulatedTime += Time.deltaTime;
 
 			Input.Update(KeyboardState, MouseState);

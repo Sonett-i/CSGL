@@ -21,10 +21,11 @@ namespace CSGL.Engine
 		public PixelFormat PixelFormat;
 		public PixelType PixelType;
 
-		public Texture(int handle, TextureType textureType)
+		public Texture(int handle, TextureType textureType, TextureUnit slot = TextureUnit.Texture0)
 		{
 			this.ID = handle;
 			this.Type = textureType;
+			this.Slot = slot;
 		}
 
 		// Sets the tex unit in the shader
@@ -36,9 +37,9 @@ namespace CSGL.Engine
 		}
 
 		// Sets the active texture at the given texture slot
-		public void Bind(TextureUnit unit)
+		public void Bind()
 		{
-			GL.ActiveTexture(unit);
+			GL.ActiveTexture(Slot);
 			GL.BindTexture(TextureTarget.Texture2D, ID);
 		}
 
@@ -57,7 +58,7 @@ namespace CSGL.Engine
 			GC.SuppressFinalize(this);
 		}
 
-		public static Texture LoadFromAsset(TextureAsset textureAsset)
+		public static Texture LoadFromAsset(TextureAsset textureAsset, int slot)
 		{
 			int handle = GL.GenTexture();
 
