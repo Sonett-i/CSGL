@@ -60,15 +60,18 @@ namespace CSGL.Assets
 			diffuse.Bind();
 			this.mesh.Shader.SetUniform("material.diffuse", diffuse.unit);
 
-			//specular.Bind();
+			specular.Bind();
 			this.mesh.Shader.SetUniform("material.specular", specular.unit);
-			this.mesh.Shader.SetUniform("material.shininess", 20.0f);
+			//this.mesh.Shader.SetUniform("material.shininess", 4.0f);
 
 			this.mesh.Shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
-			this.mesh.Shader.SetUniform("light.ambient", SceneManager.ActiveScene.MainLight.ambient);
-			this.mesh.Shader.SetUniform("light.diffuse", SceneManager.ActiveScene.MainLight.diffuse);
-			this.mesh.Shader.SetUniform("light.specular", Vector3.One * 16.0f);
+			//this.mesh.Shader.SetUniform("light.ambient", SceneManager.ActiveScene.MainLight.ambient);
+			//this.mesh.Shader.SetUniform("light.diffuse", SceneManager.ActiveScene.MainLight.diffuse);
+			//this.mesh.Shader.SetUniform("light.specular", SceneManager.ActiveScene.MainLight.specular);
 			this.mesh.Shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
+			//this.mesh.Shader.SetUniform("light.a", 3f);
+			//this.mesh.Shader.SetUniform("light.b", 0.7f);
+
 
 			this.mesh.Shader.SetUniform("camPos", Camera.main.transform.position);
 

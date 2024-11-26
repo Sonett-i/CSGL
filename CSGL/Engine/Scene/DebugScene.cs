@@ -15,7 +15,7 @@ namespace CSGL
 
 		void InitScene()
 		{
-			MainLight = new Light(Color4.White, 0.5f, 1f, 0.7f, 16f);
+			MainLight = new Light(Color4.White, 0.2f, 1f, 0.2f, 16f);
 			Box box = new Box();
 			Box box2 = new Box();
 			Box box3 = new Box();
@@ -43,7 +43,7 @@ namespace CSGL
 
 		public override void Start()
 		{
-			MainLight.transform.position = new Vector3(0.0f, 1.0f, 0.0f);
+			MainLight.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
 			MainLight.transform.scale = Vector3.One * 0.05f;
 
 			Camera.main.Yaw = 270;
