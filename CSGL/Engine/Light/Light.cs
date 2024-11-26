@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenTK.Mathematics;
 using ContentPipeline;
+using OpenTK.Graphics.OpenGL;
 using CSGL.Assets;
 
 namespace CSGL.Engine
@@ -10,18 +11,26 @@ namespace CSGL.Engine
 		public Color4 Colour = Color4.White;
 		public float intensity = 1.0f;
 
-		public Light(Color4 colour, float intensity) : base("Light")
+		public Vector3 ambient = Vector3.One * 1f;
+		public Vector3 diffuse = Vector3.One * 1f;
+		public Vector3 specular = Vector3.One * 1f;
+
+		public Light(Color4 colour, float ambient, float intensity, float diffuse, float specular) : base("Light")
 		{
 			this.Colour = colour;
 			this.intensity = intensity;
+
+			this.ambient = Vector3.One * ambient;
+			this.diffuse = Vector3.One * diffuse;
+			this.specular = Vector3.One * specular;
 
 			Model model = Import.Model("cube.obj");
 
 			Shader defaultShader = ShaderManager.Shaders["light.shader"];
 			List<Texture> texList = new List<Texture>();
-			Texture tex = Texture.LoadFromAsset(Manifest.GetAsset<TextureAsset>("default.png"), 0);
 
-			tex.texUnit(defaultShader, "tex0", 0);
+			Texture tex = new Texture("default.png", TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
+
 			texList.Add(tex);
 
 			this.mesh = Mesh.FromModel(model, texList, defaultShader);

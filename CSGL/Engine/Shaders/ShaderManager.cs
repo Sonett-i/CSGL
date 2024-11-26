@@ -24,7 +24,7 @@ namespace CSGL.Engine
 				}
 				catch (Exception ex)
 				{
-					Log.GL($"Error: {ex.Message}");
+					Error.Fatal($"Shader Compile: {ex.Message}");
 				}
 			}
 		}

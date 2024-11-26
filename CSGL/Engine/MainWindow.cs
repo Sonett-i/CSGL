@@ -144,9 +144,9 @@ namespace CSGL
 			base.OnUnload();
 		}
 
-		void ShutDown()
+		public void Shutdown()
 		{
-			
+			Close();
 		}
 	}
 }

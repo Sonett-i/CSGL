@@ -11,7 +11,7 @@ namespace ContentPipeline
 		public int Width;
 		public int Height;
 
-		public bool isFlipped = false;
+		public int isFlipped = 1;
 		public byte[] data = null!;
 		public TextureType TextureType;
 
@@ -39,6 +39,7 @@ namespace ContentPipeline
 
 			StbImage.stbi_set_flip_vertically_on_load(flip);
 
+			this.FilePath = filePath;
 			this.Name = Path.GetFileName(filePath);
 			this.ext = Path.GetExtension(filePath);
 			this.TextureType = texType;

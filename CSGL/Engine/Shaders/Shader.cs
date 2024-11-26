@@ -62,6 +62,12 @@ namespace CSGL.Engine
 
 			switch (uniform.Type)
 			{
+				case ActiveUniformType.Int:
+					if (value is int intValue)
+						uniform.SetValue(intValue);
+					else
+						throw new Exception($"Uniform {uniform.Name} expects a float");
+					break;
 				case ActiveUniformType.Float:
 					if (value is float floatValue)
 						uniform.SetValue(floatValue);
@@ -83,6 +89,8 @@ namespace CSGL.Engine
 				case ActiveUniformType.FloatVec4:
 					if (value is Vector4 vec4Value)
 						uniform.SetValue(vec4Value);
+					else if(value is Color4 color4Value)
+						uniform.SetValue(color4Value);
 					else
 						throw new Exception($"Uniform {uniform.Name} expects a vector4");
 					break;

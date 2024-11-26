@@ -2,22 +2,34 @@
 using CSGL.Engine;
 using Logging;
 using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL;
+using StbImageSharp;
 
 namespace CSGL.Assets
 {
 	public class Box : Entity
 	{
+		Texture diffuse;
+		Texture specular;
+
 		public Box() : base("Box")
 		{
 			Model box = Manifest.GetAsset<Model>("plane.obj");
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 			List<Texture> texList = new List<Texture>();
-			Texture tex = Texture.LoadFromAsset(Manifest.GetAsset<TextureAsset>("planks.png"), 0);
 
-			tex.texUnit(defaultShader, "tex0", 0);
-			texList.Add(tex);
+			diffuse = new Texture("planks.png", TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
+
+			specular = new Texture("planksSpec.png", TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte);
+			//specular = new Texture("water_height.png", TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte);
 
 			Log.Info("Loading box mesh");
+
+			//diffuse.TexUnit(defaultShader, "tex0", 0);
+			//specular.TexUnit(defaultShader, "tex1", 1);
+
+			//texList.Add(diffuse);
+			//texList.Add(specular);
 
 			this.mesh = Mesh.FromModel(box, texList, defaultShader);
 
@@ -28,9 +40,6 @@ namespace CSGL.Assets
 
 		public override void Start()
 		{
-			this.transform.rotation = Quaternion.FromEulerAngles(0, 0, 0);
-			this.transform.LocalScale = Vector3.One;
-			this.transform.position = new Vector3(0, 0, 0);
 			base.Start();
 		}
 
@@ -48,11 +57,21 @@ namespace CSGL.Assets
 			this.mesh.Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
 			this.mesh.Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
 
-			this.mesh.Shader.Uniforms["lightColor"].SetValue(SceneManager.ActiveScene.MainLight.Colour);
-			this.mesh.Shader.Uniforms["lightPos"].SetValue(SceneManager.ActiveScene.MainLight.transform.position);
-			//this.mesh.Shader.Uniforms["lightPos"].SetValue(Camera.main.transform.position);
+			diffuse.Bind();
+			this.mesh.Shader.SetUniform("material.diffuse", diffuse.unit);
 
-			this.mesh.Shader.Uniforms["camPos"].SetValue(Camera.main.transform.position);
+			//specular.Bind();
+			this.mesh.Shader.SetUniform("material.specular", specular.unit);
+			this.mesh.Shader.SetUniform("material.shininess", 20.0f);
+
+			this.mesh.Shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
+			this.mesh.Shader.SetUniform("light.ambient", SceneManager.ActiveScene.MainLight.ambient);
+			this.mesh.Shader.SetUniform("light.diffuse", SceneManager.ActiveScene.MainLight.diffuse);
+			this.mesh.Shader.SetUniform("light.specular", Vector3.One * 16.0f);
+			this.mesh.Shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
+
+			this.mesh.Shader.SetUniform("camPos", Camera.main.transform.position);
+
 
 			base.Render();
 		}

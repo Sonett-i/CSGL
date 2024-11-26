@@ -11,7 +11,7 @@ namespace CSGL.Engine
 		public List<Entity> renderScene = new List<Entity>();
 		public List<Light> lights = new List<Light>();
 
-		public Light MainLight = new Light(new Color4(1f, 1f, 1f, 1f), 1f);
+		public Light MainLight = new Light(new Color4(1f, 1f, 1f, 1f), 0.6f, 0.6f, 0.2f, 16f);
 
 		public Camera camera;
 

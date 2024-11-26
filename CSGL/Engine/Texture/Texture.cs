@@ -1,81 +1,79 @@
-﻿using System;
+﻿using ContentPipeline;
 using OpenTK.Graphics.OpenGL;
-using Logging;
-using ContentPipeline;
-using SharedLibrary;
+using StbImageSharp;
+using System;
+using System.IO;
 
 namespace CSGL.Engine
 {
-	public enum TextureType
+	public class Texture
 	{
-		diffuse,
-		specular,
-		normal
-	}
+		public int ID { get; private set; }
+		public int unit = 0;
+		public TextureTarget Type { get; private set; }
 
-	public class Texture : IDisposable
-	{
-		public readonly int ID;
-		public TextureType Type;
-		public TextureUnit Slot;
-		public PixelFormat PixelFormat;
-		public PixelType PixelType;
-
-		public Texture(int handle, TextureType textureType, TextureUnit slot = TextureUnit.Texture0)
+		public Texture(string imagePath, TextureTarget texType, int slot, PixelFormat format, PixelType pixelType)
 		{
-			this.ID = handle;
-			this.Type = textureType;
-			this.Slot = slot;
+			Type = texType;
+			this.unit = slot;
+			TextureAsset texAsset = Manifest.GetAsset<TextureAsset>(imagePath);
+
+			// Load the image
+			StbImage.stbi_set_flip_vertically_on_load(texAsset.isFlipped);
+
+			using (FileStream stream = File.OpenRead(texAsset.FilePath))
+			{
+				ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+
+				// Generate OpenGL texture object
+				ID = GL.GenTexture();
+				GL.ActiveTexture(TextureUnit.Texture0 + slot);
+				GL.BindTexture(texType, ID);
+
+				// Configure texture parameters
+				GL.TexParameter(texType, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
+				GL.TexParameter(texType, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+
+				GL.TexParameter(texType, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+				GL.TexParameter(texType, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+
+				// Upload the image to OpenGL
+				GL.TexImage2D(texType, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, format, pixelType, image.Data);
+				GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+				// Unbind the texture
+				GL.BindTexture(texType, 0);
+			}
+			StbImage.stbi_set_flip_vertically_on_load(texAsset.isFlipped);
 		}
 
-		// Sets the tex unit in the shader
-		public void texUnit(Shader shader, string uniform, int unit)
+		public void TexUnit(int shaderProgram, string uniform, int unit)
 		{
-			int texUni = GL.GetUniformLocation(shader.ID, uniform);
-			shader.Activate();
-			GL.Uniform1(texUni, unit);
+			int location = GL.GetUniformLocation(shaderProgram, uniform);
+			GL.UseProgram(shaderProgram);
+			GL.Uniform1(location, unit);
 		}
 
-		// Sets the active texture at the given texture slot
+		public void TexUnit(Shader shaderProgram, string uniform, int unit)
+		{
+			TexUnit(shaderProgram.ID, uniform, unit);
+		}
+
 		public void Bind()
 		{
-			GL.ActiveTexture(Slot);
-			GL.BindTexture(TextureTarget.Texture2D, ID);
+			GL.ActiveTexture(TextureUnit.Texture0 + unit);
+			GL.BindTexture(Type, ID);
 		}
 
 		public void Unbind()
 		{
-			GL.BindTexture(TextureTarget.Texture2D, 0);
+			GL.BindTexture(Type, 0);
 		}
 
-		~Texture()
-		{
-			this.Dispose();
-		}
 		public void Dispose()
 		{
-			GL.DeleteTexture(this.ID);
-			GC.SuppressFinalize(this);
-		}
-
-		public static Texture LoadFromAsset(TextureAsset textureAsset, int slot)
-		{
-			int handle = GL.GenTexture();
-
-			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.BindTexture(TextureTarget.Texture2D, handle);
-
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, textureAsset.Width, textureAsset.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, textureAsset.data);
-
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-
-			GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-
-			return new Texture(handle, TextureType.diffuse);
+			GL.DeleteTexture(ID);
 		}
 	}
+
 }

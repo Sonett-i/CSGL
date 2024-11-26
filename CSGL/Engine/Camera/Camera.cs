@@ -32,7 +32,7 @@ namespace CSGL.Engine
 		public Matrix4 ViewMatrix { get; set; }
 		public Matrix4 ProjectionMatrix { get; set; }
 
-		public float MovementSpeed = 6.5f;
+		public float MovementSpeed = 3.5f;
 		public float Sensitivity = 0.30f;
 
 		// Smoothing

@@ -34,7 +34,8 @@ namespace Logging
 
 		public static void Fatal(string message)
 		{
-			LogToFile(LogType.LOG_FATAL, message);
+			Console.WriteLine($"[FATAL]: {message}");
+			LogToFile(LogType.LOG_FATAL, $"{message}");
 		}
 
 		public static void Info(string message)
