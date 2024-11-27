@@ -1,6 +1,7 @@
 ﻿using OpenTK.Windowing.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,9 @@ namespace CSGL.Engine
 
 		public static float InterpolationFactor = 0.0f;
 
+		public static double FPS = 0.0;
+		public static double ms = 0.0;
+
 		public static void Update(FrameEventArgs e)
 		{
 			Time.time += (float) e.Time;
@@ -40,7 +44,7 @@ namespace CSGL.Engine
 
 		public static void Poll()
 		{
-			MainWindow.Instance.Title = $"({EngineConfig.Name}:{EngineConfig.Version}) delta: {Time.deltaTime} (Yaw: {Camera.main.Yaw}, Pitch: {Camera.main.Pitch} Roll: {Camera.main.Roll}) ";
+			MainWindow.Instance.Title = $"({EngineConfig.Name}:{EngineConfig.Version}) (FPS: {Time.FPS.ToString("0.00")} delta: {Time.ms.ToString("0.00")}ms) (Yaw: {Camera.main.Yaw.ToString("0.00")}, Pitch: {Camera.main.Pitch.ToString("0.00")} Roll: {Camera.main.Roll.ToString("0.00")})";
 		}
 	}
 }

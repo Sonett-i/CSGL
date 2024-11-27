@@ -117,8 +117,27 @@ namespace CSGL
 			base.OnUpdateFrame(e);
 		}
 
+		double prevTime = 0.0;
+		double currentTime = 0.0;
+		double timeDiff;
+		uint counter = 0;
+
 		protected override void OnRenderFrame(FrameEventArgs e)
 		{
+			currentTime = GLFW.GetTime();
+			timeDiff = currentTime - prevTime;
+			counter++;
+
+			if (timeDiff >= 1.0 / 30.0)
+			{
+				Time.FPS = (1.0 / timeDiff) * counter;
+				Time.ms = (timeDiff / counter) * 1000;
+
+				prevTime = currentTime;
+				counter = 0;
+			}
+
+
 			Time.Update(e);
 			
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
