@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Engine\Cubemap\**" />
+    <EmbeddedResource Remove="Engine\Cubemap\**" />
+    <None Remove="Engine\Cubemap\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.8.2" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="StbTrueTypeSharp" Version="1.26.12" />
@@ -16,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Bindings\" />
-    <Folder Include="Engine\Cubemap\" />
     <Folder Include="Diagnostics\" />
   </ItemGroup>
 

@@ -38,7 +38,9 @@ namespace CSGL.Engine
 			Vertex[] vertices = GenerateVertices();
 			uint[] indices = GenerateIndices();
 
-			this.mesh = new Mesh(vertices, indices, this.Textures, defaultShader);
+			Mesh mesh = new Mesh(vertices, indices, this.Textures, defaultShader);
+
+			this.model.AddMesh(mesh);
 
 			this.transform.position = new Vector3(0, -600, 0);
 		}

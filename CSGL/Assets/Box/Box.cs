@@ -13,13 +13,16 @@ namespace CSGL.Assets
 			ModelAsset box = Manifest.GetAsset<ModelAsset>("plane.obj");
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 
+			
+
 			this.AddTexture(new Texture("planks.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte));
 			this.AddTexture(new Texture("planksSpec.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
+
+			this.model = new Model(box, this.Textures);
+
 			Log.Info("Loading box mesh");
 
-			//this.mesh = Mesh.FromModel(box, base.Textures, defaultShader);
 			base.Lit = true;
-			Log.GL(this.mesh.ToString());
 		}
 
 		float delta = 0;

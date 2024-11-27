@@ -26,34 +26,29 @@ namespace CSGL.Engine
 		public EntityType EntityType;
 		public bool Lit = false;
 
-		public List<Mesh> meshes = new List<Mesh>();
+		public Model model
+		{
+			get
+			{
+				return this.GetComponent<Model>();
+			}
+			set
+			{
+				this.RemoveComponent<Model>();
+				this.AddComponent<Model>(value);
+			}
+		}
 
 		public Entity(string name)
 		{
 			this.Name = name;
 
 			this.AddComponent<Transform>();
-			this.AddComponent<Mesh>();
+			this.AddComponent<Model>();
 
 		}
 
 		public Transform transform => this.GetComponent<Transform>();
-		public Mesh mesh {
-			get
-			{
-				return this.GetComponent<Mesh>();
-			}
-			set
-			{
-				this.RemoveComponent<Mesh>();
-				this.AddComponent<Mesh>(value);
-			}
-		}
-
-		public void AddMesh(Mesh mesh)
-		{
-			meshes.Add(mesh);
-		}
 
 		public virtual void Start()
 		{
@@ -72,34 +67,33 @@ namespace CSGL.Engine
 
 		public virtual void Render()
 		{
-			foreach (Mesh mesh in meshes)
-			{
-				mesh.Draw(mesh.Shader, Camera.main);
-			}
-			//this.mesh.Draw(this.mesh.Shader, Camera.main);
+			this.model.Draw();
 		}
 
 		public void Dispose()
 		{
-			this.GetComponent<Mesh>().Dispose();
+			this.GetComponent<Model>().Dispose();
 		}
 
 		// Adds a component to this monobehaviour, using an initializing method (if applicable)
 
 		public T AddComponent<T>(T component) where T : Component
 		{
+			if (Components.ContainsKey(typeof(T)))
+				throw new InvalidOperationException($"Component of type {typeof(T).Name} already exists in this entity.");
+
 			component.ParentEntity = this;
 			Components[typeof(T)] = component;
 			component.Start();
 
-			if (component is Mesh mesh)
-				this.meshes.Add(mesh);
 			return component;
 		}
 
 
 		public T AddComponent<T>(Action<T>? initializer = null) where T : Component, new()
 		{
+			if (Components.ContainsKey(typeof(T)))
+				throw new InvalidOperationException($"Component of type {typeof(T).Name} already exists in this entity.");
 			T component = new T { ParentEntity = this };
 			initializer?.Invoke(component);
 			Components[typeof(T)] = component;

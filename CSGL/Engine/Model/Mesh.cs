@@ -4,10 +4,11 @@ using CSGL.Engine.OpenGL;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
+using OpenTK.Mathematics;
 
 namespace CSGL.Engine
 {
-	public class Mesh : Component, IDisposable
+	public class Mesh : IDisposable
 	{
 		private List<Vertex> Vertices = new List<Vertex>();
 		private List<Texture> textures = new List<Texture>();
@@ -45,7 +46,6 @@ namespace CSGL.Engine
 			this.VAO.LinkAttrib(VBO, 2, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.TangentOffset);
 			this.VAO.LinkAttrib(VBO, 3, 2, VertexAttribPointerType.Float, Vertex.Stride, Vertex.UVOffset);
 
-
 			ErrorCode error = GL.GetError();
 			if (error != ErrorCode.NoError)
 			{
@@ -58,7 +58,7 @@ namespace CSGL.Engine
 			VAO.Unbind();
 		}
 
-		public void Draw(Shader shader, Camera camera)
+		public void Draw(Shader shader, Camera camera, Matrix4 modelM)
 		{
 			shader.Activate();
 			VAO.Bind();
@@ -71,19 +71,19 @@ namespace CSGL.Engine
 				textures[i].TexUnit(shader, ("material." + type), i);
 				textures[i].Bind();
 			}
-
+			/*
 			if (ParentEntity.Lit == true)
 			{
 				shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
 				
 				shader.SetUniform("light.ambient", SceneManager.ActiveScene.MainLight.ambient);
 			}
-
+			*/
 			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
 
 			shader.SetUniform("camPos", Camera.main.transform.position);
 
-			shader.SetUniform("model", ParentEntity.transform.Transform_Matrix);
+			shader.SetUniform("model", modelM);
 			shader.SetUniform("view", camera.ViewMatrix);
 			shader.SetUniform("projection", camera.ProjectionMatrix);
 			shader.SetUniform("nearClip", camera.NearClip);
@@ -96,27 +96,6 @@ namespace CSGL.Engine
 			if (error != ErrorCode.NoError)
 			{
 				Log.GL($"Error drawing {this.ToString()}");
-			}
-		}
-
-		public void Draw()
-		{
-			Shader.Activate();
-
-			this.VAO.Bind();
-			this.EBO.Bind();
-
-			this.Shader.Uniforms["model"].SetValue(ParentEntity.transform.Transform_Matrix);
-			this.Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
-			this.Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
-
-			this.Shader.SetUniform("camPos", Camera.main.transform.position);
-
-
-			for (int i = 0; i < this.textures.Count; i++)
-			{
-				GL.ActiveTexture(TextureUnit.Texture0 + i);
-				GL.BindTexture(TextureTarget.Texture2D, textures[i].ID);
 			}
 		}
 
