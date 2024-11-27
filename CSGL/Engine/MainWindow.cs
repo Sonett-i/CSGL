@@ -51,6 +51,10 @@ namespace CSGL
 			GL.Enable(EnableCap.DepthTest);
 			GL.Enable(EnableCap.StencilTest);
 			GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
+
+			GL.Enable(EnableCap.CullFace);
+			GL.CullFace(CullFaceMode.Front);
+			GL.FrontFace(FrontFaceDirection.Cw);
 		}
 
 		protected override void OnLoad()
