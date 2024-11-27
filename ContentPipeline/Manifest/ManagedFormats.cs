@@ -15,7 +15,7 @@ namespace ContentPipeline
 
 		public static Dictionary<AssetType, Func<string, Asset>> FactoryMethods = new Dictionary<AssetType, Func<string, Asset>>()
 		{
-			{ AssetType.ASSET_MODEL, filePath => { Model model = new Model(filePath); model.InitializeFields(filePath); return model; } },
+			{ AssetType.ASSET_MODEL, filePath => { ModelAsset model = new ModelAsset(filePath); model.InitializeFields(filePath); return model; } },
 			{ AssetType.ASSET_SHADER, filePath => { ShaderAsset shader = new ShaderAsset(filePath); shader.InitializeFields(filePath); return shader; } },
 			{ AssetType.ASSET_TEXTURE, filePath => { TextureAsset texture = new TextureAsset(filePath); texture.InitializeFields(filePath); return texture; } },
 			//{AssetType.ASSET_TEXTURE, filePath => new T { FilePath = filePath } },

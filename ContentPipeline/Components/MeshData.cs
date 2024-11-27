@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenTK.Mathematics;
+using SharedLibrary;
 
 
 namespace ContentPipeline.Components

@@ -10,14 +10,14 @@ namespace CSGL.Assets
 	{
 		public Box() : base("Box")
 		{
-			Model box = Manifest.GetAsset<Model>("plane.obj");
+			ModelAsset box = Manifest.GetAsset<ModelAsset>("plane.obj");
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 
 			this.AddTexture(new Texture("planks.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte));
 			this.AddTexture(new Texture("planksSpec.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
 			Log.Info("Loading box mesh");
 
-			this.mesh = Mesh.FromModel(box, base.Textures, defaultShader);
+			//this.mesh = Mesh.FromModel(box, base.Textures, defaultShader);
 			base.Lit = true;
 			Log.GL(this.mesh.ToString());
 		}

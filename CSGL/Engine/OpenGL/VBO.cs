@@ -2,6 +2,7 @@
 using ContentPipeline.Components;
 using OpenTK.Graphics.OpenGL;
 using Logging;
+using SharedLibrary;
 
 namespace CSGL.Engine.OpenGL
 {

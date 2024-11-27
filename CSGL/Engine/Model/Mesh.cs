@@ -4,7 +4,6 @@ using CSGL.Engine.OpenGL;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
-using Assimp.Unmanaged;
 
 namespace CSGL.Engine
 {
@@ -131,13 +130,6 @@ namespace CSGL.Engine
 			{
 				tex.Dispose();
 			}
-		}
-
-		public static Mesh FromModel(Model model, List<Texture> Textures, Shader shader)
-		{
-			Mesh mesh = new Mesh(model.Meshes[0].Vertices, model.Meshes[0].Indices, Textures, shader);
-
-			return mesh;
 		}
 
 		public override string ToString()

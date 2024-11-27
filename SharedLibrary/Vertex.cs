@@ -1,7 +1,6 @@
-﻿using System;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
-namespace ContentPipeline.Components
+namespace SharedLibrary
 {
 	public struct Vertex
 	{
@@ -20,8 +19,7 @@ namespace ContentPipeline.Components
 			this.UV = uvs;
 		}
 
-
-		public static int Stride = 11;
+		public static int Stride = 32;
 
 		public static int PositionOffset = 0;
 		public static int NormalOffset = PositionOffset + 3;

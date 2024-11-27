@@ -6,9 +6,9 @@ namespace CSGL.Engine
 	// Bridge between Engine and ContentPipeline
 	public class Import
 	{
-		public static Model Model(string modelName)
+		public static ModelAsset Model(string modelName)
 		{
-			return Manifest.GetAsset<Model>("cube.obj");
+			return Manifest.GetAsset<ModelAsset>("cube.obj");
 		}
 
 		public static Shader Shader(string shaderName)

@@ -37,7 +37,7 @@ namespace CSGL.Engine
 			this.diffuse = Vector3.One * diffuse;
 			this.specular = Vector3.One * specular;
 
-			Model model = Import.Model("cube.obj");
+			ModelAsset model = Import.Model("cube.obj");
 
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 			List<Texture> texList = new List<Texture>();
@@ -46,7 +46,7 @@ namespace CSGL.Engine
 
 			texList.Add(tex);
 
-			this.mesh = Mesh.FromModel(model, texList, defaultShader);
+			//this.mesh = Mesh.FromModel(model, texList, defaultShader);
 		}
 
 		public override void Start()

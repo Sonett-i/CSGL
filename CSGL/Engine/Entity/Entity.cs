@@ -26,6 +26,8 @@ namespace CSGL.Engine
 		public EntityType EntityType;
 		public bool Lit = false;
 
+		public List<Mesh> meshes = new List<Mesh>();
+
 		public Entity(string name)
 		{
 			this.Name = name;
@@ -48,6 +50,11 @@ namespace CSGL.Engine
 			}
 		}
 
+		public void AddMesh(Mesh mesh)
+		{
+			meshes.Add(mesh);
+		}
+
 		public virtual void Start()
 		{
 
@@ -65,7 +72,11 @@ namespace CSGL.Engine
 
 		public virtual void Render()
 		{
-			this.mesh.Draw(this.mesh.Shader, Camera.main);
+			foreach (Mesh mesh in meshes)
+			{
+				mesh.Draw(mesh.Shader, Camera.main);
+			}
+			//this.mesh.Draw(this.mesh.Shader, Camera.main);
 		}
 
 		public void Dispose()
@@ -77,21 +88,18 @@ namespace CSGL.Engine
 
 		public T AddComponent<T>(T component) where T : Component
 		{
-			if (Components.ContainsKey(typeof(T)))
-				throw new InvalidOperationException($"Component of type {typeof(T).Name} already exists in this entity.");
-
 			component.ParentEntity = this;
 			Components[typeof(T)] = component;
 			component.Start();
+
+			if (component is Mesh mesh)
+				this.meshes.Add(mesh);
 			return component;
 		}
 
 
 		public T AddComponent<T>(Action<T>? initializer = null) where T : Component, new()
 		{
-			if (Components.ContainsKey(typeof(T)))
-				throw new InvalidOperationException($"Component of type {typeof(T).Name} already exists in this entity.");
-
 			T component = new T { ParentEntity = this };
 			initializer?.Invoke(component);
 			Components[typeof(T)] = component;

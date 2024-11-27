@@ -21,6 +21,8 @@ namespace CSGL
 			Box box3 = new Box();
 			Box box4 = new Box();
 
+			Multimesh mm = new Multimesh();
+
 			box.transform.position = new Vector3(0, 0, 0);
 			box2.transform.position = new Vector3(0f, 0, 2f);
 			box3.transform.position = new Vector3(-2f, 0, 0f);

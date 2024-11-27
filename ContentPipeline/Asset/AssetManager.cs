@@ -36,7 +36,7 @@ namespace ContentPipeline
 		{
 			return type switch
 			{
-				_ when type == typeof(Model) => AssetType.ASSET_MODEL,
+				_ when type == typeof(ModelAsset) => AssetType.ASSET_MODEL,
 				_ when type == typeof(Material) => AssetType.ASSET_MATERIAL,
 				_ when type == typeof(TextureAsset) => AssetType.ASSET_TEXTURE,
 				_ => throw new Exception($"Unknown asset type")

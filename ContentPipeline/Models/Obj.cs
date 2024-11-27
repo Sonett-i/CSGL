@@ -2,6 +2,7 @@
 using ContentPipeline.Components;
 using Assimp;
 using OpenTK.Mathematics;
+using SharedLibrary;
 
 namespace ContentPipeline.Extensions
 {

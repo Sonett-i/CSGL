@@ -7,19 +7,19 @@ using ContentPipeline.Components;
 
 namespace ContentPipeline
 {
-	public class Model : Asset
+	public class ModelAsset : Asset
 	{
 		public int Vertices = 0;
 		public int SubMeshes = 0;
 		public MeshData[] Meshes = null!;
 		public Material[] Materials = null!;
 
-		public Model() 
+		public ModelAsset() 
 		{
 			base.Type = AssetType.ASSET_MODEL;
 		}
 
-		public Model(string filePath)
+		public ModelAsset(string filePath)
 		{
 			base.Type = AssetType.ASSET_MODEL;
 		}
