@@ -8,7 +8,10 @@ namespace CSGL.Engine
 {
 	public class GameObject : Entity
 	{
-		public GameObject(string name) : base(name) { }
+		public GameObject(string name) : base(name) 
+		{
+			base.EntityType = EntityType.GameObject;
+		}
 
 
 	}

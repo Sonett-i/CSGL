@@ -78,5 +78,10 @@ namespace CSGL.Engine
 				entity.Dispose();
 			}
 		}
+
+		public static void Instantiate(Entity entity)
+		{
+
+		}
 	}
 }

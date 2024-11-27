@@ -6,14 +6,24 @@ using System.Threading.Tasks;
 
 namespace CSGL.Engine
 {
+	public enum EntityType
+	{
+		Default,
+		GameObject,
+		Light
+	}
+
 	public class Entity
 	{
 		// Add component
 		// Get component mwthods
 
 		private Dictionary<Type, Component> Components = new Dictionary<Type, Component>();
+		public List<Texture> Textures = new List<Texture>();
 
 		public string Name = "";
+
+		public EntityType EntityType;
 
 		public Entity(string name)
 		{
@@ -54,7 +64,7 @@ namespace CSGL.Engine
 
 		public virtual void Render()
 		{
-			this.mesh.Draw();
+			this.mesh.Draw(this.mesh.Shader, Camera.main);
 		}
 
 		public void Dispose()
@@ -108,5 +118,13 @@ namespace CSGL.Engine
 			return Components.ContainsKey(typeof(T));
 		}
 
+		public Entity AddTexture(Texture texture)
+		{
+			if (texture == null) 
+				throw new ArgumentNullException(nameof(texture), "Texture cannot be null");
+
+			Textures.Add(texture);
+			return this;
+		}
 	}
 }

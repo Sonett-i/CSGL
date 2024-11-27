@@ -34,14 +34,15 @@ namespace CSGL.Engine
 			if (CheckCompileStatus(fragmentShader.ID) == 0)
 				throw new Exception("Fragment Shader Failed to Compile");
 
+
 			this.ID = this.Compile(this.vertexShader, this.fragmentShader);
 
 			if (CheckProgramLinkStatus() == 0)
 				throw new Exception("Fragment Shader Failed to Compile");
 
 			GetUniforms();
-
 		}
+
 
 		public void Activate()
 		{

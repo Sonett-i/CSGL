@@ -43,7 +43,7 @@ namespace CSGL
 
 		public override void Start()
 		{
-			MainLight.transform.position = new Vector3(0.5f, 0.5f, 0.5f);
+			MainLight.transform.position = new Vector3(0.0f, 0.5f, 0.0f);
 			MainLight.transform.scale = Vector3.One * 0.05f;
 
 			Camera.main.Yaw = 270;
@@ -57,6 +57,7 @@ namespace CSGL
 		{
 			t += 1;
 
+			MainLight.transform.position += new Vector3(MathF.Cos(MathU.Rad(t)), MathF.Sin(MathU.Rad(t+10)), MathF.Sin(MathU.Rad(t))) * Time.deltaTime;
 
 			base.Update();
 		}

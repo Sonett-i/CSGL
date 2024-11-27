@@ -3,6 +3,14 @@ using OpenTK.Mathematics;
 using ContentPipeline;
 using OpenTK.Graphics.OpenGL;
 using CSGL.Assets;
+using SharedLibrary;
+
+public enum LightType
+{
+	POINT,
+	DIRECTIONAL,
+	SPOTLIGHT
+}
 
 namespace CSGL.Engine
 {
@@ -15,8 +23,13 @@ namespace CSGL.Engine
 		public Vector3 diffuse = Vector3.One * 1f;
 		public Vector3 specular = Vector3.One * 1f;
 
-		public Light(Color4 colour, float ambient, float intensity, float diffuse, float specular) : base("Light")
+		public LightType lightType = LightType.POINT;
+
+		public Light(Color4 colour, float ambient, float intensity, float diffuse, float specular, LightType lightType = LightType.POINT) : base("Light")
 		{
+			base.EntityType = EntityType.Light;
+			this.lightType = lightType;
+
 			this.Colour = colour;
 			this.intensity = intensity;
 
@@ -29,7 +42,7 @@ namespace CSGL.Engine
 			Shader defaultShader = ShaderManager.Shaders["light.shader"];
 			List<Texture> texList = new List<Texture>();
 
-			Texture tex = new Texture("default.png", TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
+			Texture tex = new Texture("default.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
 
 			texList.Add(tex);
 
@@ -55,7 +68,7 @@ namespace CSGL.Engine
 			this.mesh.Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
 			this.mesh.Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
 
-			this.mesh.Shader.Uniforms["lightColor"].SetValue(Colour);
+			this.mesh.Shader.Uniforms["light.colour"].SetValue(Colour);
 
 			base.Render();
 		}

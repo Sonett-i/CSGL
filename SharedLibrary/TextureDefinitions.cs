@@ -15,6 +15,14 @@ namespace SharedLibrary
 
 	public class TextureDefinitions
 	{
+		public static Dictionary<TextureType, string> TextureUniformTypes = new Dictionary<TextureType, string>()
+		{
+			[SharedLibrary.TextureType.DIFFUSE] = "diffuse",
+			[SharedLibrary.TextureType.SPECULAR] = "specular",
+			[SharedLibrary.TextureType.NORMAL] = "normal",
+
+		};
+
 		public static Dictionary<string, TextureType> TextureType = new Dictionary<string, TextureType>()
 		{
 			["diffuse"] = SharedLibrary.TextureType.DIFFUSE,

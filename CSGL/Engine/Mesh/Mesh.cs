@@ -3,11 +3,14 @@ using ContentPipeline.Components;
 using CSGL.Engine.OpenGL;
 using OpenTK.Graphics.OpenGL;
 using Logging;
+using SharedLibrary;
+using Assimp.Unmanaged;
 
 namespace CSGL.Engine
 {
 	public class Mesh : Component, IDisposable
 	{
+		private List<Vertex> Vertices = new List<Vertex>();
 		private List<Texture> textures = new List<Texture>();
 		public Shader Shader = null!;
 
@@ -56,18 +59,33 @@ namespace CSGL.Engine
 			VAO.Unbind();
 		}
 
-		public void Draw()
+		public void Draw(Shader shader, Camera camera)
 		{
-			Shader.Activate();
+			shader.Activate();
+			VAO.Bind();
 
-			this.VAO.Bind();
-			this.EBO.Bind();
-
-			for (int i = 0; i < this.textures.Count; i++)
+			EBO.Bind();
+			for (int i = 0; i < textures.Count; i++)
 			{
-				GL.ActiveTexture(TextureUnit.Texture0 + i);
-				GL.BindTexture(TextureTarget.Texture2D, textures[i].ID);
+				string type = TextureDefinitions.TextureUniformTypes[textures[i].TextureType];
+
+
+				textures[i].TexUnit(shader, ("material." + type), i);
+				textures[i].Bind();
 			}
+
+			if (ParentEntity.EntityType == EntityType.GameObject)
+			{
+				shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
+				
+				shader.SetUniform("light.ambient", SceneManager.ActiveScene.MainLight.ambient);
+			}
+
+			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
+
+			shader.SetUniform("model", ParentEntity.transform.Transform_Matrix);
+			shader.SetUniform("view", camera.ViewMatrix);
+			shader.SetUniform("projection", camera.ProjectionMatrix);
 
 			GL.DrawElements(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0);
 
@@ -76,6 +94,27 @@ namespace CSGL.Engine
 			if (error != ErrorCode.NoError)
 			{
 				Log.GL($"Error drawing {this.ToString()}");
+			}
+		}
+
+		public void Draw()
+		{
+			Shader.Activate();
+
+			this.VAO.Bind();
+			this.EBO.Bind();
+
+			this.Shader.Uniforms["model"].SetValue(ParentEntity.transform.Transform_Matrix);
+			this.Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
+			this.Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
+
+			this.Shader.SetUniform("camPos", Camera.main.transform.position);
+
+
+			for (int i = 0; i < this.textures.Count; i++)
+			{
+				GL.ActiveTexture(TextureUnit.Texture0 + i);
+				GL.BindTexture(TextureTarget.Texture2D, textures[i].ID);
 			}
 		}
 
