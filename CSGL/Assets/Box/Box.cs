@@ -1,9 +1,7 @@
 ﻿using ContentPipeline;
 using CSGL.Engine;
 using Logging;
-using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
-using StbImageSharp;
 using SharedLibrary;
 
 namespace CSGL.Assets
@@ -20,7 +18,7 @@ namespace CSGL.Assets
 			Log.Info("Loading box mesh");
 
 			this.mesh = Mesh.FromModel(box, base.Textures, defaultShader);
-
+			base.Lit = true;
 			Log.GL(this.mesh.ToString());
 		}
 
@@ -40,6 +38,7 @@ namespace CSGL.Assets
 
 		public override void Render()
 		{
+
 			base.Render();
 		}
 	}

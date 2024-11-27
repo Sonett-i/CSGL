@@ -20,7 +20,7 @@ namespace CSGL.Engine
 			this.Name = name; 
 			this.sceneID = SceneManager.AddScene(this);
 
-			camera = new Camera();
+			camera = new Camera(new Vector3(0, 0, 0), 0.01f, 10000.0f, 60);
 
 			Camera.main = camera;
 			Awake(); 

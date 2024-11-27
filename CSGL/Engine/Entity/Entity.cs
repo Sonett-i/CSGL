@@ -24,6 +24,7 @@ namespace CSGL.Engine
 		public string Name = "";
 
 		public EntityType EntityType;
+		public bool Lit = false;
 
 		public Entity(string name)
 		{

@@ -69,12 +69,11 @@ namespace CSGL.Engine
 			{
 				string type = TextureDefinitions.TextureUniformTypes[textures[i].TextureType];
 
-
 				textures[i].TexUnit(shader, ("material." + type), i);
 				textures[i].Bind();
 			}
 
-			if (ParentEntity.EntityType == EntityType.GameObject)
+			if (ParentEntity.Lit == true)
 			{
 				shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
 				
@@ -83,9 +82,13 @@ namespace CSGL.Engine
 
 			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
 
+			shader.SetUniform("camPos", Camera.main.transform.position);
+
 			shader.SetUniform("model", ParentEntity.transform.Transform_Matrix);
 			shader.SetUniform("view", camera.ViewMatrix);
 			shader.SetUniform("projection", camera.ProjectionMatrix);
+			shader.SetUniform("nearClip", camera.NearClip);
+			shader.SetUniform("farClip", camera.FarClip);
 
 			GL.DrawElements(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0);
 

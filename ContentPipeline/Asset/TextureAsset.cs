@@ -12,9 +12,18 @@ namespace ContentPipeline
 		public int Height;
 
 		public int isFlipped = 1;
-		public byte[] data = null!;
 		public TextureType TextureType;
 
+		
+
+		public byte[] Load(int colourComponents)
+		{
+			using (FileStream stream = File.OpenRead(this.FilePath))
+			{
+				ImageResult result = ImageResult.FromStream(stream, (ColorComponents) colourComponents);
+				return result.Data;
+			}
+		}
 
 		public TextureAsset(string filePath)
 		{
@@ -28,16 +37,14 @@ namespace ContentPipeline
 
 			TextureType texType = TextureType.DIFFUSE;
 
-			int flip = 1;
+			this.isFlipped = 1;
 			if (filePath.Contains("Skybox", StringComparison.OrdinalIgnoreCase))
 			{
-				flip = 0;
+				this.isFlipped = 0;
 			}
 
 			if (filePath.Contains("diffuse"))
 				texType = TextureType.DIFFUSE;
-
-			StbImage.stbi_set_flip_vertically_on_load(flip);
 
 			this.FilePath = filePath;
 			this.Name = Path.GetFileName(filePath);
@@ -49,11 +56,9 @@ namespace ContentPipeline
 				ImageResult result = ImageResult.FromStream(stream);
 				this.Width = result.Width;
 				this.Height = result.Height;
-				this.data = result.Data;
 			}
 
 			Log.Info($"{this.Name} (Width: {this.Width}, Height: {this.Height}) loaded {this.ID}");
-			StbImage.stbi_set_flip_vertically_on_load(0);
 		}
 	}
 }

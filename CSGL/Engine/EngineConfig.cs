@@ -4,6 +4,7 @@ using ContentPipeline.Extensions;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using CSGL.Engine;
+using OpenTK.Mathematics;
 
 namespace CSGL
 {
@@ -11,6 +12,9 @@ namespace CSGL
 	{
 		public static string Version = "0.0.0";
 		public static string Name = "CSGL";
+
+		public static Vector3 BackdropColour = new Vector3(0.85f, 0.85f, 0.90f);
+		public static Vector3 Fog = new Vector3(0.85f, 0.85f, 0.90f);
 	}
 
 	public static class WindowConfig

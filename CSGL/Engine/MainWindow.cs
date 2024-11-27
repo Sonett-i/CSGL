@@ -45,17 +45,19 @@ namespace CSGL
 			ShaderManager.CompileShaders();
 			//TextureManager.CompileTextures();
 
-			Color4 backColour = new Color4(0.1f, 0.1f, 0.3f, 1.0f);
+			Color4 backColour = new Color4(EngineConfig.BackdropColour.X, EngineConfig.BackdropColour.Y, EngineConfig.BackdropColour.Z, 1.0f);
 			GL.ClearColor(backColour);
 
 			GL.Enable(EnableCap.DepthTest);
+			GL.Enable(EnableCap.StencilTest);
+			GL.StencilOp(StencilOp.Keep, StencilOp.Keep, StencilOp.Replace);
 		}
 
 		protected override void OnLoad()
 		{
 			this.IsVisible = true; // make openGL window visible
 
-			Scene debugScene = new DebugScene("debug");
+			Scene debugScene = new TerrainTest("debug");
 
 			debugScene.Start();
 			SceneManager.ActiveScene = debugScene;
@@ -115,7 +117,9 @@ namespace CSGL
 		{
 			Time.Update(e);
 			
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
+			GL.StencilFunc(StencilFunction.Always, 1, 0xFF);
+			GL.StencilMask(0xFF);
 
 			SceneManager.ActiveScene.Render();
 			this.Context.SwapBuffers();

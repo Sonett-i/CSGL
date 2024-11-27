@@ -39,7 +39,7 @@ namespace CSGL.Engine
 
 			Model model = Import.Model("cube.obj");
 
-			Shader defaultShader = ShaderManager.Shaders["light.shader"];
+			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 			List<Texture> texList = new List<Texture>();
 
 			Texture tex = new Texture("default.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
@@ -63,13 +63,6 @@ namespace CSGL.Engine
 
 		public override void Render()
 		{
-			this.mesh.Shader.Activate();
-			this.mesh.Shader.Uniforms["model"].SetValue(this.transform.Transform_Matrix);
-			this.mesh.Shader.Uniforms["view"].SetValue(Camera.main.ViewMatrix);
-			this.mesh.Shader.Uniforms["projection"].SetValue(Camera.main.ProjectionMatrix);
-
-			this.mesh.Shader.Uniforms["light.colour"].SetValue(Colour);
-
 			base.Render();
 		}
 	}

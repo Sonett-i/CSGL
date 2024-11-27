@@ -1,4 +1,5 @@
 ﻿using ContentPipeline;
+using Logging;
 using OpenTK.Graphics.OpenGL;
 using SharedLibrary;
 using StbImageSharp;
@@ -13,6 +14,8 @@ namespace CSGL.Engine
 		public int unit = 0;
 		public TextureTarget TextureTargetType { get; private set; }
 		public TextureType TextureType { get; private set; }
+
+		public Texture() { } // Empty
 
 		public Texture(string imagePath, TextureType textureType, TextureTarget textureTarget, int slot, PixelFormat format, PixelType pixelType)
 		{
@@ -49,6 +52,23 @@ namespace CSGL.Engine
 				GL.BindTexture(textureTarget, 0);
 			}
 			StbImage.stbi_set_flip_vertically_on_load(texAsset.isFlipped);
+		}
+
+		public void SetParameters(params TextureParameter[] parameters)
+		{
+			this.Bind();
+
+			foreach (TextureParameter parameter in parameters)
+			{
+				GL.TexParameter(parameter.TextureTarget, parameter.TextureParameterName, (int)parameter.targetEnum);
+
+				ErrorCode error = GL.GetError();
+
+				if (error != ErrorCode.NoError)
+				{
+					Log.GL($"Error: {error}");
+				}
+			}
 		}
 
 		public void TexUnit(int shaderProgram, string uniform, int unit)

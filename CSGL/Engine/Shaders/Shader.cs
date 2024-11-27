@@ -53,7 +53,9 @@ namespace CSGL.Engine
 		{
 			if (!Uniforms.TryGetValue(uniformName, out Uniform? uniform))
 			{
-				throw new ArgumentException($"Uniform with {uniformName} does not exist");
+				//Log.GL($"Uniform {uniformName} doesn't exist");
+				return;
+				//throw new ArgumentException($"Uniform with {uniformName} does not exist");
 			}
 
 			if (value == null)
