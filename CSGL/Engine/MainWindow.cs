@@ -62,7 +62,8 @@ namespace CSGL
 		{
 			this.IsVisible = true; // make openGL window visible
 
-			Scene debugScene = new DebugScene("debug"); // TerrainTest("debug");
+			//Scene debugScene = new DebugScene("debug"); // TerrainTest("debug");
+			Scene debugScene = new TerrainTest("debug");
 
 			debugScene.Start();
 			SceneManager.ActiveScene = debugScene;

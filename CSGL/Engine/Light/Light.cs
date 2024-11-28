@@ -38,16 +38,14 @@ namespace CSGL.Engine
 			this.diffuse = Vector3.One * diffuse;
 			this.specular = Vector3.One * specular;
 
-			ModelAsset model = Import.Model("cube.obj");
-
-			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 			List<Texture> texList = new List<Texture>();
 
 			Texture tex = new Texture("default.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
 
 			texList.Add(tex);
 
-			//this.mesh = Mesh.FromModel(model, texList, defaultShader);
+			this.model = new Model(Manifest.GetAsset<ModelAsset>("cube.obj"));
+			this.model.shader = ShaderManager.Shaders["light.shader"];
 		}
 
 		public override void Start()

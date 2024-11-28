@@ -85,12 +85,17 @@ namespace CSGL.Graphics
 			initialized = true;
 		}
 
-		public void Draw(Shader shader, Camera camera)
+		public void Draw(Shader shader, Camera camera, Matrix4 modelMatrix)
 		{
 			if (this.VAO == null || this.EBO == null || this.VBO == null)
 				return;
 
-			shader.Activate();
+
+			if (shader != null)
+				shader.Activate();
+			else
+				ShaderManager.Shaders["default.shader"].Activate();
+
 			VAO.Bind();
 
 			EBO.Bind();
@@ -103,10 +108,12 @@ namespace CSGL.Graphics
 			}
 
 			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
+			shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
+
 
 			shader.SetUniform("camPos", Camera.main.transform.position);
 
-			shader.SetUniform("model", this.transform.Transform_Matrix);
+			shader.SetUniform("model", modelMatrix);
 			shader.SetUniform("view", camera.ViewMatrix);
 			shader.SetUniform("projection", camera.ProjectionMatrix);
 			shader.SetUniform("nearClip", camera.NearClip);

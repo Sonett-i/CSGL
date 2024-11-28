@@ -42,6 +42,14 @@ namespace CSGL.Engine
 			this.AddComponent<Transform>();
 			this.AddComponent<Model>();
 
+			this.model.shader = ShaderManager.Shaders["default.shader"];
+		}
+
+		public Entity()
+		{
+			this.AddComponent<Transform>();
+			this.AddComponent<Model>();
+			this.model.shader = ShaderManager.Shaders["default.shader"];
 		}
 
 		public Transform transform => this.GetComponent<Transform>();

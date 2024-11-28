@@ -17,6 +17,9 @@ namespace CSGL.Engine
 		public Terrain(string heightMap) : base("Terrain")
 		{
 			base.Lit = true;
+
+			//this.AddComponent<Model>();
+
 			Texture mapDiffuse = new Texture("mapdiffuse.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
 
 			TextureParameter[] texParams =
@@ -39,6 +42,7 @@ namespace CSGL.Engine
 			uint[] indices = GenerateIndices();
 
 			this.model.meshes.Add(new Mesh(vertices, indices, this.Textures, "Terrain"));
+			this.model.shader = defaultShader;
 
 			this.transform.position = new Vector3(0, -600, 0);
 		}
