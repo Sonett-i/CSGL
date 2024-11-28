@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
 	public class TextureParameter
 	{

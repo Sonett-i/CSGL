@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 using Logging;
 using OpenTK.Mathematics;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
 	public class Shader : IDisposable
 	{

@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using Logging;
 using CSGL.Engine;
 using OpenTK.Mathematics;
+using CSGL.Graphics;
 
 namespace CSGL
 {

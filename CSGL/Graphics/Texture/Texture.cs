@@ -6,7 +6,7 @@ using StbImageSharp;
 using System;
 using System.IO;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
 	public class Texture
 	{

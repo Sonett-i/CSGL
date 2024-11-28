@@ -1,8 +1,9 @@
 ﻿using System;
 using ContentPipeline;
 using Logging;
+using CSGL.Engine;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
 	public class ShaderManager
 	{

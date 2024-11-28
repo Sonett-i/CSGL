@@ -3,6 +3,7 @@ using OpenTK.Mathematics;
 using ContentPipeline;
 using OpenTK.Graphics.OpenGL;
 using CSGL.Assets;
+using CSGL.Graphics;
 using SharedLibrary;
 
 public enum LightType

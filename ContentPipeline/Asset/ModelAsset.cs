@@ -2,18 +2,13 @@
 using ContentPipeline.Utilities;
 using System;
 using OpenTK.Mathematics;
-using ContentPipeline.Components;
+using ContentPipeline;
 
 
 namespace ContentPipeline
 {
 	public class ModelAsset : Asset
 	{
-		public int Vertices = 0;
-		public int SubMeshes = 0;
-		public MeshData[] Meshes = null!;
-		public Material[] Materials = null!;
-
 		public ModelAsset() 
 		{
 			base.Type = AssetType.ASSET_MODEL;
@@ -32,34 +27,11 @@ namespace ContentPipeline
 			this.FilePath = filePath;
 			this.Name = Path.GetFileName(filePath);
 			this.ext = Path.GetExtension(filePath);
-
-			switch (this.ext)
-			{
-				case ".obj":
-					Meshes = Obj.Import(this.FilePath);
-
-					break;
-				case ".fbx":
-					break;
-			}
-
-			if (this.Meshes != null)
-				this.SubMeshes = this.Meshes.Length;
 		}
 
 		public override string ToString()
 		{
-			string output = "";
-			float size = 0.0f;
-
-			foreach (MeshData mesh in Meshes)
-			{
-				output += mesh.ToString() + "\n";
-				size += mesh.Size;
-			}
-
-			output += "Size: " + Util.KiB(size);
-			return output;
+			return $"{this.ID}: {this.Name}";
 		}
 	}
 }

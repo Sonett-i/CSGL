@@ -1,10 +1,10 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL;
 using Logging;
-using ContentPipeline.Components;
+using ContentPipeline;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace CSGL.Engine.OpenGL
+namespace CSGL.Graphics
 {
 	public class VAO : IDisposable
 	{

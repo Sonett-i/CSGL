@@ -2,7 +2,7 @@
 using OpenTK.Graphics.OpenGL;
 using Logging;
 
-namespace CSGL.Engine.OpenGL
+namespace CSGL.Graphics
 {
 	public abstract class GLBuffer : IDisposable
 	{

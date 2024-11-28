@@ -1,10 +1,10 @@
 ﻿using ContentPipeline;
-using ContentPipeline.Components;
 using CSGL.Engine;
 using Logging;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using SharedLibrary;
+using CSGL.Graphics;
 
 namespace CSGL.Engine
 {
@@ -38,9 +38,7 @@ namespace CSGL.Engine
 			Vertex[] vertices = GenerateVertices();
 			uint[] indices = GenerateIndices();
 
-			Mesh mesh = new Mesh(vertices, indices, this.Textures, defaultShader);
-
-			this.model.AddMesh(mesh);
+			this.model.meshes.Add(new Mesh(vertices, indices, this.Textures, "Terrain"));
 
 			this.transform.position = new Vector3(0, -600, 0);
 		}
@@ -112,9 +110,10 @@ namespace CSGL.Engine
 					Vector3 normal = Vector3.Cross(tangentX, tangentZ).Normalized();
 					Vector3 tangent = new Vector3(tangentX.X, tangentX.Y, tangentX.Z);
 
+					Vector3 bitan = tangent;
 					Vector2 uv = new Vector2((1.0f / Width) * x, (1.0f / Height) * z);
 
-					vertices.Add(new Vertex(position, normal, tangent, uv));
+					vertices.Add(new Vertex(position, normal, tangent, bitan, uv));
 				}
 			}
 

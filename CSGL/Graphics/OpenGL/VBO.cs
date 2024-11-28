@@ -1,10 +1,10 @@
 ﻿using System;
-using ContentPipeline.Components;
+using ContentPipeline;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
 
-namespace CSGL.Engine.OpenGL
+namespace CSGL.Graphics
 {
 	public class VBO : IDisposable
 	{
@@ -17,7 +17,7 @@ namespace CSGL.Engine.OpenGL
 		{
 			this.usageHint = hint;
 
-			this.buffer = MeshData.Buffer(vertices);
+			this.buffer = Vertex.ToBuffer(vertices); // MeshData.Buffer(vertices);
 
 			this.ID = GL.GenBuffer();
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);

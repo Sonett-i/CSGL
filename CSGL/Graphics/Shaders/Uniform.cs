@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
 	public class Uniform
 	{

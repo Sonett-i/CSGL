@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL;
 using ContentPipeline;
 using Logging;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
 	internal class TextureManager
 	{

@@ -68,7 +68,7 @@ namespace CSGL.Engine
 			{
 				entity.Render();
 			}
-			MainLight.Render();
+			//MainLight.Render();
 		}
 
 		public virtual void Unload()

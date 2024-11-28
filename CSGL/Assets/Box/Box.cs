@@ -3,22 +3,26 @@ using CSGL.Engine;
 using Logging;
 using OpenTK.Graphics.OpenGL;
 using SharedLibrary;
+using CSGL.Graphics;
 
 namespace CSGL.Assets
 {
 	public class Box : GameObject
 	{
+		Shader shader;
 		public Box() : base("Box")
 		{
 			ModelAsset box = Manifest.GetAsset<ModelAsset>("plane.obj");
-			Shader defaultShader = ShaderManager.Shaders["default.shader"];
 
-			
+			//Model model = ModelImporter.Import(Manifest.GetAsset<ModelAsset>("nodesnodes.obj").FilePath);
 
+			shader = ShaderManager.Shaders["default.shader"];
+
+		
 			this.AddTexture(new Texture("planks.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte));
 			this.AddTexture(new Texture("planksSpec.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
 
-			this.model = new Model(box, this.Textures);
+			this.model = new Model(Manifest.GetAsset<ModelAsset>("nodesnodes.obj"));
 
 			Log.Info("Loading box mesh");
 
@@ -41,7 +45,6 @@ namespace CSGL.Assets
 
 		public override void Render()
 		{
-
 			base.Render();
 		}
 	}

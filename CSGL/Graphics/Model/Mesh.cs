@@ -1,18 +1,33 @@
 ﻿using ContentPipeline;
-using ContentPipeline.Components;
-using CSGL.Engine.OpenGL;
+using CSGL.Engine;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
 using OpenTK.Mathematics;
+using System.Security.Cryptography.X509Certificates;
 
-namespace CSGL.Engine
+namespace CSGL.Graphics
 {
+	public class MeshNode
+	{
+		public List<Mesh> Meshes { get; set; } = new List<Mesh>();
+		public List<MeshNode> Children { get; set; } = new List<MeshNode>();
+
+		public MeshNode Parent { get; set; }
+
+		public string Name { get; set; }
+		public MeshNode(string name)
+		{
+			this.Name = name;
+		}
+	}
+
 	public class Mesh : IDisposable
 	{
-		private List<Vertex> Vertices = new List<Vertex>();
+		bool initialized = false;
+		public string Name { get; set; }
+
 		private List<Texture> textures = new List<Texture>();
-		public Shader Shader = null!;
 
 		public VAO VAO = null!;
 		public VBO VBO = null!;
@@ -21,16 +36,27 @@ namespace CSGL.Engine
 		float[] vertexBuffer = null!;
 		uint[] indexBuffer = null!;
 
+		public Mesh parent;
+
+		public Transform transform = new Transform();
+
+		public Matrix4 Transform_M = Matrix4.Identity;
+
 		BufferUsageHint hint;
 		public Mesh() { }
 
-		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, Shader shader, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		public Mesh(string name)
 		{
-			//this.vbo = new VBO(vertices);
+			Name = name;
+		}
 
-			this.vertexBuffer = MeshData.Buffer(vertices);
+		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, string name, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		{
+
+			this.Name = name;
+
+			this.vertexBuffer = Vertex.ToBuffer(vertices);
 			this.indexBuffer = indices;
-			this.Shader = shader;
 
 			this.hint = hint;
 			this.textures = textures;
@@ -56,10 +82,14 @@ namespace CSGL.Engine
 
 
 			VAO.Unbind();
+			initialized = true;
 		}
 
-		public void Draw(Shader shader, Camera camera, Matrix4 modelM)
+		public void Draw(Shader shader, Camera camera)
 		{
+			if (this.VAO == null || this.EBO == null || this.VBO == null)
+				return;
+
 			shader.Activate();
 			VAO.Bind();
 
@@ -71,19 +101,12 @@ namespace CSGL.Engine
 				textures[i].TexUnit(shader, ("material." + type), i);
 				textures[i].Bind();
 			}
-			/*
-			if (ParentEntity.Lit == true)
-			{
-				shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
-				
-				shader.SetUniform("light.ambient", SceneManager.ActiveScene.MainLight.ambient);
-			}
-			*/
+
 			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
 
 			shader.SetUniform("camPos", Camera.main.transform.position);
 
-			shader.SetUniform("model", modelM);
+			shader.SetUniform("model", this.transform.Transform_Matrix);
 			shader.SetUniform("view", camera.ViewMatrix);
 			shader.SetUniform("projection", camera.ProjectionMatrix);
 			shader.SetUniform("nearClip", camera.NearClip);
@@ -101,10 +124,13 @@ namespace CSGL.Engine
 
 		public void Dispose()
 		{
+			if (initialized == false)
+				return;
+
 			VAO.Dispose();
 			VBO.Dispose();
 			EBO.Dispose();
-			Shader.Dispose();
+			//Shader.Dispose();
 			foreach (Texture tex in textures) 
 			{
 				tex.Dispose();

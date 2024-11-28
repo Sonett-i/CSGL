@@ -1,5 +1,6 @@
 ﻿using System;
 using ContentPipeline;
+using CSGL.Graphics;
 
 namespace CSGL.Engine
 {
