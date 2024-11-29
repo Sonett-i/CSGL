@@ -43,6 +43,8 @@ namespace CSGL.Engine
 			this.AddComponent<Model>();
 
 			this.model.shader = ShaderManager.Shaders["default.shader"];
+
+			Awake();
 		}
 
 		public Entity()
@@ -50,9 +52,16 @@ namespace CSGL.Engine
 			this.AddComponent<Transform>();
 			this.AddComponent<Model>();
 			this.model.shader = ShaderManager.Shaders["default.shader"];
+
+			Awake();
 		}
 
 		public Transform transform => this.GetComponent<Transform>();
+
+		public virtual void Awake()
+		{
+			SceneManager.ActiveScene.renderScene.Add(this);
+		}
 
 		public virtual void Start()
 		{
@@ -62,6 +71,7 @@ namespace CSGL.Engine
 		public virtual void Update()
 		{
 			this.transform.UpdateTransforms();
+			this.model.Update();
 		}
 
 		public virtual void FixedUpdate()
@@ -101,6 +111,7 @@ namespace CSGL.Engine
 			T component = new T { ParentEntity = this };
 			initializer?.Invoke(component);
 			Components[typeof(T)] = component;
+			component.ParentEntity = this;
 			component.Start();
 			return component;
 		}

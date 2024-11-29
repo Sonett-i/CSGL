@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ContentPipeline;
 using CSGL.Engine;
 
@@ -7,10 +8,15 @@ namespace CSGL.Graphics
 	public class Model : Component, IDisposable
 	{
 		public List<Texture> textures = new List<Texture>();
-		public List<Mesh> meshes = new List<Mesh>();
+		public Dictionary<string, MeshNode> Meshes = new Dictionary<string, MeshNode>();
 
-		public Mesh root;
+		public List<Mesh> _mesh = new List<Mesh>();
+
+		public MeshNode root;
+
 		public Shader shader;
+
+		public Transform transform = new Transform();
 
 		public Model()
 		{
@@ -19,29 +25,48 @@ namespace CSGL.Graphics
 
 		public Model(ModelAsset modelAsset)
 		{
-			this.loadModel(modelAsset.FilePath);
+			ModelImporter importer = new ModelImporter(modelAsset.FilePath);
+
 			this.shader = ShaderManager.Shaders["default.shader"];
-			
+			this._mesh = importer.meshes;
+
+			if (root != null)
+			{
+				if (ParentEntity != null)
+					this.root.Transform.Parent = this.ParentEntity.transform;
+			}
+
+			this.root = importer.rootMesh;
 		}
 
-
-		void loadModel(string path)
+		void getModelParts(MeshNode node)
 		{
-			ModelImporter importer = new ModelImporter(path);
-			this.shader = ShaderManager.Shaders["default.shader"];
-			this.meshes = importer.meshes;
+
 		}
 
-		public void SetShader(Shader shader)
+		public override void Update()
 		{
+			if (root != null)
+			{
+				root.Transform.UpdateTransforms();
+			}
 
+			base.Update();
 		}
 
 		public void Draw()
 		{
-			foreach (Mesh mesh in meshes)
+			if (root != null)
 			{
-				mesh.Draw(this.shader, Camera.main, this.ParentEntity.transform.Transform_Matrix);
+				this.root.TransformMatrix = this.ParentEntity.transform.TRS();
+				root.Render(this.shader);
+			}
+			else
+			{
+				foreach (Mesh mesh in _mesh)
+				{
+					mesh.Draw(this.shader, Camera.main, this.ParentEntity.transform.Transform_Matrix);
+				}
 			}
 		}
 
@@ -52,7 +77,10 @@ namespace CSGL.Graphics
 
 		public void Dispose()
 		{
-			root?.Dispose();
+			for (int i = 0; i < _mesh.Count; i++)
+			{
+				_mesh[i].Dispose();
+			}
 		}
 	}
 }

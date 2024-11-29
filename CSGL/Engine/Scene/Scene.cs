@@ -11,7 +11,7 @@ namespace CSGL.Engine
 		public List<Entity> renderScene = new List<Entity>();
 		public List<Light> lights = new List<Light>();
 
-		public Light MainLight = new Light(new Color4(1f, 1f, 1f, 1f), 0.6f, 0.6f, 0.2f, 16f);
+		public Light MainLight;
 
 		public Camera camera;
 
@@ -20,21 +20,25 @@ namespace CSGL.Engine
 			this.Name = name; 
 			this.sceneID = SceneManager.AddScene(this);
 
-			camera = new Camera(new Vector3(0, 0, 0), 0.01f, 10000.0f, 60);
-
-			Camera.main = camera;
+			
 			Awake(); 
 		}
 
 		public virtual void Awake()
 		{
 			Log.Default(Name + " scene awake");
+			SceneManager.ActiveScene = this;
+
+			camera = new Camera(new Vector3(0, 0, 0), 0.01f, 10000.0f, 60);
+			MainLight = new Light(new Color4(1f, 1f, 1f, 1f), 0.6f, 0.6f, 0.2f, 16f);
+			Camera.main = camera;
 		}
 
 		public virtual void Start()
 		{
 			Camera.main.Start();
 			MainLight.Start();
+			MainLight.transform.position = new Vector3(0, 100, 0);
 			foreach (Entity entity in renderScene)
 			{
 				entity.Start();

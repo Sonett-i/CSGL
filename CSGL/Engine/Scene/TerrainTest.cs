@@ -7,17 +7,18 @@ namespace CSGL
 {
 	public class TerrainTest : Scene
 	{
-
+		Player player;
 		public TerrainTest(string name) : base("TerrainTest")
 		{
 			SceneManager.ActiveScene = this;
+
 		}
 
 		void InitScene()
 		{
 			Terrain terrain = new Terrain("heightmap.png");
 
-			this.renderScene.Add(terrain);
+			player = new Player();
 		}
 
 		public override void Awake()
@@ -27,13 +28,16 @@ namespace CSGL
 
 		public override void Start()
 		{
+			InitScene();
+
 			Camera.main.Yaw = 270;
 			Camera.main.Pitch = -65.5f;
 			Camera.main.transform.position = new Vector3(0, 10, 5);
 
 			MainLight.transform.position = new Vector3(-1, 1, 0);
-			InitScene();
 
+			player.transform.position = new Vector3(0, 30, 0);
+			
 			base.Start();
 		}
 

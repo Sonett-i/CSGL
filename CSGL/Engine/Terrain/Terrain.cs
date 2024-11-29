@@ -41,10 +41,10 @@ namespace CSGL.Engine
 			Vertex[] vertices = GenerateVertices();
 			uint[] indices = GenerateIndices();
 
-			this.model.meshes.Add(new Mesh(vertices, indices, this.Textures, "Terrain"));
+			this.model.root = new MeshNode("terrain");
+			this.model.root.Meshes.Add((new Mesh(vertices, indices, this.Textures, "Terrain")));
+			this.model.root.Transform.position = new Vector3(0, -600, 0);
 			this.model.shader = defaultShader;
-
-			this.transform.position = new Vector3(0, -600, 0);
 		}
 
 		uint[] GenerateIndices()

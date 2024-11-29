@@ -1,4 +1,6 @@
 ﻿using Assimp;
+using Logging;
+using OpenTK.Mathematics;
 
 namespace CSGL.Graphics
 {
@@ -22,7 +24,7 @@ namespace CSGL.Graphics
 		public List<Mesh> meshes = new List<Mesh>();
 		string directory;
 
-		public Mesh rootMesh;
+		public MeshNode rootMesh;
 
 		public ModelImporter(string filePath)
 		{
@@ -43,26 +45,36 @@ namespace CSGL.Graphics
 			directory = path;
 
 			this.rootMesh = processNode(scene.RootNode, scene);
+
+			Log.Info("AAAA");
 		}
 
-		Mesh processNode(Node node, Scene scene)
+		MeshNode processNode(Node node, Scene scene, MeshNode parent = null)
 		{
-			Mesh currentMesh = new Mesh(node.Name);
+			MeshNode currentMesh = new MeshNode(node.Name);
+			currentMesh.TransformMatrix = ConvertToMatrix4(node.Transform);
 
-			
+			node.Transform.Decompose(out Vector3D scaling, out Assimp.Quaternion rotation, out Vector3D translation);
+			currentMesh.Transform.position = Convert(translation);
+			currentMesh.Transform.rotation = Convert(rotation);
+			currentMesh.Transform.scale = Convert(scaling);
+
+			Vector3 euler = currentMesh.Transform.rotation.ToEulerAngles();
+
 			if (node.MeshCount > 0)
 			{
 				foreach (int meshIndex in node.MeshIndices)
 				{
 					Mesh mesh = processMesh(scene.Meshes[meshIndex], scene);
-					meshes.Add(mesh);
+					currentMesh.Meshes.Add(mesh);
 				}
 			}
 
 			for (int i = 0; i < node.ChildCount; i++)
 			{
-				Mesh child = processNode(node.Children[i], scene);
-				child.parent = currentMesh;
+				MeshNode child = processNode(node.Children[i], scene, currentMesh);
+				child.SetParent(currentMesh);
+				currentMesh.Children.Add(child);
 			}
 
 			//meshes.Add(currentMesh);
@@ -127,6 +139,28 @@ namespace CSGL.Graphics
 			ModelImporter importer = new ModelImporter(filePath);
 
 			return null;
+		}
+
+		static Matrix4 ConvertToMatrix4(Assimp.Matrix4x4 assimpMatrix)
+		{
+			return new Matrix4(
+				assimpMatrix.A1, assimpMatrix.A2, assimpMatrix.A3, assimpMatrix.A4,
+				assimpMatrix.B1, assimpMatrix.B2, assimpMatrix.B3, assimpMatrix.B4,
+				assimpMatrix.C1, assimpMatrix.C2, assimpMatrix.C3, assimpMatrix.C4,
+				assimpMatrix.D1, assimpMatrix.D2, assimpMatrix.D3, assimpMatrix.D4
+			);
+		}
+
+		static Vector3 Convert(Vector3D vector)
+		{
+			return new Vector3(vector.X, vector.Y, vector.Z);
+		}
+
+		static OpenTK.Mathematics.Quaternion Convert(Assimp.Quaternion quaternion)
+		{
+			OpenTK.Mathematics.Quaternion q = new OpenTK.Mathematics.Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
+
+			return q;
 		}
 	}
 }

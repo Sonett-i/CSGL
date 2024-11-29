@@ -4,6 +4,7 @@ using Logging;
 using OpenTK.Graphics.OpenGL;
 using SharedLibrary;
 using CSGL.Graphics;
+using OpenTK.Mathematics;
 
 namespace CSGL.Assets
 {
@@ -12,8 +13,6 @@ namespace CSGL.Assets
 		Shader shader;
 		public Box() : base("Box")
 		{
-			ModelAsset box = Manifest.GetAsset<ModelAsset>("plane.obj");
-
 			//Model model = ModelImporter.Import(Manifest.GetAsset<ModelAsset>("nodesnodes.obj").FilePath);
 
 			shader = ShaderManager.Shaders["default.shader"];
@@ -39,7 +38,11 @@ namespace CSGL.Assets
 		public override void Update()
 		{
 			delta++;
-			//this.transform.rotation = Quaternion.FromEulerAngles(new Vector3(MathHelper.DegreesToRadians(delta), 0, MathHelper.DegreesToRadians(-delta))) * Time.deltaTime;
+
+			//this.model._mesh[1].transform.rotation = Quaternion.FromEulerAngles(new Vector3(MathHelper.DegreesToRadians(delta), 0, MathHelper.DegreesToRadians(-delta))) * Time.deltaTime;
+			//this.model._mesh[2].transform.rotation = Quaternion.FromEulerAngles(new Vector3(-MathHelper.DegreesToRadians(delta), 0, MathHelper.DegreesToRadians(-delta))) * Time.deltaTime;
+
+			//this.
 			base.Update();
 		}
 

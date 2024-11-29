@@ -66,7 +66,7 @@ namespace CSGL
 			Scene debugScene = new TerrainTest("debug");
 
 			debugScene.Start();
-			SceneManager.ActiveScene = debugScene;
+			
 
 			base.OnLoad();
 		}

@@ -4,7 +4,6 @@ using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
 using OpenTK.Mathematics;
-using System.Security.Cryptography.X509Certificates;
 
 namespace CSGL.Graphics
 {
@@ -15,16 +14,49 @@ namespace CSGL.Graphics
 
 		public MeshNode Parent { get; set; }
 
+		public Transform Transform { get; set; }
+
+		public Matrix4 TransformMatrix { get; set; }
+
 		public string Name { get; set; }
+
 		public MeshNode(string name)
 		{
 			this.Name = name;
+			this.Transform = new Transform();
+		}
+
+		public void SetParent(MeshNode parent)
+		{
+			if (parent == null)
+				return;
+
+			this.Parent = parent;
+			this.Transform.Parent = parent.Transform;
+		}
+
+		public void Update()
+		{
+
+		}
+
+		public void Render(Shader shader)
+		{
+			foreach (Mesh mesh in Meshes)
+			{
+				mesh.Draw(shader, Camera.main, this.Transform.Transform_Matrix);
+			}
+
+			foreach (MeshNode node in Children)
+			{
+				node.Render(shader);
+			}
 		}
 	}
 
 	public class Mesh : IDisposable
 	{
-		bool initialized = false;
+		public bool initialized = false;
 		public string Name { get; set; }
 
 		private List<Texture> textures = new List<Texture>();
@@ -37,10 +69,7 @@ namespace CSGL.Graphics
 		uint[] indexBuffer = null!;
 
 		public Mesh parent;
-
-		public Transform transform = new Transform();
-
-		public Matrix4 Transform_M = Matrix4.Identity;
+		public List<Mesh> children = new List<Mesh>();
 
 		BufferUsageHint hint;
 		public Mesh() { }
@@ -52,7 +81,6 @@ namespace CSGL.Graphics
 
 		public Mesh(Vertex[] vertices, uint[] indices, List<Texture> textures, string name, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
-
 			this.Name = name;
 
 			this.vertexBuffer = Vertex.ToBuffer(vertices);
@@ -85,7 +113,7 @@ namespace CSGL.Graphics
 			initialized = true;
 		}
 
-		public void Draw(Shader shader, Camera camera, Matrix4 modelMatrix)
+		public void Draw(Shader shader, Camera camera, Matrix4 transformMatrix)
 		{
 			if (this.VAO == null || this.EBO == null || this.VBO == null)
 				return;
@@ -113,7 +141,7 @@ namespace CSGL.Graphics
 
 			shader.SetUniform("camPos", Camera.main.transform.position);
 
-			shader.SetUniform("model", modelMatrix);
+			shader.SetUniform("model", transformMatrix);
 			shader.SetUniform("view", camera.ViewMatrix);
 			shader.SetUniform("projection", camera.ProjectionMatrix);
 			shader.SetUniform("nearClip", camera.NearClip);
@@ -133,6 +161,7 @@ namespace CSGL.Graphics
 		{
 			if (initialized == false)
 				return;
+			Log.GL("Disposing: " + this.ToString());
 
 			VAO.Dispose();
 			VBO.Dispose();
@@ -146,24 +175,7 @@ namespace CSGL.Graphics
 
 		public override string ToString()
 		{
-			string output = "VertexBuffer\n\tx\ty\tz\tx\ty\tz\tx\ty\tz\tu\tv";
-
-			for (int i = 0; i < this.vertexBuffer.Length; i++)
-			{
-				if (i % Vertex.Stride == 0)
-					output += "\n";
-
-				output += "\t" + this.vertexBuffer[i];
-			}
-
-			output += "\nIndex Buffer\n";
-
-			for (int i = 0; i < this.indexBuffer.Length; i++)
-			{
-				if (i % 3 == 0)
-					output += "\n";
-				output += "\t" + this.indexBuffer[i];
-			}
+			string output = $"{this.Name}";
 
 			return output;
 		}
