@@ -152,7 +152,7 @@ namespace CSGL.Engine
 		public override void Update()
 		{
 			HandleMouseInput();
-			HandleKeyboardInput();
+			//HandleKeyboardInput();
 		}
 
 		public override void FixedUpdate()

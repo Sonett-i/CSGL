@@ -25,6 +25,16 @@ namespace CSGL.Assets
 
 		Vector3 currentAxis = Vector3.Zero;
 
+		Vector3 currentForce = Vector3.Zero;
+		Vector3 previousForce = Vector3.Zero;
+
+		float smoothing = 0.5f;
+		float decay = 0.9f;
+		float smoothingSpeed = 10.5f;
+
+		float rotationSpeed = 30f;
+
+
 		public Player() : base("Player")
 		{
 			this.model = new Model(Manifest.GetAsset<ModelAsset>("planemodel.fbx"));
@@ -45,14 +55,23 @@ namespace CSGL.Assets
 		{
 			float roll = Input.GetArrowInput("Horizontal");
 			float pitch = Input.GetArrowInput("Vertical");
+
 			float yaw = 0;
+
 			if (Input.KeyboardState.IsKeyDown(Keys.Q))
 				yaw = 1;
 
 			if (Input.KeyboardState.IsKeyDown(Keys.E))
 				yaw = -1;
 
-			currentAxis += new Vector3(MathU.Rad(pitch), MathU.Rad(yaw), MathU.Rad(roll)) * Time.deltaTime * 15f;
+			Vector3 targetForce = new Vector3(MathU.Rad(pitch), MathU.Rad(yaw), MathU.Rad(roll)) * rotationSpeed;
+
+			if (targetForce != Vector3.Zero)
+			{
+				currentForce = Vector3.Lerp(previousForce, targetForce, Time.deltaTime * smoothingSpeed);
+
+				previousForce = currentForce;
+			}
 
 			leftWing = MathU.Rad(-roll * 10f);
 			rightWing = MathU.Rad(roll * 10f);
@@ -64,11 +83,11 @@ namespace CSGL.Assets
 		float angle = 0;
 		public override void Update()
 		{
-			angle += 1;
+			angle += 25;
 
 			HandleInput();
 
-			this.model.Meshes["Propeller"].Transform.rotation = Quaternion.FromEulerAngles(0, 0, MathU.Rad(angle)) * 5f;
+			this.model.Meshes["Propeller"].Transform.rotation = Quaternion.FromEulerAngles(0, 0, MathU.Rad(angle)) * 25f;
 			this.model.Meshes["LeftWing"].Transform.rotation = Quaternion.FromEulerAngles(leftWing, 0, 0);
 			this.model.Meshes["WingRight"].Transform.rotation = Quaternion.FromEulerAngles(rightWing, 0, 0);
 			this.model.Meshes["TailLeft"].Transform.rotation = Quaternion.FromEulerAngles(tail, 0, 0);
@@ -80,7 +99,11 @@ namespace CSGL.Assets
 		public override void FixedUpdate()
 		{
 			//this.model.transform.rotation *= Quaternion.FromEulerAngles(currentAxis) * Time.deltaTime * 5f;
-			this.transform.rotation = Quaternion.FromEulerAngles(currentAxis);
+			currentForce *= decay;
+			Quaternion rotationDelta = Quaternion.FromEulerAngles(currentForce * Time.deltaTime);
+
+			this.transform.rotation *= rotationDelta;
+
 			base.FixedUpdate();
 		}
 	}
