@@ -37,7 +37,7 @@ namespace CSGL.Assets
 
 		public Player() : base("Player")
 		{
-			this.model = new Model(Manifest.GetAsset<ModelAsset>("planemodel.fbx"));
+			this.model = new Model(Manifest.GetAsset<ModelAsset>("planemodelsmall.fbx"));
 			this.model.ParentEntity = this;
 
 			//this.model.root.Transform.Parent = this.transform;

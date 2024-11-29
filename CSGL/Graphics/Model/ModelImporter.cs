@@ -124,14 +124,27 @@ namespace CSGL.Graphics
 
 			// Process Textures
 
+			if (mesh.MaterialIndex > 0)
+			{
+				Material material = scene.Materials[mesh.MaterialIndex];
+
+				textures.AddRange(LoadMaterialTextures(material, TextureType.Diffuse, "diffuse"));
+				textures.AddRange(LoadMaterialTextures(material, TextureType.Specular, "specular"));
+				textures.AddRange(LoadMaterialTextures(material, TextureType.Normals, "normal"));
+				textures.AddRange(LoadMaterialTextures(material, TextureType.Height, "height"));
+			}
+
 			Mesh nmesh = new Mesh(vertices.ToArray(), indices.ToArray(), textures, mesh.Name);
 
 			return nmesh;
 		}
 
-		public Model ToModel()
+		List<Texture> LoadMaterialTextures(Material material, TextureType textureType, string typeName)
 		{
-			return new Model();
+			List<Texture> textures = new List<Texture>();
+
+
+			return textures;
 		}
 
 		public static Model Import(string filePath)
