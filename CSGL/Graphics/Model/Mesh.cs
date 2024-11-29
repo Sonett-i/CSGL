@@ -35,9 +35,17 @@ namespace CSGL.Graphics
 			this.Transform.Parent = parent.Transform;
 		}
 
-		public void Update()
+		public void Dispose()
 		{
+			foreach (Mesh mesh in Meshes)
+			{
+				mesh.Dispose(); 
+			}
 
+			foreach (MeshNode child in Children)
+			{
+				child.Dispose();
+			}
 		}
 
 		public void Render(Shader shader)

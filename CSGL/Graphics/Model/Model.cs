@@ -77,6 +77,10 @@ namespace CSGL.Graphics
 
 		public void Dispose()
 		{
+			if (this.root != null)
+			{
+				root.Dispose();
+			}
 			for (int i = 0; i < _mesh.Count; i++)
 			{
 				_mesh[i].Dispose();
