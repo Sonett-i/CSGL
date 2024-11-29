@@ -48,16 +48,18 @@ namespace CSGL.Graphics
 			}
 		}
 
-		public void Render(Shader shader)
+		public void Render(Shader shader, Matrix4 cbt)
 		{
+			cbt = this.Transform.Transform_Matrix * cbt;
+
 			foreach (Mesh mesh in Meshes)
 			{
-				mesh.Draw(shader, Camera.main, this.Transform.Transform_Matrix);
+				mesh.Draw(shader, Camera.main, cbt);
 			}
 
 			foreach (MeshNode node in Children)
 			{
-				node.Render(shader);
+				node.Render(shader, cbt);
 			}
 		}
 	}

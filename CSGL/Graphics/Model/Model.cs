@@ -16,8 +16,6 @@ namespace CSGL.Graphics
 
 		public Shader shader;
 
-		public Transform transform = new Transform();
-
 		public Model()
 		{
 
@@ -37,11 +35,17 @@ namespace CSGL.Graphics
 			}
 
 			this.root = importer.rootMesh;
+
+			getModelParts(root);
 		}
 
 		void getModelParts(MeshNode node)
 		{
-
+			foreach (MeshNode child in node.Children)
+			{
+				getModelParts(child);
+				Meshes[child.Name] = child;
+			}
 		}
 
 		public override void Update()
@@ -58,8 +62,7 @@ namespace CSGL.Graphics
 		{
 			if (root != null)
 			{
-				this.root.TransformMatrix = this.ParentEntity.transform.TRS();
-				root.Render(this.shader);
+				root.Render(this.shader, this.ParentEntity.transform.Transform_Matrix);
 			}
 			else
 			{
