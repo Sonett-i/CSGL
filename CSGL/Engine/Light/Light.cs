@@ -44,8 +44,7 @@ namespace CSGL.Engine
 
 			texList.Add(tex);
 
-			this.model = new Model(Manifest.GetAsset<ModelAsset>("cube.obj"));
-			this.model.shader = ShaderManager.Shaders["light.shader"];
+			this.model = new Model(Manifest.GetAsset<ModelAsset>("cube.obj"), ShaderManager.Shaders["light.shader"]);
 		}
 
 		public override void Start()

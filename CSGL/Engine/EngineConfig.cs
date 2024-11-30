@@ -16,6 +16,7 @@ namespace CSGL
 
 		public static Vector3 BackdropColour = new Vector3(0.85f, 0.85f, 0.90f);
 		public static Vector3 Fog = new Vector3(0.85f, 0.85f, 0.90f);
+		public static int MSAA_Samples = 20;
 	}
 
 	public static class WindowConfig

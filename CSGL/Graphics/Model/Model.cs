@@ -21,11 +21,11 @@ namespace CSGL.Graphics
 
 		}
 
-		public Model(ModelAsset modelAsset)
+		public Model(ModelAsset modelAsset, Shader shader)
 		{
 			ModelImporter importer = new ModelImporter(modelAsset.FilePath);
 
-			this.shader = ShaderManager.Shaders["default.shader"];
+			this.shader = shader;
 			this._mesh = importer.meshes;
 
 			if (root != null)

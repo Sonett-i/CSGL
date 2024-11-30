@@ -8,17 +8,18 @@ using OpenTK.Mathematics;
 
 namespace CSGL.Assets
 {
-	public class Box : GameObject
+	public class Foliage : GameObject
 	{
-		public Box() : base("Box")
+		public Foliage(Vector3 position) : base("Grass")
 		{
 			//Model model = ModelImporter.Import(Manifest.GetAsset<ModelAsset>("nodesnodes.obj").FilePath);
 
-		
-			this.AddTexture(new Texture("planks.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte));
-			this.AddTexture(new Texture("planksSpec.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
+			this.transform.position = position;
 
-			this.model = new Model(Manifest.GetAsset<ModelAsset>("nodesnodes.obj"), ShaderManager.Shaders["default.shader"]);
+			//this.AddTexture(new Texture("bush_diffuse.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte));
+			//this.AddTexture(new Texture("bush_specular.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
+
+			this.model = new Model(Manifest.GetAsset<ModelAsset>("Bush.fbx"), ShaderManager.Shaders["grass.shader"]);
 
 			Log.Info("Loading box mesh");
 

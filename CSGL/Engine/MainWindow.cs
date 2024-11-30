@@ -56,6 +56,8 @@ namespace CSGL
 			GL.Enable(EnableCap.CullFace);
 			GL.CullFace(CullFaceMode.Front);
 			GL.FrontFace(FrontFaceDirection.Cw);
+
+			GLFW.WindowHint(WindowHintInt.Samples, EngineConfig.MSAA_Samples);
 		}
 
 		protected override void OnLoad()

@@ -47,8 +47,6 @@ namespace CSGL.Graphics
 			}
 
 			this.rootMesh = processNode(scene.RootNode, scene);
-
-			Log.Info("AAAA");
 		}
 
 		MeshNode processNode(Node node, Scene scene, MeshNode parent = null)
@@ -69,6 +67,7 @@ namespace CSGL.Graphics
 				{
 					Mesh mesh = processMesh(scene.Meshes[meshIndex], scene);
 					currentMesh.Meshes.Add(mesh);
+					meshes.Add(mesh);
 				}
 			}
 
