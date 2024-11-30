@@ -29,7 +29,7 @@ namespace CSGL.Engine
 			Log.Default(Name + " scene awake");
 			SceneManager.ActiveScene = this;
 
-			camera = new Camera(new Vector3(0, 0, 0), 0.01f, 10000.0f, 60);
+			camera = new Camera(CameraType.FreeCamera, new Vector3(0, 0, 0), 0.01f, 10000.0f, 60);
 			MainLight = new Light(new Color4(1f, 1f, 1f, 1f), 0.6f, 0.6f, 0.2f, 16f);
 			Camera.main = camera;
 		}

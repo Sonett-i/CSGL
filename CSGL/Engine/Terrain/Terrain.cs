@@ -22,20 +22,36 @@ namespace CSGL.Engine
 
 			Texture mapDiffuse = new Texture("mapdiffuse.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
 
-			TextureParameter[] texParams =
+			TextureParameter[] difftexParams =
 			{
 				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear),
-				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear),
+				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear),
 				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat),
 				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat),
 				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.Repeat)
 			};
 
-			mapDiffuse.SetParameters(texParams);
+			mapDiffuse.SetParameters(difftexParams);
+
+			
+
+			Texture mapSpecular = new Texture("mapspecular.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Rgba, PixelType.UnsignedByte);
+
+			TextureParameter[] spectexParams =
+{
+				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear),
+				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest),
+				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat),
+				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat),
+				new TextureParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.Repeat)
+			};
+
+			mapSpecular.SetParameters(spectexParams);
+
+			this.AddTexture(mapDiffuse);
+			this.AddTexture(mapSpecular);
 
 			Shader defaultShader = ShaderManager.Shaders["default.shader"];
-			this.AddTexture(mapDiffuse);
-			this.AddTexture(new Texture("mapspecular.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
 			this.heightmapData = GenerateHeightMap(Manifest.GetAsset<TextureAsset>(heightMap));
 
 			Vertex[] vertices = GenerateVertices();

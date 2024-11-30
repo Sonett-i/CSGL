@@ -23,11 +23,15 @@ namespace CSGL.Graphics
 	{
 		public List<Mesh> meshes = new List<Mesh>();
 		string directory;
+		string fileName;
 
 		public MeshNode rootMesh;
 
 		public ModelImporter(string filePath)
 		{
+			this.fileName = Path.GetFileName(filePath);
+
+			this.directory = filePath.Replace(fileName, "");
 			loadModel(filePath);
 		}
 
@@ -41,8 +45,6 @@ namespace CSGL.Graphics
 			{
 				return;
 			}
-
-			directory = path;
 
 			this.rootMesh = processNode(scene.RootNode, scene);
 
@@ -124,7 +126,7 @@ namespace CSGL.Graphics
 
 			// Process Textures
 
-			if (mesh.MaterialIndex > 0)
+			if (mesh.MaterialIndex >= 0)
 			{
 				Material material = scene.Materials[mesh.MaterialIndex];
 
@@ -143,6 +145,17 @@ namespace CSGL.Graphics
 		{
 			List<Texture> textures = new List<Texture>();
 
+			for (int i = 0; i< material.GetMaterialTextureCount(textureType); i++)
+			{
+				TextureSlot textureSlot;
+
+				if (material.GetMaterialTexture(textureType, i, out textureSlot))
+				{
+					string FP = textureSlot.FilePath;
+					Texture texture = new Texture(this.directory + textureSlot.FilePath, typeName, (int)textureSlot.WrapModeU, (int)textureSlot.WrapModeV, textureSlot.TextureIndex);
+					textures.Add(texture);
+				}
+			}
 
 			return textures;
 		}

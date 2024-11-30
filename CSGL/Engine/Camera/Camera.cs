@@ -6,16 +6,24 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace CSGL.Engine
 {
+	public enum CameraType
+	{
+		FollowCamera,
+		FreeCamera
+	}
+
 	public class Camera : Entity
 	{
 		public static Camera main = null!;
+
+		CameraType cameraType;
 
 		// Camera Details
 		public float NearClip;
 		public float FarClip;
 		public float FOV;
 
-
+		Entity target;
 
 		private Vector3 front = -Vector3.UnitZ;
 		public Vector3 Front => front;
@@ -27,6 +35,7 @@ namespace CSGL.Engine
 
 		public Vector3 Direction => (transform.position + Front);
 
+		Vector3 targetLook = Vector3.Zero;
 
 		// Cached matrices
 		public Matrix4 ViewMatrix { get; set; }
@@ -85,14 +94,22 @@ namespace CSGL.Engine
 			this.FOV = 45f;
 		}
 
-		public Camera(Vector3 position, float nearClip, float farClip, float fov) : base("Camera")
+		public Camera(CameraType camType, Vector3 position, float nearClip, float farClip, float fov) : base("Camera")
 		{
+			this.cameraType = camType;
 			this.NearClip = nearClip;
 			this.FarClip = farClip;
 			this.FOV = fov;
 		}
 
-		public Matrix4 GetViewMatrix() => Matrix4.LookAt(transform.position, transform.position + Front, Up);
+		public Matrix4 GetViewMatrix()
+		{
+			if (target == null)
+				return Matrix4.LookAt(transform.position, transform.position + Front, Up);
+
+			return Matrix4.LookAt(transform.position, target.transform.position, Up);
+		}
+
 		public Matrix4 GetProjectionMatrix() => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), WindowConfig.AspectRatio, Camera.main.NearClip, Camera.main.FarClip);
 
 
@@ -149,10 +166,17 @@ namespace CSGL.Engine
 			}
 		}
 
+		public void SetTarget(Entity target)
+		{
+			if (this.cameraType == CameraType.FollowCamera)
+				this.target = target;
+		}
+
 		public override void Update()
 		{
 			HandleMouseInput();
-			HandleKeyboardInput();
+			if (cameraType == CameraType.FreeCamera)
+				HandleKeyboardInput();
 		}
 
 		public override void FixedUpdate()

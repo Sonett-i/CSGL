@@ -48,6 +48,7 @@ namespace CSGL.Assets
 
 		public override void Start()
 		{
+			Camera.main.SetTarget(this);
 			base.Start();
 		}
 

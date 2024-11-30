@@ -1,5 +1,6 @@
 ﻿using ContentPipeline;
 using Logging;
+using OpenTK.Audio.OpenAL;
 using OpenTK.Graphics.OpenGL;
 using SharedLibrary;
 using StbImageSharp;
@@ -52,6 +53,51 @@ namespace CSGL.Graphics
 				GL.BindTexture(textureTarget, 0);
 			}
 			StbImage.stbi_set_flip_vertically_on_load(texAsset.isFlipped);
+		}
+
+		public Texture(string path, string typeName, int wrapU, int wrapV, int unit)
+		{
+			this.TextureTargetType = TextureTarget.Texture2D;
+			this.TextureType = TextureDefinitions.TextureType[typeName];
+			this.unit = unit;
+
+			StbImage.stbi_set_flip_vertically_on_load(1);
+
+			using (FileStream stream = File.OpenRead(path))
+			{
+				ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+
+				// Generate OpenGL texture object
+				ID = GL.GenTexture();
+				GL.ActiveTexture(TextureUnit.Texture0 + unit);
+				GL.BindTexture(this.TextureTargetType, ID);
+
+				//image.Comp = ColorComponents.RedGreenBlue;
+				
+
+				// Configure texture parameters
+				GL.TexParameter(this.TextureTargetType, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
+				GL.TexParameter(this.TextureTargetType, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+
+				GL.TexParameter(this.TextureTargetType, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+				GL.TexParameter(this.TextureTargetType, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+
+
+				// Upload the image to OpenGL
+				GL.TexImage2D(this.TextureTargetType, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, TextureDefinitions.GetPixelFormat(this.TextureType), PixelType.UnsignedByte, image.Data);
+				GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+				ErrorCode error = GL.GetError();
+
+				if (error != ErrorCode.NoError)
+				{
+					Log.GL("Error: " + error.ToString());
+				}
+
+				// Unbind the texture
+				GL.BindTexture(this.TextureTargetType, 0);
+			}
+			StbImage.stbi_set_flip_vertically_on_load(0);
 		}
 
 		public void SetParameters(params TextureParameter[] parameters)
