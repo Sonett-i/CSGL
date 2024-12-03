@@ -101,16 +101,14 @@ namespace CSGL.Assets
 
 		public override void FixedUpdate()
 		{
-			//this.model.transform.rotation *= Quaternion.FromEulerAngles(currentAxis) * Time.deltaTime * 5f;
 			currentForce *= decay;
-			//currentSpeed *= decay;
+
 
 			Quaternion rotationDelta = Quaternion.FromEulerAngles(currentForce * Time.deltaTime);
 
 			this.transform.rotation *= rotationDelta;
 
-			Log.Info(this.transform.Forward + ", " + this.transform.Right);
-			this.transform.position += this.transform.forward * currentSpeed;
+			this.transform.position += this.transform.forward * 10f * currentSpeed;
 
 			base.FixedUpdate();
 		}

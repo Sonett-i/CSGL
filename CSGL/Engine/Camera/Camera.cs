@@ -117,7 +117,9 @@ namespace CSGL.Engine
 
 		public override void Start()
 		{
-			
+			float targetYaw = MathU.Deg(target.transform.rotation.ToEulerAngles().Y);
+
+			this.yaw = targetYaw + 90;
 		}
 
 		void HandleMouseInput()
@@ -178,6 +180,10 @@ namespace CSGL.Engine
 		{
 			if (target == null)
 				return;
+
+			float targetYaw = MathU.Deg(-target.transform.rotation.ToEulerAngles().Y) + 90;
+
+			this.yaw = float.Lerp(this.yaw, targetYaw, smoothing * Time.deltaTime);
 
 			Vector3 desiredPosition = target.transform.position - target.transform.Right * 15f;
 			desiredPosition += new Vector3(0, 4.5f, 0);
