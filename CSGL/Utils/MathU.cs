@@ -55,5 +55,16 @@ namespace CSGL
 		{
 			return MathF.PI * degrees / 180;
 		}
+		public static float Deg(float radians)
+		{
+			return radians * 180 / MathF.PI;
+		}
+
+		public static int Random(int min, int max)
+		{
+			Random random = new Random();
+
+			return random.Next(min, max);
+		}
 	}
 }

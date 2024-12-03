@@ -1,7 +1,8 @@
 ﻿using Logging;
 using CSGL.Engine;
 using OpenTK.Mathematics;
-using CSGL.Assets; 
+using CSGL.Assets;
+using CSGL.Graphics;
 
 namespace CSGL
 {
@@ -12,6 +13,13 @@ namespace CSGL
 		{
 			SceneManager.ActiveScene = this;
 		}
+
+		List<Matrix4> transformList = new List<Matrix4>();
+
+		VAO vao;
+		EBO ebo;
+		VBO vbo;
+		VBO instancedVBO;
 
 		void InitScene()
 		{
@@ -25,7 +33,6 @@ namespace CSGL
 		public override void Awake()
 		{
 			Log.Info($"{base.Name}({base.sceneID}) Scene Awake");
-			InitScene();
 
 			//Mesh mesh = new Mesh(test.m)
 
@@ -34,12 +41,24 @@ namespace CSGL
 
 		public override void Start()
 		{
+			InitScene();
 			MainLight.transform.position = new Vector3(0.0f, 0.5f, 0.0f);
 			MainLight.transform.scale = Vector3.One * 0.05f;
 
 			Camera.main.Yaw = 270;
 			Camera.main.Pitch = -65.5f;
 			Camera.main.transform.position = new Vector3(0, 10, 5);
+
+			for (int i = 0; i < 100; i++)
+			{
+				float x = MathU.Random(0, 100);
+				float y = MathU.Random(0, 100);
+				float z = MathU.Random(0, 100);
+
+				Vector3 pos = new Vector3(x, y, z);
+				transformList.Add(Matrix4.CreateTranslation(pos));
+			}
+
 			base.Start();
 		}
 
@@ -60,6 +79,8 @@ namespace CSGL
 
 		public override void Render()
 		{
+
+
 			base.Render();
 		}
 	}

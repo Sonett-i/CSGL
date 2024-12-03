@@ -4,6 +4,7 @@ using Logging;
 
 namespace CSGL.Graphics
 {
+	// EBO = Element Buffer Object
 	public class EBO : IDisposable
 	{
 		public int ID;

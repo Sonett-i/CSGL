@@ -16,7 +16,7 @@ namespace CSGL.Engine
 	{
 		public static Camera main = null!;
 
-		CameraType cameraType;
+		public CameraType cameraType;
 
 		// Camera Details
 		public float NearClip;
@@ -54,6 +54,8 @@ namespace CSGL.Engine
 
 		Vector3 currentForce = Vector3.Zero;
 		Vector3 previousForce = Vector3.Zero;
+
+		Vector3 currentLook = Vector3.Zero;
 
 		public float decay = 0.95f;
 
@@ -107,7 +109,7 @@ namespace CSGL.Engine
 			if (target == null)
 				return Matrix4.LookAt(transform.position, transform.position + Front, Up);
 
-			return Matrix4.LookAt(transform.position, target.transform.position, Up);
+			return Matrix4.LookAt(transform.position, transform.position + Front, Up);
 		}
 
 		public Matrix4 GetProjectionMatrix() => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), WindowConfig.AspectRatio, Camera.main.NearClip, Camera.main.FarClip);
@@ -172,11 +174,22 @@ namespace CSGL.Engine
 				this.target = target;
 		}
 
+		void FollowTarget()
+		{
+			if (target == null)
+				return;
+
+			Vector3 desiredPosition = target.transform.position - target.transform.Right * 15f;
+			desiredPosition += new Vector3(0, 4.5f, 0);
+
+			this.transform.position = desiredPosition;
+		}
+
 		public override void Update()
 		{
 			HandleMouseInput();
-			if (cameraType == CameraType.FreeCamera)
-				HandleKeyboardInput();
+			//HandleKeyboardInput();
+			FollowTarget();
 		}
 
 		public override void FixedUpdate()

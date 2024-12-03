@@ -30,13 +30,14 @@ namespace CSGL
 		{
 			InitScene();
 
-			Camera.main.Yaw = 270;
-			Camera.main.Pitch = -65.5f;
+			Camera.main.Yaw = 451;
+			Camera.main.Pitch = -21;
 			Camera.main.transform.position = new Vector3(0, 10, 5);
 
 			MainLight.transform.position = new Vector3(-1, 1, 0);
 
 			player.transform.position = new Vector3(0, 30, 0);
+			Camera.main.SetTarget(player);
 
 
 			Foliage foliage = new Foliage(new Vector3(0, 0, 0));

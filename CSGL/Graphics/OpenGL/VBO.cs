@@ -3,9 +3,12 @@ using ContentPipeline;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
+using OpenTK.Mathematics;
+using System.Collections.Generic;
 
 namespace CSGL.Graphics
 {
+	// VBO = Vertex Buffer Object
 	public class VBO : IDisposable
 	{
 		public int ID;
@@ -24,6 +27,21 @@ namespace CSGL.Graphics
 			GL.BufferData(BufferTarget.ArrayBuffer, this.buffer.Length * sizeof(float), this.buffer, hint);
 
 			Log.GL($"Generated VBO: {this.ID}");
+		}
+
+		public VBO(List<Matrix4> transforms, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		{
+			this.usageHint = hint;
+
+			this.ID = GL.GenBuffer();
+
+			int vec4size = Vector4.SizeInBytes;
+			int mat4Size = 4 * vec4size;
+
+			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
+			GL.BufferData(BufferTarget.ArrayBuffer, transforms.Count * (mat4Size), transforms.ToArray(), hint);
+
+			Log.GL($"Generated IBO: {this.ID}");
 		}
 
 		public void Bind()

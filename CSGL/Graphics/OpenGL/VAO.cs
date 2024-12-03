@@ -6,6 +6,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CSGL.Graphics
 {
+	// VAO = Vertex Array Object
 	public class VAO : IDisposable
 	{
 		public int ID;
@@ -13,6 +14,7 @@ namespace CSGL.Graphics
 		public VAO() 
 		{
 			this.ID = GL.GenVertexArray();
+			this.Bind();
 			Log.GL($"Generated VAO: {this.ID}");
 			initialized = true;
 		}
@@ -47,8 +49,8 @@ namespace CSGL.Graphics
 			
 			GL.VertexAttribPointer(layout, numComponents, type, false, stride * sizeof(float), offset * sizeof(float));
 			GL.EnableVertexAttribArray(layout);
-			ErrorCode error = GL.GetError();
 
+			ErrorCode error = GL.GetError();
 			if (error != ErrorCode.NoError)
 			{
 				Log.GL($"Error linking attribute: {this.ToString()}");

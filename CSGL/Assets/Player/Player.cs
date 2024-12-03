@@ -33,7 +33,7 @@ namespace CSGL.Assets
 		float smoothingSpeed = 10.5f;
 
 		float rotationSpeed = 30f;
-
+		float bankFactor = 0.1f;
 
 		public Player() : base("Player")
 		{
@@ -56,6 +56,8 @@ namespace CSGL.Assets
 		{
 			float roll = Input.GetArrowInput("Horizontal");
 			float pitch = Input.GetArrowInput("Vertical");
+
+			currentSpeed += Input.GetAxisRaw("Vertical") * Time.deltaTime;
 
 			float yaw = 0;
 
@@ -88,7 +90,7 @@ namespace CSGL.Assets
 
 			HandleInput();
 
-			this.model.Meshes["Propeller"].Transform.rotation = Quaternion.FromEulerAngles(0, 0, MathU.Rad(angle)) * 25f;
+			this.model.Meshes["Propeller"].Transform.rotation = Quaternion.FromEulerAngles(0, 0, MathU.Rad(angle)) * currentSpeed;
 			this.model.Meshes["LeftWing"].Transform.rotation = Quaternion.FromEulerAngles(leftWing, 0, 0);
 			this.model.Meshes["WingRight"].Transform.rotation = Quaternion.FromEulerAngles(rightWing, 0, 0);
 			this.model.Meshes["TailLeft"].Transform.rotation = Quaternion.FromEulerAngles(tail, 0, 0);
@@ -101,9 +103,14 @@ namespace CSGL.Assets
 		{
 			//this.model.transform.rotation *= Quaternion.FromEulerAngles(currentAxis) * Time.deltaTime * 5f;
 			currentForce *= decay;
+			//currentSpeed *= decay;
+
 			Quaternion rotationDelta = Quaternion.FromEulerAngles(currentForce * Time.deltaTime);
 
 			this.transform.rotation *= rotationDelta;
+
+			Log.Info(this.transform.Forward + ", " + this.transform.Right);
+			this.transform.position += this.transform.forward * currentSpeed;
 
 			base.FixedUpdate();
 		}

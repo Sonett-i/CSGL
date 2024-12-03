@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
 using OpenTK.Mathematics;
+using System.Runtime.CompilerServices;
 
 namespace CSGL.Graphics
 {
@@ -70,6 +71,7 @@ namespace CSGL.Graphics
 		public string Name { get; set; }
 
 		private List<Texture> textures = new List<Texture>();
+		
 
 		public VAO VAO = null!;
 		public VBO VBO = null!;
@@ -80,6 +82,11 @@ namespace CSGL.Graphics
 
 		public Mesh parent;
 		public List<Mesh> children = new List<Mesh>();
+
+		public Vertex[] Vertices = null!;
+		public uint[] Indices = null!;
+
+		public int instancing;
 
 		BufferUsageHint hint;
 		public Mesh() { }
@@ -97,7 +104,10 @@ namespace CSGL.Graphics
 			this.indexBuffer = indices;
 
 			this.hint = hint;
+
 			this.textures = textures;
+			this.Vertices = vertices;
+			this.Indices = indices;
 
 			this.VBO = new VBO(vertices);
 

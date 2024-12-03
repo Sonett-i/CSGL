@@ -14,6 +14,9 @@ namespace CSGL.Engine
 		public int Width { get; set; }
 		public int Height { get; set; }
 
+		public List<Vertex> FoliagePosition = new List<Vertex>();
+		public int plantChance = 60;
+
 		public Terrain(string heightMap) : base("Terrain")
 		{
 			base.Lit = true;
@@ -61,6 +64,7 @@ namespace CSGL.Engine
 			this.model.root.Meshes.Add((new Mesh(vertices, indices, this.Textures, "Terrain")));
 			this.model.root.Transform.position = new Vector3(0, -600, 0);
 			this.model.shader = defaultShader;
+
 		}
 
 		uint[] GenerateIndices()
@@ -133,11 +137,18 @@ namespace CSGL.Engine
 					Vector3 bitan = tangent;
 					Vector2 uv = new Vector2((1.0f / Width) * x, (1.0f / Height) * z);
 
-					vertices.Add(new Vertex(position, normal, tangent, bitan, uv));
+					Vertex vert = new Vertex(position, normal, tangent, bitan, uv);
+
+					vertices.Add(vert);
+
+					if (MathU.Random(0, 100) >= plantChance)
+					{
+						FoliagePosition.Add(vert);
+					}
 				}
 			}
 
-			Log.Info($"Terrain generated with {vertices.Count} vertices");
+			Log.Info($"Terrain generated with {vertices.Count} vertices {FoliagePosition.Count} plants generated.");
 			return vertices.ToArray();
 		}
 

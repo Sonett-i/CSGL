@@ -99,11 +99,12 @@ namespace CSGL.Engine
 				return new Vector3(
 					(float)(MathF.Cos(radY) * MathF.Cos(radX)),
 					(float)(MathF.Sin(radX)),
-					(float)(MathF.Sin(radY) * MathF.Cos(radX))
-					);
+					(float)(MathF.Sin(radY) * MathF.Cos(radX)));
 			}
 		}
 
+		public Vector3 forward => Vector3.Transform(Vector3.UnitZ, this.rotation);
+		public Vector3 right => Vector3.Cross(forward, Vector3.UnitY).Normalized();
 		// Right vector is cross product of forward vector and local up vector
 		public Vector3 Right
 		{

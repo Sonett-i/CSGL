@@ -15,10 +15,13 @@ namespace CSGL.Graphics
 		private List<Texture> textures = new List<Texture>();
 
 		public int instanceCount;
+		public List<Matrix4> instanceMatrix = new List<Matrix4>();
 
 		public VAO VAO = null!;
 		public VBO VBO = null!;
 		public EBO EBO = null!;
+
+		public VBO InstanceVBO = null!;
 
 		float[] vertexBuffer = null!;
 		uint[] indexBuffer = null!;
@@ -31,7 +34,7 @@ namespace CSGL.Graphics
 			Name = name;
 		}
 
-		public Instance(Vertex[] vertices, uint[] indices, List<Texture> textures, string name, BufferUsageHint hint = BufferUsageHint.StaticDraw)
+		public Instance(Vertex[] vertices, uint[] indices, List<Texture> textures, string name, int instanceCount, List<Matrix4> transforms, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.Name = name;
 
@@ -40,8 +43,10 @@ namespace CSGL.Graphics
 
 			this.hint = hint;
 			this.textures = textures;
+			this.instanceCount = instanceCount;
 
 			this.VBO = new VBO(vertices);
+			this.InstanceVBO = new VBO(transforms);
 
 			this.VAO = new VAO();
 
@@ -51,6 +56,12 @@ namespace CSGL.Graphics
 			this.VAO.LinkAttrib(VBO, 1, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.NormalOffset);
 			this.VAO.LinkAttrib(VBO, 2, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.TangentOffset);
 			this.VAO.LinkAttrib(VBO, 3, 2, VertexAttribPointerType.Float, Vertex.Stride, Vertex.UVOffset);
+
+			if (instancing != 1)
+			{
+				InstanceVBO.Bind();
+				//VAO.LinkAttrib(InstanceVBO, 4, 4, VertexAttribPointerType.Float, 16)
+			}
 
 			ErrorCode error = GL.GetError();
 			if (error != ErrorCode.NoError)
