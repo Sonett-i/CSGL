@@ -34,21 +34,18 @@ namespace CSGL
 			Camera.main.Pitch = -21;
 			Camera.main.transform.position = new Vector3(0, 10, 5);
 
-			MainLight.transform.position = new Vector3(-1, 1, 0);
+			MainLight.transform.position = new Vector3(-1, 1000, 0);
 
 			player.transform.position = new Vector3(0, 30, 0);
 			//Camera.main.SetTarget(player);
 
-
-			Foliage foliage = new Foliage(new Vector3(0, 0, 0));
 			
 			base.Start();
 		}
 
-		float h = 0;
+
 		public override void Update()
 		{
-			h += Time.deltaTime;
 
 			//MainLight.transform.position *= new Vector3(MathF.Cos(MathU.Rad(h)), MathF.Sin(MathU.Rad(h)), 0f);
 

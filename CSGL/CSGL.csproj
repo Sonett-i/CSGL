@@ -9,12 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Engine\Cubemap\**" />
-    <EmbeddedResource Remove="Engine\Cubemap\**" />
-    <None Remove="Engine\Cubemap\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="OpenTK" Version="4.8.2" />
     <PackageReference Include="StbImageSharp" Version="2.30.15" />

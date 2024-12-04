@@ -6,6 +6,7 @@ using SharedLibrary;
 using OpenTK.Mathematics;
 using CSGL.Engine;
 using Assimp.Unmanaged;
+using System.Runtime.CompilerServices;
 
 namespace CSGL.Graphics
 {
@@ -18,11 +19,15 @@ namespace CSGL.Graphics
 		public EBO EBO;
 		public Shader shader;
 
+		public List<Texture> TextureList = new List<Texture>();
+
 		bool initialized = false;
 		public int instances;
-		public Instance(VAO vao, VBO vbo, EBO ebo, Shader shader, List<Matrix4> transforms = null!) 
+		public Instance(VAO vao, VBO vbo, EBO ebo, Shader shader, List<Matrix4> transforms = null!, List<Texture> textures = null!) 
 		{
 			this.shader = shader;
+
+			this.TextureList = textures;
 
 			this.VAO = vao;
 			this.VBO = vbo;
@@ -77,12 +82,24 @@ namespace CSGL.Graphics
 
 		public void Draw()
 		{
+			GL.Disable(EnableCap.CullFace);
 			shader.Activate();
 
 			VAO.Bind();
 			EBO.Bind();
 
+			for (int i = 0; i < TextureList.Count; i++)
+			{
+				string type = TextureDefinitions.TextureUniformTypes[TextureList[i].TextureType];
+
+				TextureList[i].TexUnit(shader, ("material." + type), i);
+				TextureList[i].Bind();
+			}
+
 			shader.SetUniform("camPos", Camera.main.transform.position);
+
+			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
+			shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
 
 			//shader.SetUniform("model", Matrix4.Identity);
 			shader.SetUniform("view", Camera.main.ViewMatrix);
@@ -99,7 +116,7 @@ namespace CSGL.Graphics
 			{
 				Log.GL($"Error: {errorCode}");
 			}
-
+			GL.Enable(EnableCap.CullFace);
 		}
 	}
 }

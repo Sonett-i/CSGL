@@ -26,6 +26,7 @@ namespace CSGL.Graphics
 		string fileName;
 
 		public MeshNode rootMesh;
+		public List<Texture> Textures = new List<Texture>();
 
 		public ModelImporter(string filePath)
 		{
@@ -153,6 +154,7 @@ namespace CSGL.Graphics
 					string FP = textureSlot.FilePath;
 					Texture texture = new Texture(this.directory + textureSlot.FilePath, typeName, (int)textureSlot.WrapModeU, (int)textureSlot.WrapModeV, textureSlot.TextureIndex);
 					textures.Add(texture);
+					this.Textures.Add(texture);
 				}
 			}
 

@@ -71,7 +71,7 @@ namespace CSGL.Engine
 
 			ModelImporter importer = new ModelImporter(Manifest.GetAsset<ModelAsset>("Bush.fbx").FilePath);
 
-			foliage = new Instance(importer.meshes[0].VAO, importer.meshes[0].VBO, importer.meshes[0].EBO, ShaderManager.Shaders["instance.shader"], FoliagePosition);
+			foliage = new Instance(importer.meshes[0].VAO, importer.meshes[0].VBO, importer.meshes[0].EBO, ShaderManager.Shaders["instance.shader"], FoliagePosition, importer.Textures);
 		}
 
 		uint[] GenerateIndices()

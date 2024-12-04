@@ -38,7 +38,6 @@ namespace CSGL.Engine
 		{
 			Camera.main.Start();
 			MainLight.Start();
-			MainLight.transform.position = new Vector3(0, 100, 0);
 			foreach (Entity entity in renderScene)
 			{
 				entity.Start();
