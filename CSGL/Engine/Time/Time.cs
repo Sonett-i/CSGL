@@ -44,7 +44,7 @@ namespace CSGL.Engine
 
 		public static void Poll()
 		{
-			MainWindow.Instance.Title = $"({EngineConfig.Name}:{EngineConfig.Version}) (FPS: {Time.FPS.ToString("0.00")} delta: {Time.ms.ToString("0.00")}ms) (Yaw: {Camera.main.Yaw.ToString("0.00")}, Pitch: {Camera.main.Pitch.ToString("0.00")} Roll: {Camera.main.Roll.ToString("0.00")}) Active Scene: {SceneManager.ActiveScene.Name}";
+			MainWindow.Instance.Title = $"({EngineConfig.Name}:{EngineConfig.Version}) (FPS: {Time.FPS.ToString("0.00")} delta: {Time.ms.ToString("0.00")}ms) (CamPos: {Camera.main.transform.position.ToString()}) (Yaw: {Camera.main.Yaw.ToString("0.00")}, Pitch: {Camera.main.Pitch.ToString("0.00")} Roll: {Camera.main.Roll.ToString("0.00")}) Active Scene: {SceneManager.ActiveScene.Name}";
 		}
 	}
 }

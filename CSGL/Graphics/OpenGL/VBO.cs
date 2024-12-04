@@ -41,6 +41,12 @@ namespace CSGL.Graphics
 			GL.BindBuffer(BufferTarget.ArrayBuffer, this.ID);
 			GL.BufferData(BufferTarget.ArrayBuffer, transforms.Count * (mat4Size), transforms.ToArray(), hint);
 
+			GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out int bufsize);
+
+			this.buffer = new float[bufsize / sizeof(float)];
+
+			GL.GetBufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, bufsize, this.buffer);
+
 			Log.GL($"Generated IBO: {this.ID}");
 		}
 

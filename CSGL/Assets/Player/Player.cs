@@ -32,8 +32,11 @@ namespace CSGL.Assets
 		float decay = 0.9f;
 		float smoothingSpeed = 10.5f;
 
-		float rotationSpeed = 30f;
+		float rotationSpeed = 45f;
 		float bankFactor = 0.1f;
+
+		float minSpeed = 0.1f;
+		float maxSpeed = 100f;
 
 		public Player() : base("Player")
 		{
@@ -102,7 +105,8 @@ namespace CSGL.Assets
 		public override void FixedUpdate()
 		{
 			currentForce *= decay;
-
+			
+			currentSpeed = MathU.Clamp(currentSpeed, minSpeed, maxSpeed);
 
 			Quaternion rotationDelta = Quaternion.FromEulerAngles(currentForce * Time.deltaTime);
 

@@ -10,11 +10,13 @@ namespace CSGL.Graphics
 		public int ID;
 		private bool initialized;
 		public int indexLength;
+		public uint[] buffer;
 
 		public EBO(uint[] indices, BufferUsageHint hint = BufferUsageHint.StaticDraw)
 		{
 			this.ID = GL.GenBuffer();
 			this.indexLength = indices.Length;
+			this.buffer = indices;
 
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.ID);
 			GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, hint);

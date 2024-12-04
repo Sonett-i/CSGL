@@ -24,6 +24,7 @@ namespace CSGL
 		void InitScene()
 		{
 			MainLight = new Light(Color4.White, 0.2f, 1f, 0.2f, 16f);
+			
 			Box box = new Box();
 
 			box.transform.position = new Vector3(0, 0, 0);
@@ -79,8 +80,6 @@ namespace CSGL
 
 		public override void Render()
 		{
-
-
 			base.Render();
 		}
 	}

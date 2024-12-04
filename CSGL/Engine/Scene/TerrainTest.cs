@@ -37,7 +37,7 @@ namespace CSGL
 			MainLight.transform.position = new Vector3(-1, 1, 0);
 
 			player.transform.position = new Vector3(0, 30, 0);
-			Camera.main.SetTarget(player);
+			//Camera.main.SetTarget(player);
 
 
 			Foliage foliage = new Foliage(new Vector3(0, 0, 0));

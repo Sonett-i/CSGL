@@ -4,121 +4,57 @@ using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
 using OpenTK.Mathematics;
+using CSGL.Engine;
+using Assimp.Unmanaged;
 
 namespace CSGL.Graphics
 {
-	public class Instance : Mesh, IDisposable
+	public class Instance : IDisposable
 	{
-		public bool initialized = false;
 		public string Name { get; set; }
+		public VAO VAO;
+		public VBO VBO;
+		public VBO IBO;
+		public EBO EBO;
+		public Shader shader;
 
-		private List<Texture> textures = new List<Texture>();
-
-		public int instanceCount;
-		public List<Matrix4> instanceMatrix = new List<Matrix4>();
-
-		public VAO VAO = null!;
-		public VBO VBO = null!;
-		public EBO EBO = null!;
-
-		public VBO InstanceVBO = null!;
-
-		float[] vertexBuffer = null!;
-		uint[] indexBuffer = null!;
-
-		BufferUsageHint hint;
-		public Instance() { }
-
-		public Instance(string name)
+		bool initialized = false;
+		public int instances;
+		public Instance(VAO vao, VBO vbo, EBO ebo, Shader shader, List<Matrix4> transforms = null!) 
 		{
-			Name = name;
-		}
+			this.shader = shader;
 
-		public Instance(Vertex[] vertices, uint[] indices, List<Texture> textures, string name, int instanceCount, List<Matrix4> transforms, BufferUsageHint hint = BufferUsageHint.StaticDraw)
-		{
-			this.Name = name;
+			this.VAO = vao;
+			this.VBO = vbo;
+			this.EBO = ebo;
 
-			this.vertexBuffer = Vertex.ToBuffer(vertices);
-			this.indexBuffer = indices;
+			this.instances = transforms.Count;
+			this.IBO = new VBO(transforms);
 
-			this.hint = hint;
-			this.textures = textures;
-			this.instanceCount = instanceCount;
+			GL.BindVertexArray(VAO.ID);
 
-			this.VBO = new VBO(vertices);
-			this.InstanceVBO = new VBO(transforms);
+			VAO.LinkAttrib(IBO, 4, 4, VertexAttribPointerType.Float, 16, 0);
+			VAO.LinkAttrib(IBO, 5, 4, VertexAttribPointerType.Float, 16, 1 * 4);
+			VAO.LinkAttrib(IBO, 6, 4, VertexAttribPointerType.Float, 16, 2 * 4);
+			VAO.LinkAttrib(IBO, 7, 4, VertexAttribPointerType.Float, 16, 3 * 4);
 
-			this.VAO = new VAO();
-
-			VAO.Bind();
-
-			this.VAO.LinkAttrib(VBO, 0, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.PositionOffset);
-			this.VAO.LinkAttrib(VBO, 1, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.NormalOffset);
-			this.VAO.LinkAttrib(VBO, 2, 3, VertexAttribPointerType.Float, Vertex.Stride, Vertex.TangentOffset);
-			this.VAO.LinkAttrib(VBO, 3, 2, VertexAttribPointerType.Float, Vertex.Stride, Vertex.UVOffset);
-
-			if (instancing != 1)
-			{
-				InstanceVBO.Bind();
-				//VAO.LinkAttrib(InstanceVBO, 4, 4, VertexAttribPointerType.Float, 16)
-			}
+			GL.VertexAttribDivisor(4, 1);
+			GL.VertexAttribDivisor(5, 1);
+			GL.VertexAttribDivisor(6, 1);
+			GL.VertexAttribDivisor(7, 1);
 
 			ErrorCode error = GL.GetError();
-			if (error != ErrorCode.NoError)
-			{
-				Log.GL($"Error drawing {this.ToString()}");
-			}
 
-			this.EBO = new EBO(indices);
-
+			Log.GL(error.ToString());
 
 			VAO.Unbind();
+			VBO.Unbind();
+			IBO.Unbind();
+			EBO.Unbind();
+
 			initialized = true;
 		}
 
-		public void Draw(Shader shader, Camera camera, Matrix4 transformMatrix)
-		{
-			if (this.VAO == null || this.EBO == null || this.VBO == null)
-				return;
-
-
-			if (shader != null)
-				shader.Activate();
-			else
-				ShaderManager.Shaders["default.shader"].Activate();
-
-			VAO.Bind();
-
-			EBO.Bind();
-			for (int i = 0; i < textures.Count; i++)
-			{
-				string type = TextureDefinitions.TextureUniformTypes[textures[i].TextureType];
-
-				textures[i].TexUnit(shader, ("material." + type), i);
-				textures[i].Bind();
-			}
-
-			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
-			shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
-
-
-			shader.SetUniform("camPos", Camera.main.transform.position);
-
-			shader.SetUniform("model", transformMatrix);
-			shader.SetUniform("view", camera.ViewMatrix);
-			shader.SetUniform("projection", camera.ProjectionMatrix);
-			shader.SetUniform("nearClip", camera.NearClip);
-			shader.SetUniform("farClip", camera.FarClip);
-
-			GL.DrawElements(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0);
-
-			ErrorCode error = GL.GetError();
-
-			if (error != ErrorCode.NoError)
-			{
-				Log.GL($"Error drawing {this.ToString()}");
-			}
-		}
 
 		public void Dispose()
 		{
@@ -129,11 +65,7 @@ namespace CSGL.Graphics
 			VAO.Dispose();
 			VBO.Dispose();
 			EBO.Dispose();
-			//Shader.Dispose();
-			foreach (Texture tex in textures) 
-			{
-				tex.Dispose();
-			}
+
 		}
 
 		public override string ToString()
@@ -141,6 +73,33 @@ namespace CSGL.Graphics
 			string output = $"{this.Name}";
 
 			return output;
+		}
+
+		public void Draw()
+		{
+			shader.Activate();
+
+			VAO.Bind();
+			EBO.Bind();
+
+			shader.SetUniform("camPos", Camera.main.transform.position);
+
+			//shader.SetUniform("model", Matrix4.Identity);
+			shader.SetUniform("view", Camera.main.ViewMatrix);
+			shader.SetUniform("projection", Camera.main.ProjectionMatrix);
+			shader.SetUniform("nearClip", Camera.main.NearClip);
+			shader.SetUniform("farClip", Camera.main.FarClip);
+
+			//GL.DrawElements(PrimitiveType.Triangles, this.ebo.indexLength, DrawElementsType.UnsignedInt, 0);
+			GL.DrawElementsInstanced(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0, instances);
+
+			ErrorCode errorCode = GL.GetError();
+
+			if (errorCode != ErrorCode.NoError)
+			{
+				Log.GL($"Error: {errorCode}");
+			}
+
 		}
 	}
 }

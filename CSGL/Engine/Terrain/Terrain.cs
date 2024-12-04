@@ -14,8 +14,12 @@ namespace CSGL.Engine
 		public int Width { get; set; }
 		public int Height { get; set; }
 
-		public List<Vertex> FoliagePosition = new List<Vertex>();
+		public List<Matrix4> FoliagePosition = new List<Matrix4>();
 		public int plantChance = 60;
+
+		Vector3 offset = new Vector3(0, -600, 0);
+
+		Instance foliage;
 
 		public Terrain(string heightMap) : base("Terrain")
 		{
@@ -62,9 +66,12 @@ namespace CSGL.Engine
 
 			this.model.root = new MeshNode("terrain");
 			this.model.root.Meshes.Add((new Mesh(vertices, indices, this.Textures, "Terrain")));
-			this.model.root.Transform.position = new Vector3(0, -600, 0);
+			this.model.root.Transform.position = offset;
 			this.model.shader = defaultShader;
 
+			ModelImporter importer = new ModelImporter(Manifest.GetAsset<ModelAsset>("Bush.fbx").FilePath);
+
+			foliage = new Instance(importer.meshes[0].VAO, importer.meshes[0].VBO, importer.meshes[0].EBO, ShaderManager.Shaders["instance.shader"], FoliagePosition);
 		}
 
 		uint[] GenerateIndices()
@@ -143,7 +150,9 @@ namespace CSGL.Engine
 
 					if (MathU.Random(0, 100) >= plantChance)
 					{
-						FoliagePosition.Add(vert);
+						Transform transform = new Transform();
+						transform.position = vert.position + offset;
+						FoliagePosition.Add(transform.TRS());
 					}
 				}
 			}
@@ -180,6 +189,7 @@ namespace CSGL.Engine
 
 		public override void Render()
 		{
+			foliage.Draw();
 			base.Render();
 		}
 	}

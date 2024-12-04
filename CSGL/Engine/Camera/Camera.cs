@@ -56,6 +56,7 @@ namespace CSGL.Engine
 		Vector3 previousForce = Vector3.Zero;
 
 		Vector3 currentLook = Vector3.Zero;
+		Vector3 targetCurrent = Vector3.Zero;
 
 		public float decay = 0.95f;
 
@@ -109,17 +110,20 @@ namespace CSGL.Engine
 			if (target == null)
 				return Matrix4.LookAt(transform.position, transform.position + Front, Up);
 
-			return Matrix4.LookAt(transform.position, transform.position + Front, Up);
+			return Matrix4.LookAt(transform.position, targetCurrent, Up);
 		}
 
 		public Matrix4 GetProjectionMatrix() => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), WindowConfig.AspectRatio, Camera.main.NearClip, Camera.main.FarClip);
 
-
 		public override void Start()
 		{
-			float targetYaw = MathU.Deg(target.transform.rotation.ToEulerAngles().Y);
+			if (target != null)
+			{
+				float targetYaw = MathU.Deg(target.transform.rotation.ToEulerAngles().Y);
 
-			this.yaw = targetYaw + 90;
+				this.yaw = targetYaw + 90;
+			}
+
 		}
 
 		void HandleMouseInput()
@@ -182,13 +186,16 @@ namespace CSGL.Engine
 				return;
 
 			float targetYaw = MathU.Deg(-target.transform.rotation.ToEulerAngles().Y) + 90;
+			float targetPitch = MathU.Deg(-target.transform.rotation.ToEulerAngles().Z * 0.5f);
 
-			this.yaw = float.Lerp(this.yaw, targetYaw, smoothing * Time.deltaTime);
+			this.yaw = targetYaw; //float.Lerp(this.yaw, targetYaw, 1 * Time.deltaTime);
+//			this.pitch = targetPitch; // float.Lerp(this.pitch, targetPitch, 1 * Time.deltaTime);
 
-			Vector3 desiredPosition = target.transform.position - target.transform.Right * 15f;
+			Vector3 desiredPosition = target.transform.position - target.transform.forward * 15f;
 			desiredPosition += new Vector3(0, 4.5f, 0);
 
 			this.transform.position = desiredPosition;
+			targetCurrent = target.transform.position;
 		}
 
 		public override void Update()
