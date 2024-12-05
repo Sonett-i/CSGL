@@ -25,7 +25,7 @@ namespace CSGL.Graphics
 		string directory;
 		string fileName;
 
-		public MeshNode rootMesh;
+		public MeshNode rootMesh = null!;
 		public List<Texture> Textures = new List<Texture>();
 
 		public ModelImporter(string filePath)
@@ -50,7 +50,7 @@ namespace CSGL.Graphics
 			this.rootMesh = processNode(scene.RootNode, scene);
 		}
 
-		MeshNode processNode(Node node, Scene scene, MeshNode parent = null)
+		MeshNode processNode(Node node, Scene scene, MeshNode? parent = null)
 		{
 			MeshNode currentMesh = new MeshNode(node.Name);
 			currentMesh.TransformMatrix = ConvertToMatrix4(node.Transform);
@@ -159,13 +159,6 @@ namespace CSGL.Graphics
 			}
 
 			return textures;
-		}
-
-		public static Model Import(string filePath)
-		{
-			ModelImporter importer = new ModelImporter(filePath);
-
-			return null;
 		}
 
 		static Matrix4 ConvertToMatrix4(Assimp.Matrix4x4 assimpMatrix)

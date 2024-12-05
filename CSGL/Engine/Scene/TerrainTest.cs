@@ -7,7 +7,9 @@ namespace CSGL
 {
 	public class TerrainTest : Scene
 	{
-		Player player;
+		Player player = null!;
+		Cubemap cubemap = null!;
+
 		public TerrainTest(string name) : base("TerrainTest")
 		{
 			SceneManager.ActiveScene = this;
@@ -18,6 +20,7 @@ namespace CSGL
 		{
 			Terrain terrain = new Terrain("heightmap.png");
 
+			cubemap = new Cubemap("top.jpg", "top.jpg", "top.jpg", "top.jpg", "top.jpg", "top.jpg");
 			player = new Player();
 		}
 
@@ -60,6 +63,7 @@ namespace CSGL
 		public override void Render()
 		{
 			base.Render();
+			cubemap.Draw();
 		}
 	}
 }

@@ -4,6 +4,8 @@ using StbImageSharp;
 using Logging;
 using SharedLibrary;
 
+#pragma warning disable 8618
+
 namespace ContentPipeline
 {
 	public class TextureAsset : Asset
@@ -13,7 +15,7 @@ namespace ContentPipeline
 
 		public int isFlipped = 1;
 		public TextureType TextureType;
-
+		public byte[] data;
 		
 
 		public byte[] Load(int colourComponents)
@@ -56,6 +58,7 @@ namespace ContentPipeline
 				ImageResult result = ImageResult.FromStream(stream);
 				this.Width = result.Width;
 				this.Height = result.Height;
+				this.data = result.Data;
 			}
 
 			Log.Info($"{this.Name} (Width: {this.Width}, Height: {this.Height}) loaded {this.ID}");

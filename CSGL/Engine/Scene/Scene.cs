@@ -11,9 +11,9 @@ namespace CSGL.Engine
 		public List<Entity> renderScene = new List<Entity>();
 		public List<Light> lights = new List<Light>();
 
-		public Light MainLight;
+		public Light MainLight = null!;
 
-		public Camera camera;
+		public Camera camera = null!;
 
 		public Scene(string name) 
 		{ 

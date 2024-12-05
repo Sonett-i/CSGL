@@ -18,7 +18,7 @@ namespace CSGL.Graphics
 
 		public Texture() { } // Empty
 
-		public Texture(string imagePath, TextureType textureType, TextureTarget textureTarget, int slot, PixelFormat format, PixelType pixelType)
+		public Texture(string imagePath, TextureType textureType, TextureTarget textureTarget, int slot, PixelFormat format, PixelType pixelType, int flipped = -1)
 		{
 			this.TextureTargetType = textureTarget;
 			this.TextureType = textureType;
@@ -26,8 +26,9 @@ namespace CSGL.Graphics
 			this.unit = slot;
 			TextureAsset texAsset = Manifest.GetAsset<TextureAsset>(imagePath);
 
+			int imageFlipped = (flipped != -1) ? flipped : texAsset.isFlipped;
 			// Load the image
-			StbImage.stbi_set_flip_vertically_on_load(texAsset.isFlipped);
+			StbImage.stbi_set_flip_vertically_on_load(imageFlipped);
 
 			using (FileStream stream = File.OpenRead(texAsset.FilePath))
 			{
@@ -52,7 +53,7 @@ namespace CSGL.Graphics
 				// Unbind the texture
 				GL.BindTexture(textureTarget, 0);
 			}
-			StbImage.stbi_set_flip_vertically_on_load(texAsset.isFlipped);
+			StbImage.stbi_set_flip_vertically_on_load(0);
 		}
 
 		public Texture(string path, string typeName, int wrapU, int wrapV, int unit)
@@ -60,6 +61,8 @@ namespace CSGL.Graphics
 			this.TextureTargetType = TextureTarget.Texture2D;
 			this.TextureType = TextureDefinitions.TextureType[typeName];
 			this.unit = unit;
+
+			
 
 			StbImage.stbi_set_flip_vertically_on_load(1);
 

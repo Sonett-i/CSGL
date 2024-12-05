@@ -1,4 +1,5 @@
 ﻿using System;
+using CSGL.Graphics;
 using Logging;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -23,7 +24,7 @@ namespace CSGL.Engine
 		public float FarClip;
 		public float FOV;
 
-		Entity target;
+		Entity target = null!;
 
 		private Vector3 front = -Vector3.UnitZ;
 		public Vector3 Front => front;
@@ -111,6 +112,16 @@ namespace CSGL.Engine
 				return Matrix4.LookAt(transform.position, transform.position + Front, Up);
 
 			return Matrix4.LookAt(transform.position, targetCurrent, Up);
+		}
+
+		public Matrix4 SkyMatrix()
+		{
+			Matrix4 view = Matrix4.LookAt(Vector3.Zero, -Vector3.UnitZ, Up);
+
+			// Remove translation (position) component by resetting it
+			//view.Row3 = new Vector4(0, 0, 0, 1);
+
+			return view;
 		}
 
 		public Matrix4 GetProjectionMatrix() => Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Camera.main.FOV), WindowConfig.AspectRatio, Camera.main.NearClip, Camera.main.FarClip);

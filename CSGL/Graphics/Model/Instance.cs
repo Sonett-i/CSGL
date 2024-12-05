@@ -1,18 +1,14 @@
-﻿using ContentPipeline;
-using CSGL.Engine;
+﻿using CSGL.Engine;
 using OpenTK.Graphics.OpenGL;
 using Logging;
 using SharedLibrary;
 using OpenTK.Mathematics;
-using CSGL.Engine;
-using Assimp.Unmanaged;
-using System.Runtime.CompilerServices;
 
 namespace CSGL.Graphics
 {
 	public class Instance : IDisposable
 	{
-		public string Name { get; set; }
+		public string? Name { get; set; }
 		public VAO VAO;
 		public VBO VBO;
 		public VBO IBO;
@@ -38,11 +34,13 @@ namespace CSGL.Graphics
 
 			GL.BindVertexArray(VAO.ID);
 
+			// Link each matrix4's vector4 to the VAO
 			VAO.LinkAttrib(IBO, 4, 4, VertexAttribPointerType.Float, 16, 0);
 			VAO.LinkAttrib(IBO, 5, 4, VertexAttribPointerType.Float, 16, 1 * 4);
 			VAO.LinkAttrib(IBO, 6, 4, VertexAttribPointerType.Float, 16, 2 * 4);
 			VAO.LinkAttrib(IBO, 7, 4, VertexAttribPointerType.Float, 16, 3 * 4);
 
+			// Ensures that the linkedattribute
 			GL.VertexAttribDivisor(4, 1);
 			GL.VertexAttribDivisor(5, 1);
 			GL.VertexAttribDivisor(6, 1);
@@ -101,13 +99,11 @@ namespace CSGL.Graphics
 			shader.SetUniform("light.colour", SceneManager.ActiveScene.MainLight.Colour);
 			shader.SetUniform("light.position", SceneManager.ActiveScene.MainLight.transform.position);
 
-			//shader.SetUniform("model", Matrix4.Identity);
 			shader.SetUniform("view", Camera.main.ViewMatrix);
 			shader.SetUniform("projection", Camera.main.ProjectionMatrix);
 			shader.SetUniform("nearClip", Camera.main.NearClip);
 			shader.SetUniform("farClip", Camera.main.FarClip);
 
-			//GL.DrawElements(PrimitiveType.Triangles, this.ebo.indexLength, DrawElementsType.UnsignedInt, 0);
 			GL.DrawElementsInstanced(PrimitiveType.Triangles, this.EBO.indexLength, DrawElementsType.UnsignedInt, 0, instances);
 
 			ErrorCode errorCode = GL.GetError();

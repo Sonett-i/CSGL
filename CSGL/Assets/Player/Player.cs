@@ -9,17 +9,11 @@ namespace CSGL.Assets
 {
 	public class Player : GameObject
 	{
-
-		float minAngle = -10;
-		float maxAngle = 10;
-
 		float leftWing = 0;
 		float rightWing = 0;
 
 		float rudder = 0;
 		float tail = 0;
-
-		float MaxSpeed = 100f;
 
 		float currentSpeed = 0;
 
@@ -28,23 +22,18 @@ namespace CSGL.Assets
 		Vector3 currentForce = Vector3.Zero;
 		Vector3 previousForce = Vector3.Zero;
 
-		float smoothing = 0.5f;
 		float decay = 0.9f;
 		float smoothingSpeed = 10.5f;
 
 		float rotationSpeed = 45f;
-		float bankFactor = 0.1f;
 
 		float minSpeed = 0.1f;
-		float maxSpeed = 100f;
+		float maxSpeed = 0.5f;
 
 		public Player() : base("Player")
 		{
 			this.model = new Model(Manifest.GetAsset<ModelAsset>("planemodelsmall.fbx"), ShaderManager.Shaders["default.shader"]);
 			this.model.ParentEntity = this;
-
-			//this.model.root.Transform.Parent = this.transform;
-			//this.model.Meshes["Propeller"].SetParent(this.model.Meshes["Chassis"]);
 
 			Log.Info("player loaded");
 		}

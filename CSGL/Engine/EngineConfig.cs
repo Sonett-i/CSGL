@@ -15,7 +15,7 @@ namespace CSGL
 		public static string Name = "CSGL";
 
 		public static Vector3 BackdropColour = new Vector3(0.85f, 0.85f, 0.90f);
-		public static Vector3 Fog = new Vector3(0.85f, 0.85f, 0.90f);
+		public static Vector3 Fog = new Vector3(0.33f, 0.42f, 0.54f);
 		public static int MSAA_Samples = 20;
 	}
 

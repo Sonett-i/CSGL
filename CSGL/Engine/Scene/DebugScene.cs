@@ -16,11 +16,6 @@ namespace CSGL
 
 		List<Matrix4> transformList = new List<Matrix4>();
 
-		VAO vao;
-		EBO ebo;
-		VBO vbo;
-		VBO instancedVBO;
-
 		void InitScene()
 		{
 			MainLight = new Light(Color4.White, 0.2f, 1f, 0.2f, 16f);

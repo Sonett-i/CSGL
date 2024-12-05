@@ -1,8 +1,10 @@
 ﻿using System;
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using StbImageSharp;
 using CSGL.Graphics;
+using ContentPipeline;
+using Logging;
 
 namespace CSGL.Engine
 {
@@ -54,146 +56,100 @@ namespace CSGL.Engine
 			 1.0f, -1.0f,  1.0f
 		};
 
-		// OpenGL handles
-		private int vbo;
-		private int vao;
-		private int cubemapID;
+		int VAO;
+		int VBO;
+		int ID;
 
-		private Shader shader;
+		Shader shader = null!;
 
-		// Texture paths for the cubemap
-		private readonly string[] facesCubeMap =
+		public Cubemap(params string[] textures)
 		{
-			"right.jpg", // +X
-			"left.jpg", // -X
-			"top.jpg", // +Y
-			"bottom.jpg", // -Y
-			"front.jpg", // +Z
-			"back.jpg"  // -Z
-		};
-
-		Texture[] Cfaces;
-
-		public Cubemap()
-		{
-			Cfaces = new Texture[6];
-
-			for (int i = 0; i < 6; i++)
-			{
-				if (i < facesCubeMap.Length)
-				{
-					Cfaces[i] = Resources.Textures[facesCubeMap[i]];
-				}
-				else
-				{
-					Cfaces[i] = Resources.Textures[facesCubeMap[i % facesCubeMap.Length]];
-				}
-			}
-
-			this.shader = Resources.Shaders["skybox"];
-			LoadCubeMap();
+			this.ID = LoadCubeMap(textures);
 			Setup();
 		}
 
-		public Cubemap(string[] faces)
+		int LoadCubeMap(string[] textures)
 		{
-			facesCubeMap = new string[6];
+			this.ID = GL.GenTexture();
 
-			Cfaces = new Texture2D[6];
+			GL.BindTexture(TextureTarget.TextureCubeMap, ID);
+
+			StbImage.stbi_set_flip_vertically_on_load(0);
 
 			for (int i = 0; i < 6; i++)
 			{
-				if (i < faces.Length)
+				TextureAsset tex = Manifest.GetAsset<TextureAsset>(textures[i]);
+
+				using (Stream stream = File.OpenRead(tex.FilePath))
 				{
-					Cfaces[i] = Resources.Textures[faces[i]];
-				}
-				else
-				{
-					Cfaces[i] = Resources.Textures[faces[i % faces.Length]];
-				}
-			}
+					ImageResult result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+					GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, result.Width, result.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, result.Data);
 
-			this.shader = Resources.Shaders["skybox"];
-			LoadCubeMap();
-			Setup();
-		}
-
-		// Initialize vertex array and buffer elements 
-		void Setup()
-		{
-			this.vbo = GL.GenBuffer();
-			this.vao = GL.GenVertexArray();
-
-			GL.BindVertexArray(vao);
-			GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo);
-
-			GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * skyboxVertices.Length, skyboxVertices, BufferUsageHint.StaticDraw);
-			GL.EnableVertexAttribArray(0);
-			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
-
-			GL.UseProgram(shader.ID);
-
-			GL.Uniform1(shader.Uniforms["skybox"].Location, 0);
-		}
-
-		// Loads input cubemap textures into cubemap object
-		private int LoadCubeMap()
-		{
-			cubemapID = GL.GenTexture();
-			GL.BindTexture(TextureTarget.TextureCubeMap, cubemapID);
-
-			for (int i = 0; i < Cfaces.Length; i++)
-			{
-				GL.TexImage2D(TextureTarget.TextureCubeMapPositiveX + i, 0, PixelInternalFormat.Rgba, Cfaces[i].Width, Cfaces[i].Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, Cfaces[i].data);
-
-				ErrorCode error = GL.GetError();
-				if (error != ErrorCode.NoError)
-				{
-					Log.Error($"Error with face {i}: {Cfaces}: {error} ");
+					ErrorCode error = GL.GetError();
+					if (error != ErrorCode.NoError)
+					{
+						Log.Error($"Error with face {i}: {tex}: {error} ");
+					}
 				}
 			}
-			SetTextureParameters();
 
-			return cubemapID;
-		}
-
-		// Set Texture Parameters for filtering and wrapping
-		void SetTextureParameters()
-		{
 			GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
 			GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
 			GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
 			GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
 			GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+
+			return this.ID;
 		}
 
-		// Draw cubemap using camera view and projection matrices
+		void Setup()
+		{
+			VBO = GL.GenBuffer();
+			VAO = GL.GenVertexArray();
+
+			GL.BindVertexArray(VAO);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
+
+			GL.BufferData(BufferTarget.ArrayBuffer, sizeof(float) * skyboxVertices.Length, skyboxVertices, BufferUsageHint.StaticDraw);
+			GL.EnableVertexAttribArray(0);
+			GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+			this.shader = ShaderManager.Shaders["skybox.shader"];
+
+			this.shader.SetUniform("skybox", 0);
+		}
+
+		// CODE
+
 		public void Draw()
 		{
-			GL.DepthFunc(DepthFunction.Lequal); // set depth test to less than equal so the skybox doesn't render in front of anything
+			GL.Disable(EnableCap.CullFace);
+			
 
-			GL.UseProgram(shader.ShaderProgram.ShaderProgramHandle);
+			shader.Activate();
 
-			// Set shader uniforms
-			GL.UniformMatrix4(shader.Uniforms["view"].Location, true, ref Camera.main.m_View);
-			GL.UniformMatrix4(shader.Uniforms["projection"].Location, true, ref Camera.main.m_Projection);
+			GL.DepthFunc(DepthFunction.Lequal);
 
-			// Bind vertex array
-			GL.BindVertexArray(vao);
+
+			shader.SetUniform("view", Camera.main.SkyMatrix());
+			shader.SetUniform("projection", Camera.main.ProjectionMatrix);
+
+			GL.BindVertexArray(VAO);
+
 			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.BindTexture(TextureTarget.TextureCubeMap, cubemapID);
+			GL.BindTexture(TextureTarget.TextureCubeMap, ID);
 
 			GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
 			ErrorCode error = GL.GetError();
+
 			if (error != ErrorCode.NoError)
-			{
-				Log.Error($"Error Drawing Cubemap: {error}");
-			}
+				Log.GL($"Error: {error}");
 
 			GL.DepthFunc(DepthFunction.Less);
+			GL.Enable(EnableCap.CullFace);
 		}
-
+		
 		// Cleanup
 		~Cubemap()
 		{
@@ -202,10 +158,12 @@ namespace CSGL.Engine
 
 		public void Dispose()
 		{
+			Log.GL($"Disposing {this}");
+			GL.DeleteTexture(this.ID);
+			GL.DeleteBuffer(VAO);
+			GL.DeleteBuffer(VBO);
 			GC.SuppressFinalize(this);
-			GL.DeleteBuffer(vbo);
-			GL.DeleteVertexArray(vao);
-			GL.DeleteTexture(cubemapID);
 		}
+
 	}
 }

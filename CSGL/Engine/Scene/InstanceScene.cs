@@ -19,31 +19,17 @@ namespace CSGL
 
 		List<Matrix4> transformList = new List<Matrix4>();
 
-		Shader shader;
-		VAO vao;
-		EBO ebo;
-		VBO vbo;
-		VBO ibo;
-
-		Instance testInstance;
+		Instance testInstance = null!;
 		int numInstances = 100000;
 
-		int vec4Size = 4 * sizeof(float);
-		int mat4Size = 16 * sizeof(float);
 
 		void InitScene()
 		{
 			MainLight = new Light(Color4.White, 0.2f, 1f, 0.2f, 16f);
-			//Box box = new Box();
-
-			//box.transform.position = new Vector3(0, 0, 0);
-			//this.renderScene.Add(box);
 		}
 
 		void InitBuffers()
 		{
-			shader = ShaderManager.Shaders["instance.shader"];
-
 			ModelImporter importer = new ModelImporter(Manifest.GetAsset<ModelAsset>("Bush.fbx").FilePath);
 
 			testInstance = new Instance(importer.meshes[0].VAO, importer.meshes[0].VBO, importer.meshes[0].EBO, ShaderManager.Shaders["instance.shader"], transformList);

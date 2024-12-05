@@ -9,12 +9,14 @@ namespace CSGL.Graphics
 	{
 		public List<Texture> textures = new List<Texture>();
 		public Dictionary<string, MeshNode> Meshes = new Dictionary<string, MeshNode>();
+		public Dictionary<LODLevel, MeshNode> LODs = new Dictionary<LODLevel, MeshNode>();
 
 		public List<Mesh> _mesh = new List<Mesh>();
 
-		public MeshNode root;
+		public MeshNode root = null!;
 
-		public Shader shader;
+		public Shader shader = null!;
+		float distanceToCamera = 0;
 
 		public Model()
 		{
@@ -39,6 +41,14 @@ namespace CSGL.Graphics
 			getModelParts(root);
 		}
 
+		public void SetLodLevel(LODLevel level, MeshNode mesh)
+		{
+			if (!LODs.ContainsKey(level))
+			{
+				LODs[level] = mesh;
+			}
+		}
+
 		void getModelParts(MeshNode node)
 		{
 			foreach (MeshNode child in node.Children)
@@ -54,6 +64,9 @@ namespace CSGL.Graphics
 			{
 				root.Transform.UpdateTransforms();
 			}
+
+			distanceToCamera = (Camera.main.transform.position - ParentEntity.transform.position).Length;
+
 
 			base.Update();
 		}

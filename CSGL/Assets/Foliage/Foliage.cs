@@ -19,7 +19,7 @@ namespace CSGL.Assets
 			//this.AddTexture(new Texture("bush_diffuse.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte));
 			//this.AddTexture(new Texture("bush_specular.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Red, PixelType.UnsignedByte));
 
-			this.model = new Model(Manifest.GetAsset<ModelAsset>("Bush.fbx"), ShaderManager.Shaders["grass.shader"]);
+			this.model = new Model(Manifest.GetAsset<ModelAsset>("chrTree.fbx"), ShaderManager.Shaders["grass.shader"]);
 
 			Log.Info("Loading box mesh");
 

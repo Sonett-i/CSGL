@@ -6,6 +6,10 @@ using SharedLibrary;
 using OpenTK.Mathematics;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable 8602
+#pragma warning disable 8604
+
+
 namespace CSGL.Graphics
 {
 	public class MeshNode
@@ -13,7 +17,7 @@ namespace CSGL.Graphics
 		public List<Mesh> Meshes { get; set; } = new List<Mesh>();
 		public List<MeshNode> Children { get; set; } = new List<MeshNode>();
 
-		public MeshNode Parent { get; set; }
+		public MeshNode? Parent { get; set; }
 
 		public Transform Transform { get; set; }
 
@@ -68,11 +72,10 @@ namespace CSGL.Graphics
 	public class Mesh : IDisposable
 	{
 		public bool initialized = false;
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
 		private List<Texture> textures = new List<Texture>();
 		
-
 		public VAO VAO = null!;
 		public VBO VBO = null!;
 		public EBO EBO = null!;
@@ -80,7 +83,7 @@ namespace CSGL.Graphics
 		float[] vertexBuffer = null!;
 		uint[] indexBuffer = null!;
 
-		public Mesh parent;
+		public Mesh parent = null!;
 		public List<Mesh> children = new List<Mesh>();
 
 		public Vertex[] Vertices = null!;

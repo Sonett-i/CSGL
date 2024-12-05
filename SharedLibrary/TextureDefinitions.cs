@@ -58,6 +58,7 @@ namespace SharedLibrary
 			{
 				0 => PixelInternalFormat.Rgba,
 				1 => PixelInternalFormat.Luminance,
+				_ => throw new ArgumentOutOfRangeException(nameof(components), "unknown texture type")
 			};
 		}
 

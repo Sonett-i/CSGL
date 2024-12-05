@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Logging;
 
+#pragma warning disable 8604
+
 namespace ContentPipeline
 {
 	public static class Scan

@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using SharedLibrary;
 using CSGL.Graphics;
+using CSGL.Assets;
 
 namespace CSGL.Engine
 {
@@ -15,17 +16,21 @@ namespace CSGL.Engine
 		public int Height { get; set; }
 
 		public List<Matrix4> FoliagePosition = new List<Matrix4>();
+		public List<Matrix4> RockPosition = new List<Matrix4>();
+
 		public int plantChance = 60;
+
 
 		Vector3 offset = new Vector3(0, -600, 0);
 
 		Instance foliage;
+		Instance rocks;
+
+		int numRocks = 10000;
 
 		public Terrain(string heightMap) : base("Terrain")
 		{
 			base.Lit = true;
-
-			//this.AddComponent<Model>();
 
 			Texture mapDiffuse = new Texture("mapdiffuse.png", TextureType.DIFFUSE, TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte);
 
@@ -39,8 +44,6 @@ namespace CSGL.Engine
 			};
 
 			mapDiffuse.SetParameters(difftexParams);
-
-			
 
 			Texture mapSpecular = new Texture("mapspecular.png", TextureType.SPECULAR, TextureTarget.Texture2D, 1, PixelFormat.Rgba, PixelType.UnsignedByte);
 
@@ -69,9 +72,44 @@ namespace CSGL.Engine
 			this.model.root.Transform.position = offset;
 			this.model.shader = defaultShader;
 
+			for (int i = 0; i < numRocks; i++)
+			{
+				Transform transform = new Transform();
+				float x = MathU.Random(0, this.Width);
+				float z = MathU.Random(0, this.Height);
+
+				float y = heightmapData[(int)x, (int)z];
+
+				transform.position = WorldPositionFromHeightMap((int)x, (int)z);
+
+				RockPosition.Add(transform.TRS());
+			}
+
+			GenerateDecorations(RockPosition, numRocks);
+
 			ModelImporter importer = new ModelImporter(Manifest.GetAsset<ModelAsset>("Bush.fbx").FilePath);
 
 			foliage = new Instance(importer.meshes[0].VAO, importer.meshes[0].VBO, importer.meshes[0].EBO, ShaderManager.Shaders["instance.shader"], FoliagePosition, importer.Textures);
+
+			ModelImporter rockImport = new ModelImporter(Manifest.GetAsset<ModelAsset>("rock.fbx").FilePath);
+			rocks = new Instance(rockImport.meshes[0].VAO, rockImport.meshes[0].VBO, rockImport.meshes[0].EBO, ShaderManager.Shaders["instance.shader"], RockPosition, rockImport.Textures);
+		}
+
+		// Generate random positions for instanced details to be spawned at
+		public void GenerateDecorations(List<Matrix4> list, int count)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				Transform transform = new Transform();
+				float x = MathU.Random(0, this.Width);
+				float z = MathU.Random(0, this.Height);
+
+				float y = heightmapData[(int)x, (int)z];
+
+				transform.position = WorldPositionFromHeightMap((int)x, (int)z);
+
+				list.Add(transform.TRS());
+			}
 		}
 
 		uint[] GenerateIndices()
@@ -157,7 +195,7 @@ namespace CSGL.Engine
 				}
 			}
 
-			Log.Info($"Terrain generated with {vertices.Count} vertices {FoliagePosition.Count} plants generated.");
+			Log.Info($"Terrain generated with {vertices.Count} vertices {FoliagePosition.Count} plants generated\n{RockPosition.Count} trees.");
 			return vertices.ToArray();
 		}
 
@@ -187,9 +225,21 @@ namespace CSGL.Engine
 			return heightmapData;
 		}
 
+		public float GetHeightMapAt(int x, int z)
+		{
+			return heightmapData[x, z];
+		}
+
+		public Vector3 WorldPositionFromHeightMap(int x, int z)
+		{
+			return new Vector3(x - ((int)Width / 2), offset.Y + GetHeightMapAt(x, z), z - ((int)Height / 2));
+		}
+
 		public override void Render()
 		{
 			foliage.Draw();
+			rocks.Draw();
+
 			base.Render();
 		}
 	}
